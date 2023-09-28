@@ -24,7 +24,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5">
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<attributes>
 			<attribute name="module" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
@@ -36,5 +36,10 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="D:/Users/Brenda/Downloads/mysql-connector-j-8.1.0/mysql-connector-j-8.1.0.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/c3p0-0.9.5.5.jar"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.USER_LIBRARY/mchange-commons-java-0.2.19.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mchange-commons-java-0.2.16"/>
+	<classpathentry kind="lib" path="D:/Users/Brenda/Downloads/c3p0-0.9.5.4.jar"/>
+	<classpathentry kind="lib" path="D:/Users/Brenda/Downloads/mchange-commons-java-0.2.15.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

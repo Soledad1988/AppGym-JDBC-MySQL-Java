@@ -6,17 +6,13 @@ public class Cliente {
 	String nombre;
 	String apellido;
 	String direccion;
-	String telefono;
-	boolean pago = false;
 	
-	public Cliente(Integer id, String nombre, String apellido, String direccion, String telefono, boolean pago) {
+	public Cliente(Integer id, String nombre, String apellido, String direccion) {
 		super();
 		this.id = id;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;
-		this.telefono = telefono;
-		this.pago = pago;
 	}
 
 	public Integer getId() {
@@ -39,33 +35,19 @@ public class Cliente {
 		return apellido;
 	}
 
-	public void setApellido(String apellido) {
-		this.apellido = apellido;
-	}
 
 	public String getDireccion() {
 		return direccion;
 	}
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
-
-	public String getTelefono() {
-		return telefono;
-	}
-
-	public void setTelefono(String telefono) {
-		this.telefono = telefono;
-	}
-
-	public boolean isPago() {
-		return pago;
-	}
-
-	public void setPago(boolean pago) {
-		this.pago = pago;
-	}
 	
-	
+	@Override
+	public String toString() {
+		return String.format(
+				"{id: %s, nombre: %s, apellido: %s, direccion: %d}",
+				this.id,
+				this.nombre,
+				this.apellido,
+				this.direccion);
+		}
 }

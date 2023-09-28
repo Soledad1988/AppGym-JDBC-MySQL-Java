@@ -1,4 +1,4 @@
-package pruebas;
+/*package pruebas;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,9 +9,9 @@ public class PruebaConexion {
 
 	public static void main(String[] args) throws SQLException {
 		
-		Connection conn = new Conexion().recuperaConexion();
+		Connection conn = new Conexion().recuperarConexion();
 		
 		System.out.println("Cerrando conexion");
 		conn.close();
 	}
-}
+}*/
