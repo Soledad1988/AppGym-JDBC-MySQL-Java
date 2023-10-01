@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import controller.ClienteController;
+import gym.modelo.Cliente;
 
 
 
@@ -98,13 +99,36 @@ public class ListaClientesFrame extends JFrame {
         textoDireccion = new JTextField();
 
         // TODO
+        
+        textoNombre.setBounds(10, 25, 265, 20);
+        textoApellido.setBounds(10, 65, 265, 20);
+        textoDireccion.setBounds(10, 105, 265, 20);
+
+        botonGuardar = new JButton("Guardar");
+        botonLimpiar = new JButton("Limpiar");
+        botonGuardar.setBounds(10, 175, 80, 20);
+        botonLimpiar.setBounds(100, 175, 80, 20);
+
+        container.add(labelNombre);
+        container.add(labelApellido);
+        container.add(labelDireccion);
+        container.add(textoNombre);
+        container.add(textoApellido);
+        container.add(textoDireccion);
+        container.add(botonGuardar);
+        container.add(botonLimpiar);
        
     }
 
     private void configurarAccionesDelFormulario() {
         botonGuardar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               // guardar();
+            	try {
+					guardar();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
                 limpiarTabla();
                 cargarTabla();
             }
@@ -118,7 +142,7 @@ public class ListaClientesFrame extends JFrame {
 
         botonEliminar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-             //   eliminar();
+                eliminar();
                 limpiarTabla();
                 cargarTabla();
             }
@@ -126,7 +150,7 @@ public class ListaClientesFrame extends JFrame {
 
         botonModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               // modificar();
+                modificar();
                 limpiarTabla();
                 cargarTabla();
             }
@@ -151,7 +175,7 @@ public class ListaClientesFrame extends JFrame {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
 
-  /*  private void modificar() {
+    /*private void modificar() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
@@ -159,15 +183,15 @@ public class ListaClientesFrame extends JFrame {
 
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
-                  //  Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+                	Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
                     String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
                     String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-                    String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3).toString();
+                    String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
 
                     int filasModificadas;
 
                     try {
-                        filasModificadas = this.clienteController.actualizar(nombre, apellido, direccion);
+                        filasModificadas = this.clienteController.actualizar(id, nombre, apellido, direccion);
                     } catch (SQLException e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);
@@ -176,9 +200,30 @@ public class ListaClientesFrame extends JFrame {
                     JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
     }*/
+    
+    
+    private void modificar() {		
+    	Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
+        .ifPresentOrElse(filaHuesped -> {
+        	
+        	Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+            String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
+            String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+            String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
+			
+			try {
+				this.clienteController.actualizar(id,nombre,apellido,direccion);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
+		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
+		
+	}
 
     
-   /* private void eliminar() {
+    private void eliminar() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
@@ -201,7 +246,9 @@ public class ListaClientesFrame extends JFrame {
 
                     JOptionPane.showMessageDialog(this, cantidadEliminada + " Item eliminado con éxito!");
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
-    }*/
+    }
+    
+    
     
     private void cargarTabla() {
         List<Map<String, String>> productos = new ArrayList<Map<String, String>>();
@@ -221,47 +268,25 @@ public class ListaClientesFrame extends JFrame {
                         producto.get("DIRECCION") }));
     }
         
+    
+    //------------------------------------------
+    
+    private void guardar() throws SQLException {
+             
+            Cliente cliente = new Cliente(textoNombre.getText(), textoApellido.getText(), textoDireccion.getText());
+ 			this.clienteController.guardar(cliente);
+ 			dispose();
+ 			
+ 			JOptionPane.showMessageDialog(this, "Registrado con éxito!");
 
-   /* private void guardar() {
-        if (textoNombre.getText().isBlank() || textoDescripcion.getText().isBlank()) {
-            JOptionPane.showMessageDialog(this, "Los campos Nombre y Descripción son requeridos.");
-            return;
-        }
+ 	        this.limpiarFormulario();
+    							
+    }
+    
+    //******************************************
 
-        Integer cantidadInt;
-
-        try {
-            cantidadInt = Integer.parseInt(textoCantidad.getText());
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, String
-                    .format("El campo cantidad debe ser numérico dentro del rango %d y %d.", 0, Integer.MAX_VALUE));
-            return;
-        }
-
-        //var producto = new HashMap<String, String>();
-        //producto.put("NOMBRE", textoNombre.getText());
-        //producto.put("DESCRIPCION", textoDescripcion.getText());
-        //producto.put("CANTIDAD", String.valueOf(cantidadInt));
-        
-        //agregamos entidad producto
-        var producto = new Producto(textoNombre.getText(),
-        		textoDescripcion.getText(),cantidadInt);
-        
    
-        var categoria = comboCategoria.getSelectedItem();
-
-        try {
-        	this.productoController.guardar(producto);
-        }catch (SQLException e) {
-            throw new RuntimeException(e);
-        }	
-        
-
-        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
-
-        this.limpiarFormulario();
-    }*/
-
+    //formula limpiar fomulario
     private void limpiarFormulario() {
         this.textoNombre.setText("");
         this.textoApellido.setText("");
