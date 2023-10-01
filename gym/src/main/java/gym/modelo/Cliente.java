@@ -15,6 +15,12 @@ public class Cliente {
 		this.direccion = direccion;
 	}
 
+	public Cliente(String nombre, String apellido, String direccion) {
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.direccion = direccion;
+	}
+
 	public Integer getId() {
 		return id;
 	}
