@@ -10,10 +10,13 @@ import java.util.List;
 import java.util.Map;
 
 import conexion.Conexion;
+import dao.ClienteDAO;
+import gym.modelo.Cliente;
 
 
 public class ClienteController {
 
+	//Listar
 	public List<Map<String,String>> listar() throws SQLException {
 		Conexion factory = new Conexion();
 		final Connection con = factory.recuperaConexion();
@@ -39,6 +42,49 @@ public class ClienteController {
 			
 		return resultado;
 	
+	}
+	
+	//guardar
+	public void guardar(Cliente cliente) throws SQLException {
+    	ClienteDAO clienteDao = new ClienteDAO(new Conexion().recuperaConexion());
+    	clienteDao.guardar(cliente);
+    	
+	}
+	
+	public int eliminar(Integer id) throws SQLException {
+		
+		final Connection con = new Conexion().recuperaConexion();
+		
+		final PreparedStatement statement = con.prepareStatement("DELETE FROM CLIENTES WHERE ID = ?");
+			statement.setInt(1, id);
+			statement.execute();
+			return statement.getUpdateCount(); //me devuelve la cantidad de filas modificadas
+		
+	}
+	
+	//modificar
+
+
+	public int actualizar(Integer id, String nombre, String apellido, String direccion) throws SQLException {
+		Conexion factory = new Conexion();
+	    final Connection con = factory.recuperaConexion();
+	    
+	   final  PreparedStatement statement = con.prepareStatement("UPDATE clientes SET "
+	            + " NOMBRE = ?"
+	            + ", APELLIDO = ?"
+	            + ", DOMICILIO =  ?"
+	            + " WHERE ID =  ?");
+	  
+	   		statement.setInt(0, id);
+		    statement.setString(1, nombre);
+			statement.setString(2, apellido);
+			statement.setString(3, direccion);
+		    
+		    statement.execute();
+	
+		    int updateCount = statement.getUpdateCount();
+	
+		    return updateCount;
 	}
 	
 
