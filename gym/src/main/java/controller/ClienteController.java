@@ -15,6 +15,8 @@ import gym.modelo.Cliente;
 
 
 public class ClienteController {
+	
+	private ClienteDAO clienteDAO;
 
 	//Listar
 	public List<Map<String,String>> listar() throws SQLException {
@@ -62,7 +64,6 @@ public class ClienteController {
 		
 	}
 	
-	//modificar
 
 
 	public int actualizar(Integer id, String nombre, String apellido, String direccion) throws SQLException {

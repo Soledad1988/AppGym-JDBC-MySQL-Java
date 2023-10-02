@@ -150,6 +150,7 @@ public class ListaClientesFrame extends JFrame {
 
         botonModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+            	
                 modificar();
                 limpiarTabla();
                 cargarTabla();
@@ -175,7 +176,7 @@ public class ListaClientesFrame extends JFrame {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
 
-    /*private void modificar() {
+    private void modificar() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
@@ -199,29 +200,9 @@ public class ListaClientesFrame extends JFrame {
 
                     JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
-    }*/
+    }
     
-    
-    private void modificar() {		
-    	Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-        .ifPresentOrElse(filaHuesped -> {
-        	
-        	Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-            String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
-            String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-            String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
-			
-			try {
-				this.clienteController.actualizar(id,nombre,apellido,direccion);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
-		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
-		
-	}
-
+   
     
     private void eliminar() {
         if (tieneFilaElegida()) {

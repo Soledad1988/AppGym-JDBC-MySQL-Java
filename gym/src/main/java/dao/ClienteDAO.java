@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 
 import gym.modelo.Cliente;
 
@@ -16,27 +17,6 @@ public class ClienteDAO {
 	public ClienteDAO(Connection con) {
 		this.con = con;
 	}
-	
-		
-    private void ejecutaRegistro(Cliente cliente, PreparedStatement statement) throws SQLException {	
-    		statement.setString(1, cliente.getNombre());
-    		statement.setString(2, cliente.getApellido());
-    		statement.setString(3, cliente.getDireccion());	
-    		statement.execute();
-    		
-    		//me cierra todas los conexiones
-    		final ResultSet resultSet = statement.getGeneratedKeys();
-    		
-    	
-    			while(resultSet.next()) {
-    				cliente.setId(resultSet.getInt(1));
-    				System.out.println(String.format(
-    						"fue insertado el producto %s ",
-    						cliente));
-    				
-    			}
-    		}
-    
     
     //guardar
     
@@ -74,15 +54,25 @@ public class ClienteDAO {
 	}
     
     //EDITAR
-    public void Actualizar(String nombre, String apellido, String domicilio) {
+    public void Actualizar(String nombre, String apellido, String direccion, Integer id) {
 		try (PreparedStatement stm = con
-				.prepareStatement("UPDATE clientes SET nombre = ?, apellido = ?, domicilio = ? WHERE id = ?")) {
+				.prepareStatement("UPDATE clientes SET nombre = ?, apellido = ?, direccion = ? WHERE id = ?")) {
 			stm.setString(1, nombre);
 			stm.setString(2, apellido);
-			stm.setString(3, domicilio);
+			stm.setString(3, direccion);
+			stm.setInt(0, id);
 			stm.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+    
+    private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) throws SQLException {
+		try (ResultSet rst = pstm.getResultSet()) {
+			while (rst.next()) {
+				Cliente cli = new Cliente(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getString(4));
+				clientes.add((Cliente) clientes);
+			}
+		}				
 	}
 }
