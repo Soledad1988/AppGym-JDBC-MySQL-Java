@@ -16,6 +16,7 @@ public class Cliente {
 	}
 
 	public Cliente(String nombre, String apellido, String direccion) {
+		super();
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;
