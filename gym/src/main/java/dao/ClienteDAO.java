@@ -19,19 +19,14 @@ public class ClienteDAO {
 	}
     
     //guardar
-    
     public void guardar(Cliente cliente) {
 		try {
 			String sql = "INSERT INTO clientes (nombre, apellido, direccion) VALUES (?, ?, ?)";
-
 			try (PreparedStatement pstm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
 				pstm.setString(1, cliente.getNombre());
 				pstm.setString(2, cliente.getApellido());
 				pstm.setString(3, cliente.getDireccion());
-
 				pstm.execute();
-
 				try (ResultSet rst = pstm.getGeneratedKeys()) {
 					while (rst.next()) {
 						cliente.setId(rst.getInt(1));
@@ -45,7 +40,8 @@ public class ClienteDAO {
     
     //eliminar
     public void Eliminar(Integer id) {
-		try (PreparedStatement stm = con.prepareStatement("DELETE FROM clientes WHERE id = ?")) {
+    	String sql = "DELETE FROM clientes WHERE id = ?";
+		try (PreparedStatement stm = con.prepareStatement(sql)) {
 			stm.setInt(1, id);
 			stm.execute();
 		} catch (SQLException e) {
@@ -55,12 +51,12 @@ public class ClienteDAO {
     
     //EDITAR
     public void Actualizar(String nombre, String apellido, String direccion, Integer id) {
-		try (PreparedStatement stm = con
-				.prepareStatement("UPDATE clientes SET nombre = ?, apellido = ?, direccion = ? WHERE id = ?")) {
+    	String sql = "UPDATE clientes SET nombre = ?, apellido = ?, direccion = ? WHERE id = ?";
+		try (PreparedStatement stm = con.prepareStatement(sql)) {
 			stm.setString(1, nombre);
 			stm.setString(2, apellido);
 			stm.setString(3, direccion);
-			stm.setInt(0, id);
+			stm.setInt(4, id);
 			stm.execute();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
