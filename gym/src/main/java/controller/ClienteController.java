@@ -54,39 +54,32 @@ public class ClienteController {
 	}
 	
 	public int eliminar(Integer id) throws SQLException {
-		
 		final Connection con = new Conexion().recuperaConexion();
-		
 		final PreparedStatement statement = con.prepareStatement("DELETE FROM CLIENTES WHERE ID = ?");
 			statement.setInt(1, id);
 			statement.execute();
 			return statement.getUpdateCount(); //me devuelve la cantidad de filas modificadas
-		
 	}
 	
 
 
-	public int actualizar(Integer id, String nombre, String apellido, String direccion) throws SQLException {
+	public int actualizar(String nombre, String apellido, String direccion, Integer id) throws SQLException {
 		Conexion factory = new Conexion();
 	    final Connection con = factory.recuperaConexion();
-	    
-	   final  PreparedStatement statement = con.prepareStatement("UPDATE clientes SET "
-	            + " NOMBRE = ?"
-	            + ", APELLIDO = ?"
-	            + ", DOMICILIO =  ?"
-	            + " WHERE ID =  ?");
+	    final  PreparedStatement statement = con.prepareStatement("UPDATE clientes SET NOMBRE = ?, APELLIDO = ?, DIRECCION =  ? WHERE ID =  ?");
 	  
-	   		statement.setInt(0, id);
 		    statement.setString(1, nombre);
 			statement.setString(2, apellido);
 			statement.setString(3, direccion);
-		    
+			statement.setInt(4, id);
 		    statement.execute();
 	
 		    int updateCount = statement.getUpdateCount();
-	
 		    return updateCount;
 	}
+
+
+
 	
 
 }
