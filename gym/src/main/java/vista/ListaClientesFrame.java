@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -59,6 +60,9 @@ public class ListaClientesFrame extends JFrame {
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
+        
+        //modelo.addColumn(new ImageIcon(ListaClientesFrame.class.getResource("/descargas/gym.png")));
+
 
         cargarTabla();
 
@@ -149,9 +153,9 @@ public class ListaClientesFrame extends JFrame {
         });
 
         botonModificar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	
-                modificar();
+        	
+            public void actionPerformed(ActionEvent e) { 
+            	atualizar();          	
                 limpiarTabla();
                 cargarTabla();
             }
@@ -175,8 +179,9 @@ public class ListaClientesFrame extends JFrame {
     private boolean tieneFilaElegida() {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
-
-    private void modificar() {
+    
+    //*****************************************
+    private void atualizar() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
@@ -184,25 +189,26 @@ public class ListaClientesFrame extends JFrame {
 
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
-                	Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-                    String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
+                	String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
                     String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
                     String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
+                    Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
 
-                    int filasModificadas;
-
+                    int cantidadActualizada;
                     try {
-                        filasModificadas = this.clienteController.actualizar(id, nombre, apellido, direccion);
+                    	cantidadActualizada = this.clienteController.actualizar(nombre, apellido, direccion, id);	
                     } catch (SQLException e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);
                     }
+                    
+                    modelo.removeRow(tabla.getSelectedRow());
 
-                    JOptionPane.showMessageDialog(this, String.format("%d item modificado con éxito!", filasModificadas));
+                    JOptionPane.showMessageDialog(this, cantidadActualizada + " Item Modificado con éxito!");
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
     }
-    
-   
+    //****************************************
+ 
     
     private void eliminar() {
         if (tieneFilaElegida()) {
@@ -222,7 +228,6 @@ public class ListaClientesFrame extends JFrame {
                         throw new RuntimeException(e);
                     }
                     
-
                     modelo.removeRow(tabla.getSelectedRow());
 
                     JOptionPane.showMessageDialog(this, cantidadEliminada + " Item eliminado con éxito!");
@@ -256,7 +261,7 @@ public class ListaClientesFrame extends JFrame {
              
             Cliente cliente = new Cliente(textoNombre.getText(), textoApellido.getText(), textoDireccion.getText());
  			this.clienteController.guardar(cliente);
- 			dispose();
+ 			//dispose(); //me cierra el formulario automaticamente
  			
  			JOptionPane.showMessageDialog(this, "Registrado con éxito!");
 
