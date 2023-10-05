@@ -79,7 +79,30 @@ public class ClienteController {
 	}
 
 
+	public List<Map<String,String>> cargaReporte() throws SQLException {
+		
+		Conexion factory = new Conexion();
+		final Connection con = factory.recuperaConexion();
+		  
+			final PreparedStatement statement = con.prepareStatement("SELECT NOMBRE, APELLIDO, FROM CLIENTES");
+	        
+			statement.execute();
 
+	        ResultSet resultSet = statement.getResultSet();
+
+	        List<Map<String, String>> resultado = new ArrayList<>();
+
+	      //leemos el contendio para agregrlo a un listado
+	        while (resultSet.next()) {
+	            Map<String, String> fila = new HashMap<>();
+	            fila.put("NOMBRE", resultSet.getString("NOMBRE"));
+	            fila.put("APELLIDO", resultSet.getString("APELLIDO"));
+
+	            resultado.add(fila);
+	        }
+			
+		return resultado;
+    }
 	
 
 }
