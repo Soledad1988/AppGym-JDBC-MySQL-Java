@@ -163,14 +163,19 @@ public class ListaClientesFrame extends JFrame {
 
         botonReporte.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-               // abrirReporte();
+                try {
+					abrirReporte();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
     }
 
-   /* private void abrirReporte() {
-        new ReporteFrame(this);
-    }*/
+    private void abrirReporte() throws SQLException {
+        new ReporteClientes(this);
+    }
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
