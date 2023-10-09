@@ -2,18 +2,16 @@ package vista;
 
 import java.awt.Color;
 import java.awt.Container;
+import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,6 +34,19 @@ public class ListaClientesFrame extends JFrame {
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
+    
+    public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					ListaClientesFrame frame = new ListaClientesFrame();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 
     public ListaClientesFrame() {
         super("Clientes");
@@ -51,6 +62,7 @@ public class ListaClientesFrame extends JFrame {
 
         configurarAccionesDelFormulario();
     }
+    
 
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
@@ -159,9 +171,10 @@ public class ListaClientesFrame extends JFrame {
                 limpiarTabla();
                 cargarTabla();
             }
+            
         });
 
-        botonReporte.addActionListener(new ActionListener() {
+     /*   botonReporte.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
 					abrirReporte();
@@ -170,12 +183,13 @@ public class ListaClientesFrame extends JFrame {
 					e1.printStackTrace();
 				}
             }
-        });
+        });*/
     }
 
-    private void abrirReporte() throws SQLException {
-        new ReporteClientes(this);
-    }
+    
+   // private void abrirReporte() throws SQLException {
+   //     new ReporteClientes(this);
+    //}
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -240,26 +254,24 @@ public class ListaClientesFrame extends JFrame {
     }
     
     
-    
     private void cargarTabla() {
-        List<Map<String, String>> productos = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> clientes = new ArrayList<Map<String, String>>();
 
         try {
-            productos = this.clienteController.listar();
+        	clientes = this.clienteController.listar();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
 
-        productos.forEach(producto -> modelo.addRow(
+        clientes.forEach(producto -> modelo.addRow(
                 new Object[] {
-                        producto.get("ID"),
-                        producto.get("NOMBRE"),
-                        producto.get("APELLIDO"),
-                        producto.get("DIRECCION") }));
+                        producto.get("id"),
+                        producto.get("nombre"),
+                        producto.get("apellido"),
+                        producto.get("direccion") }));
     }
         
-    
     //------------------------------------------
     
     private void guardar() throws SQLException {
