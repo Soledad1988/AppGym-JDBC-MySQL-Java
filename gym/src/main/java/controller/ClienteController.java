@@ -23,7 +23,7 @@ public class ClienteController {
 		Conexion factory = new Conexion();
 		final Connection con = factory.recuperaConexion();
 		  
-			final PreparedStatement statement = con.prepareStatement("SELECT ID, NOMBRE, APELLIDO, DIRECCION FROM CLIENTES");
+			final PreparedStatement statement = con.prepareStatement("SELECT id, nombre, apellido, direccion FROM clientes");
 	        
 			statement.execute();
 
@@ -34,10 +34,10 @@ public class ClienteController {
 	      //leemos el contendio para agregrlo a un listado
 	        while (resultSet.next()) {
 	            Map<String, String> fila = new HashMap<>();
-	            fila.put("ID", String.valueOf(resultSet.getInt("ID")));
-	            fila.put("NOMBRE", resultSet.getString("NOMBRE"));
-	            fila.put("APELLIDO", resultSet.getString("APELLIDO"));
-	            fila.put("DIRECCION", resultSet.getString("DIRECCION"));
+	            fila.put("id", String.valueOf(resultSet.getInt("id")));
+	            fila.put("nombre", resultSet.getString("nombre"));
+	            fila.put("apellido", resultSet.getString("apellido"));
+	            fila.put("direccion", resultSet.getString("direccion"));
 
 	            resultado.add(fila);
 	        }
@@ -46,6 +46,32 @@ public class ClienteController {
 	
 	}
 	
+	
+	//listar reporte
+	public List<Map<String,String>> reporte() throws SQLException {
+		Conexion factory = new Conexion();
+		final Connection con = factory.recuperaConexion();
+		  
+			final PreparedStatement statement = con.prepareStatement("SELECT nombre, apellido FROM clientes");
+	        
+			statement.execute();
+
+	        ResultSet resultSet = statement.getResultSet();
+
+	        List<Map<String, String>> resultado = new ArrayList<>();
+
+	      //leemos el contendio para agregrlo a un listado
+	        while (resultSet.next()) {
+	            Map<String, String> fila = new HashMap<>();
+	            fila.put("nombre", resultSet.getString("nombre"));
+	            fila.put("apellido", resultSet.getString("apellido"));
+
+	            resultado.add(fila);
+	        }
+			
+		return resultado;
+	
+	}
 	//guardar
 	public void guardar(Cliente cliente) throws SQLException {
     	ClienteDAO clienteDao = new ClienteDAO(new Conexion().recuperaConexion());
@@ -55,7 +81,7 @@ public class ClienteController {
 	
 	public int eliminar(Integer id) throws SQLException {
 		final Connection con = new Conexion().recuperaConexion();
-		final PreparedStatement statement = con.prepareStatement("DELETE FROM CLIENTES WHERE ID = ?");
+		final PreparedStatement statement = con.prepareStatement("DELETE FROM clientes WHERE id = ?");
 			statement.setInt(1, id);
 			statement.execute();
 			return statement.getUpdateCount(); //me devuelve la cantidad de filas modificadas
@@ -66,7 +92,7 @@ public class ClienteController {
 	public int actualizar(String nombre, String apellido, String direccion, Integer id) throws SQLException {
 		Conexion factory = new Conexion();
 	    final Connection con = factory.recuperaConexion();
-	    final  PreparedStatement statement = con.prepareStatement("UPDATE clientes SET NOMBRE = ?, APELLIDO = ?, DIRECCION =  ? WHERE ID =  ?");
+	    final  PreparedStatement statement = con.prepareStatement("UPDATE clientes SET nombre = ?, apellido = ?, direccion =  ? WHERE id =  ?");
 	  
 		    statement.setString(1, nombre);
 			statement.setString(2, apellido);
@@ -79,12 +105,12 @@ public class ClienteController {
 	}
 
 
-	public List<Map<String,String>> cargaReporte() throws SQLException {
+	/*public List<Map<String,String>> cargaReporte() throws SQLException {
 		
 		Conexion factory = new Conexion();
 		final Connection con = factory.recuperaConexion();
 		  
-			final PreparedStatement statement = con.prepareStatement("SELECT NOMBRE, APELLIDO, FROM CLIENTES");
+			final PreparedStatement statement = con.prepareStatement("SELECT nombre, apellido, FROM clientes");
 	        
 			statement.execute();
 
@@ -95,14 +121,14 @@ public class ClienteController {
 	      //leemos el contendio para agregrlo a un listado
 	        while (resultSet.next()) {
 	            Map<String, String> fila = new HashMap<>();
-	            fila.put("NOMBRE", resultSet.getString("NOMBRE"));
-	            fila.put("APELLIDO", resultSet.getString("APELLIDO"));
+	            fila.put("nombre", resultSet.getString("nombre"));
+	            fila.put("apellido", resultSet.getString("apellido"));
 
 	            resultado.add(fila);
 	        }
 			
 		return resultado;
-    }
+    }*/
 	
 
 }
