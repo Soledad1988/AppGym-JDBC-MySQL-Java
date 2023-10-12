@@ -3,6 +3,8 @@ package vista;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -11,16 +13,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
 import gym.modelo.Cliente;
+import java.sql.Date;
 
 
 
@@ -34,6 +41,9 @@ public class ListaClientesFrame extends JFrame {
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
+    
+    public static JDateChooser textFechaIngreso;
+    private JTextField textPrecio;
     
     public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -54,11 +64,58 @@ public class ListaClientesFrame extends JFrame {
         this.clienteController = new ClienteController();
 
         Container container = getContentPane();
-        setLayout(null);
+        getContentPane().setLayout(null);
 
         configurarCamposDelFormulario(container);
 
         configurarTablaDeContenido(container);
+        
+        
+        JLabel labelFecha = new JLabel("Fecha Ingreso");
+        labelFecha.setForeground(Color.BLACK);
+        labelFecha.setBounds(10, 33, 240, 15);
+        getContentPane().add(labelFecha);
+        
+        /*----------------------------------*/
+        
+        textFechaIngreso = new JDateChooser();
+        textFechaIngreso.getCalendarButton().addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        textFechaIngreso.getCalendarButton().setBackground(SystemColor.textHighlight);
+        //textFechaIngreso.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/icon-reservas.png")));
+        textFechaIngreso.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
+        textFechaIngreso.setBounds(10, 48, 265, 23);
+        textFechaIngreso.getCalendarButton().setBounds(268, 0, 21, 33);
+        textFechaIngreso.setBackground(Color.WHITE);
+        textFechaIngreso.setBorder(new LineBorder(SystemColor.window));
+        textFechaIngreso.setDateFormatString("yyyy-MM-dd");
+        textFechaIngreso.setFont(new Font("Roboto", Font.PLAIN, 18));
+		//panel.add(textFechaIngreso);
+        getContentPane().add(textFechaIngreso);
+        
+        JLabel lblPrecio = new JLabel("Precio");
+        lblPrecio.setForeground(Color.BLACK);
+        lblPrecio.setBounds(10, 220, 240, 15);
+        getContentPane().add(lblPrecio);
+        
+        textPrecio = new JTextField();
+        textPrecio.setBounds(10, 234, 265, 20);
+        getContentPane().add(textPrecio);
+        
+        JLabel Logo = new JLabel("");
+        Logo.setIcon(new ImageIcon("D:\\Users\\Brenda\\Downloads\\gym.png"));
+        Logo.setBounds(401, 48, 281, 212);
+        getContentPane().add(Logo);
+        
+        JLabel lblTitulo = new JLabel("Registro Clientes");
+        lblTitulo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
+        lblTitulo.setBounds(275, 0, 213, 30);
+        getContentPane().add(lblTitulo);
+        
+        
+        
 
         configurarAccionesDelFormulario();
     }
@@ -69,23 +126,25 @@ public class ListaClientesFrame extends JFrame {
 
         modelo = (DefaultTableModel) tabla.getModel();
         modelo.addColumn("Id");
+        modelo.addColumn("Fecha Alta");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
+        modelo.addColumn("Pago");
         
         //modelo.addColumn(new ImageIcon(ListaClientesFrame.class.getResource("/descargas/gym.png")));
 
 
         cargarTabla();
 
-        tabla.setBounds(10, 205, 760, 280);
+        tabla.setBounds(10, 286, 760, 240);
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
         botonReporte = new JButton("Ver Reporte");
-        botonEliminar.setBounds(10, 500, 80, 20);
-        botonModificar.setBounds(100, 500, 80, 20);
-        botonReporte.setBounds(190, 500, 80, 20);
+        botonEliminar.setBounds(15, 530, 80, 20);
+        botonModificar.setBounds(105, 530, 80, 20);
+        botonReporte.setBounds(195, 530, 80, 20);
 
         container.add(tabla);
         container.add(botonEliminar);
@@ -102,9 +161,9 @@ public class ListaClientesFrame extends JFrame {
         labelApellido = new JLabel("Apellido");
         labelDireccion = new JLabel("Direccion");
 
-        labelNombre.setBounds(10, 10, 240, 15);
-        labelApellido.setBounds(10, 50, 240, 15);
-        labelDireccion.setBounds(10, 90, 240, 15);
+        labelNombre.setBounds(10, 82, 240, 15);
+        labelApellido.setBounds(10, 128, 240, 15);
+        labelDireccion.setBounds(10, 174, 240, 15);
 
         labelNombre.setForeground(Color.BLACK);
         labelApellido.setForeground(Color.BLACK);
@@ -116,14 +175,14 @@ public class ListaClientesFrame extends JFrame {
 
         // TODO
         
-        textoNombre.setBounds(10, 25, 265, 20);
-        textoApellido.setBounds(10, 65, 265, 20);
-        textoDireccion.setBounds(10, 105, 265, 20);
+        textoNombre.setBounds(10, 97, 265, 20);
+        textoApellido.setBounds(10, 143, 265, 20);
+        textoDireccion.setBounds(10, 189, 265, 20);
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(10, 175, 80, 20);
-        botonLimpiar.setBounds(100, 175, 80, 20);
+        botonGuardar.setBounds(15, 265, 80, 20);
+        botonLimpiar.setBounds(105, 265, 80, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);
@@ -208,14 +267,16 @@ public class ListaClientesFrame extends JFrame {
 
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
-                	String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
-                    String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-                    String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
+                	Date fechaAlta = (Date) modelo.getValueAt(tabla.getSelectedRow(), 1);
+                	String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+                    String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
+                    String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 4);
+                    Double precio = Double.parseDouble(textPrecio.getText());
                     Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
 
                     int cantidadActualizada;
                     try {
-                    	cantidadActualizada = this.clienteController.actualizar(nombre, apellido, direccion, id);	
+                    	cantidadActualizada = this.clienteController.actualizar(fechaAlta, nombre, apellido, direccion, precio, id);	
                     } catch (SQLException e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);
@@ -266,23 +327,29 @@ public class ListaClientesFrame extends JFrame {
 
         clientes.forEach(producto -> modelo.addRow(
                 new Object[] {
-                        producto.get("id"),
-                        producto.get("nombre"),
-                        producto.get("apellido"),
-                        producto.get("direccion") }));
+                		 producto.get("id"),
+                         producto.get("fechaAlta"),
+                         producto.get("nombre"),
+                         producto.get("apellido"),
+                         producto.get("direccion"), 
+                         producto.get("precio")}));
     }
         
     //------------------------------------------
     
     private void guardar() throws SQLException {
              
-            Cliente cliente = new Cliente(textoNombre.getText(), textoApellido.getText(), textoDireccion.getText());
- 			this.clienteController.guardar(cliente);
- 			//dispose(); //me cierra el formulario automaticamente
+    	String fechaIngreso = ((JTextField)textFechaIngreso.getDateEditor().getUiComponent()).getText();
+    	Double precio = Double.parseDouble(textPrecio.getText());
+		
+		  Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
+          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),precio);
+		
+		this.clienteController.guardar(cliente);
  			
- 			JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+ 		JOptionPane.showMessageDialog(this, "Registrado con éxito!");
 
- 	        this.limpiarFormulario();
+ 	    this.limpiarFormulario();
     							
     }
     
@@ -291,9 +358,11 @@ public class ListaClientesFrame extends JFrame {
    
     //formula limpiar fomulario
     private void limpiarFormulario() {
+    	this.textFechaIngreso.setDate(null);
         this.textoNombre.setText("");
         this.textoApellido.setText("");
         this.textoDireccion.setText("");
+        this.textPrecio.setText("");
     }
 
 }
