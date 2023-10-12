@@ -24,6 +24,8 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
+import controller.ReporteController;
+
 import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -45,7 +47,8 @@ public class ReporteClientes extends JFrame {
 	private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonReporte;
 	
 
-    private ClienteController clienteController;
+    //private ClienteController clienteController;
+    private ReporteController reporteControler;
     private JTextField textTotal;
     
     
@@ -64,7 +67,7 @@ public class ReporteClientes extends JFrame {
 
     public ReporteClientes() {
     	super("Lista Clientes");
-    	this.clienteController = new ClienteController();
+    	this.reporteControler = new ReporteController();
     	
     	Container container = getContentPane();
         getContentPane().setLayout(null);
@@ -104,8 +107,10 @@ public class ReporteClientes extends JFrame {
         tabla = new JTable();
 
         modelo = (DefaultTableModel) tabla.getModel();
+        modelo.addColumn("Fecha Alta");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
+        modelo.addColumn("Precio");
     
         cargarTabla();
 
@@ -134,7 +139,7 @@ public class ReporteClientes extends JFrame {
         List<Map<String, String>> clientes = new ArrayList<Map<String, String>>();
 
         try {
-        	clientes = this.clienteController.reporte();
+        	clientes = this.reporteControler.reporte();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -142,7 +147,9 @@ public class ReporteClientes extends JFrame {
 
         clientes.forEach(producto -> modelo.addRow(
                 new Object[] {
+                		producto.get("fechaAlta"),
                         producto.get("nombre"),
-                        producto.get("apellido")}));
+                        producto.get("apellido"),
+                        producto.get("precio")}));
     }
 }
