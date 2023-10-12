@@ -1,25 +1,33 @@
 package gym.modelo;
 
+import java.sql.Date;
+
 public class Cliente {
 
 	Integer id;
+	Date fechaAlta;
 	String nombre;
 	String apellido;
 	String direccion;
+	double precio;
 	
-	public Cliente(Integer id, String nombre, String apellido, String direccion) {
+	public Cliente(Integer id, Date fechaAlta, String nombre, String apellido, String direccion,
+			double precio) {
 		super();
 		this.id = id;
+		this.fechaAlta = fechaAlta;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;
+		this.precio = precio;
 	}
 
-	public Cliente(String nombre, String apellido, String direccion) {
-		super();
+	public Cliente(Date fechaAlta, String nombre, String apellido, String direccion, double precio) {
+		this.fechaAlta = fechaAlta;
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;
+		this.precio = precio;
 	}
 
 	public Integer getId() {
@@ -28,6 +36,14 @@ public class Cliente {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public Date getFechaAlta() {
+		return fechaAlta;
+	}
+
+	public void setFechaAlta(Date fechaAlta) {
+		this.fechaAlta = fechaAlta;
 	}
 
 	public String getNombre() {
@@ -42,19 +58,24 @@ public class Cliente {
 		return apellido;
 	}
 
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
 
 	public String getDireccion() {
 		return direccion;
 	}
 
-	
-	@Override
-	public String toString() {
-		return String.format(
-				"{id: %s, nombre: %s, apellido: %s, direccion: %d}",
-				this.id,
-				this.nombre,
-				this.apellido,
-				this.direccion);
-		}
+	public void setDireccion(String direccion) {
+		this.direccion = direccion;
+	}
+
+	public double getPrecio() {
+		return precio;
+	}
+
+	public void setPrecio(double precio) {
+		this.precio = precio;
+	}
+
 }
