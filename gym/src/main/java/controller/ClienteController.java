@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,7 +24,7 @@ public class ClienteController {
 		Conexion factory = new Conexion();
 		final Connection con = factory.recuperaConexion();
 		  
-			final PreparedStatement statement = con.prepareStatement("SELECT id, nombre, apellido, direccion FROM clientes");
+			final PreparedStatement statement = con.prepareStatement("SELECT id, fechaAlta, nombre, apellido, direccion, precio FROM clientes");
 	        
 			statement.execute();
 
@@ -35,9 +36,11 @@ public class ClienteController {
 	        while (resultSet.next()) {
 	            Map<String, String> fila = new HashMap<>();
 	            fila.put("id", String.valueOf(resultSet.getInt("id")));
+	            fila.put("fechaAlta", String.valueOf(resultSet.getDate("fechaAlta")));
 	            fila.put("nombre", resultSet.getString("nombre"));
 	            fila.put("apellido", resultSet.getString("apellido"));
 	            fila.put("direccion", resultSet.getString("direccion"));
+	            fila.put("precio", String.valueOf(resultSet.getDouble("precio")));
 
 	            resultado.add(fila);
 	        }
@@ -47,31 +50,7 @@ public class ClienteController {
 	}
 	
 	
-	//listar reporte
-	public List<Map<String,String>> reporte() throws SQLException {
-		Conexion factory = new Conexion();
-		final Connection con = factory.recuperaConexion();
-		  
-			final PreparedStatement statement = con.prepareStatement("SELECT nombre, apellido FROM clientes");
-	        
-			statement.execute();
-
-	        ResultSet resultSet = statement.getResultSet();
-
-	        List<Map<String, String>> resultado = new ArrayList<>();
-
-	      //leemos el contendio para agregrlo a un listado
-	        while (resultSet.next()) {
-	            Map<String, String> fila = new HashMap<>();
-	            fila.put("nombre", resultSet.getString("nombre"));
-	            fila.put("apellido", resultSet.getString("apellido"));
-
-	            resultado.add(fila);
-	        }
-			
-		return resultado;
 	
-	}
 	//guardar
 	public void guardar(Cliente cliente) throws SQLException {
     	ClienteDAO clienteDao = new ClienteDAO(new Conexion().recuperaConexion());
@@ -89,15 +68,17 @@ public class ClienteController {
 	
 
 
-	public int actualizar(String nombre, String apellido, String direccion, Integer id) throws SQLException {
+	public int actualizar(Date fechaAlta, String nombre, String apellido, String direccion, Double precio, Integer id) throws SQLException {
 		Conexion factory = new Conexion();
 	    final Connection con = factory.recuperaConexion();
-	    final  PreparedStatement statement = con.prepareStatement("UPDATE clientes SET nombre = ?, apellido = ?, direccion =  ? WHERE id =  ?");
+	    final  PreparedStatement statement = con.prepareStatement("UPDATE clientes SET fechaAlta = ?, nombre = ?, apellido = ?, direccion =  ? precio = ? WHERE id =  ?");
 	  
-		    statement.setString(1, nombre);
-			statement.setString(2, apellido);
-			statement.setString(3, direccion);
-			statement.setInt(4, id);
+	    	statement.setDate(1, fechaAlta);
+		    statement.setString(2, nombre);
+			statement.setString(3, apellido);
+			statement.setString(4, direccion);
+			statement.setDouble(5, precio);
+			statement.setInt(6, id);
 		    statement.execute();
 	
 		    int updateCount = statement.getUpdateCount();
