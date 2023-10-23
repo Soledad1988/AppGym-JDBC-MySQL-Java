@@ -19,6 +19,19 @@ public class ClienteController {
 	
 	private ClienteDAO clienteDAO;
 
+	/*public List<Cliente> listar() {
+		return this.clienteDAO.listar();
+	}
+	
+	
+	public void actualizar(Date fechaAlta, String nombre, String apellido, String direccion, Double precio, Integer id) {
+		this.clienteDAO.actualizar(fechaAlta, nombre, apellido, direccion, precio, id);
+	}
+	
+	public void eliminar(Integer id) {
+		this.clienteDAO.eliminar(id);
+	}*/
+
 	//Listar
 	public List<Map<String,String>> listar() throws SQLException {
 		Conexion factory = new Conexion();
@@ -57,6 +70,8 @@ public class ClienteController {
     	clienteDao.guardar(cliente);
     	
 	}
+
+	
 	
 	public int eliminar(Integer id) throws SQLException {
 		final Connection con = new Conexion().recuperaConexion();
@@ -68,6 +83,7 @@ public class ClienteController {
 	
 
 
+	
 	public int actualizar(Date fechaAlta, String nombre, String apellido, String direccion, Double precio, Integer id) throws SQLException {
 		Conexion factory = new Conexion();
 	    final Connection con = factory.recuperaConexion();
@@ -84,32 +100,6 @@ public class ClienteController {
 		    int updateCount = statement.getUpdateCount();
 		    return updateCount;
 	}
-
-
-	/*public List<Map<String,String>> cargaReporte() throws SQLException {
-		
-		Conexion factory = new Conexion();
-		final Connection con = factory.recuperaConexion();
-		  
-			final PreparedStatement statement = con.prepareStatement("SELECT nombre, apellido, FROM clientes");
-	        
-			statement.execute();
-
-	        ResultSet resultSet = statement.getResultSet();
-
-	        List<Map<String, String>> resultado = new ArrayList<>();
-
-	      //leemos el contendio para agregrlo a un listado
-	        while (resultSet.next()) {
-	            Map<String, String> fila = new HashMap<>();
-	            fila.put("nombre", resultSet.getString("nombre"));
-	            fila.put("apellido", resultSet.getString("apellido"));
-
-	            resultado.add(fila);
-	        }
-			
-		return resultado;
-    }*/
 	
 
 }
