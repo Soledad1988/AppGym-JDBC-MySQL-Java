@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import javax.sql.DataSource;
-import com.mchange.v2.c3p0.*;
 
 
 //conectamos a la base de datos
@@ -16,7 +15,7 @@ public class Conexion {
 		return DriverManager.getConnection(
               "jdbc:mysql://localhost/baseClientes?useTimeZone=true&serverTimeZone=UTC",
               "root",
-              "12345678");
+              "root");
 	}
 	
 }

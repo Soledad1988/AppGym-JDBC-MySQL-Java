@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import gym.modelo.Cliente;
@@ -42,7 +43,7 @@ public class ClienteDAO {
 	}
     
     //eliminar
-    public void Eliminar(Integer id) {
+    public void eliminar(Integer id) {
     	String sql = "DELETE FROM clientes WHERE id = ?";
 		try (PreparedStatement stm = con.prepareStatement(sql)) {
 			stm.setInt(1, id);
@@ -53,16 +54,33 @@ public class ClienteDAO {
 	}
     
     //EDITAR
-    public void Actualizar(Date fechaAlta, String nombre, String apellido, String direccion, Double precio, Integer id) {
+    public void actualizar(Date fechaAlta, String nombre, String apellido, String direccion, Double precio, Integer id) {
     	String sql = "UPDATE clientes SET fechaAlta = ? nombre = ?, apellido = ?, direccion = ? precio = ? WHERE id = ?";
 		try (PreparedStatement stm = con.prepareStatement(sql)) {
 			stm.setDate(1, fechaAlta);
 			stm.setString(2, nombre);
 			stm.setString(3, apellido);
 			stm.setString(4, direccion);
-			stm.setDouble(4, precio);
-			stm.setInt(5, id);
+			stm.setDouble(5, precio);
+			stm.setInt(6, id);
 			stm.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+    
+    //nuevo
+    public List<Cliente> listar() {
+		List<Cliente> cliente = new ArrayList<Cliente>();
+		try {
+			String sql = "SELECT id, fechaAlta, nombre, apellido, direccion, precio FROM clientes";
+
+			try (PreparedStatement pstm = con.prepareStatement(sql)) {
+				pstm.execute();
+
+				transformarResultSetEnCliente(cliente, pstm);
+			}
+			return cliente;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
