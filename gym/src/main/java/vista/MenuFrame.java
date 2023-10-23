@@ -20,6 +20,7 @@ public class MenuFrame extends JFrame {
 	 
 	 ListaClientesFrame listaClientesFrame;
 	 ReporteClientes reporteClientes;
+	 ReporteGastos reporteGastos;
 	
 	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -89,8 +90,21 @@ public class MenuFrame extends JFrame {
 		reporteGastos.setBounds(91, 200, 115, 23);
 		contentPane.add(reporteGastos);
 		
+		reporteGastos.addActionListener(new ActionListener() {
+        	
+            public void actionPerformed(ActionEvent e) { 
+            	try {
+            		abrirReporteGastos();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            }
+            
+        });
+		
 		JLabel logo = new JLabel("New label");
-		logo.setIcon(new ImageIcon("D:\\Users\\Brenda\\Downloads\\gym.png"));
+		logo.setIcon(new ImageIcon("C:\\Users\\brent\\eclipse-workspace\\gym.png"));
 		logo.setBounds(326, 34, 274, 243);
 		contentPane.add(logo);
 
@@ -105,5 +119,9 @@ public class MenuFrame extends JFrame {
 	   
 	   private void abrirReporte() throws SQLException {
 	       reporteClientes = new ReporteClientes();
+	    }
+	   
+	   private void abrirReporteGastos() throws SQLException {
+	       reporteGastos = new ReporteGastos();
 	    }
 }

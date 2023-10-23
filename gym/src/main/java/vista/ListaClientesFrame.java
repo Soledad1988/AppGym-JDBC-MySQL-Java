@@ -37,10 +37,11 @@ public class ListaClientesFrame extends JFrame {
 
     private JLabel labelNombre, labelApellido, labelDireccion;
     private JTextField textoNombre, textoApellido, textoDireccion;
-    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonReporte;
+    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonMenu;
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
+    private MenuFrame menuFrame;
     
     public static JDateChooser textFechaIngreso;
     private JTextField textPrecio;
@@ -84,7 +85,6 @@ public class ListaClientesFrame extends JFrame {
         	}
         });
         textFechaIngreso.getCalendarButton().setBackground(SystemColor.textHighlight);
-        //textFechaIngreso.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/icon-reservas.png")));
         textFechaIngreso.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
         textFechaIngreso.setBounds(10, 48, 265, 23);
         textFechaIngreso.getCalendarButton().setBounds(268, 0, 21, 33);
@@ -105,7 +105,7 @@ public class ListaClientesFrame extends JFrame {
         getContentPane().add(textPrecio);
         
         JLabel Logo = new JLabel("");
-        Logo.setIcon(new ImageIcon("D:\\Users\\Brenda\\Downloads\\gym.png"));
+        Logo.setIcon(new ImageIcon("C:\\Users\\brent\\eclipse-workspace\\gym.png"));
         Logo.setBounds(401, 48, 281, 212);
         getContentPane().add(Logo);
         
@@ -113,9 +113,6 @@ public class ListaClientesFrame extends JFrame {
         lblTitulo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
         lblTitulo.setBounds(275, 0, 213, 30);
         getContentPane().add(lblTitulo);
-        
-        
-        
 
         configurarAccionesDelFormulario();
     }
@@ -131,8 +128,6 @@ public class ListaClientesFrame extends JFrame {
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
         modelo.addColumn("Pago");
-        
-        //modelo.addColumn(new ImageIcon(ListaClientesFrame.class.getResource("/descargas/gym.png")));
 
 
         cargarTabla();
@@ -141,20 +136,23 @@ public class ListaClientesFrame extends JFrame {
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
-        botonReporte = new JButton("Ver Reporte");
+        botonMenu = new JButton("Menù");
+        
         botonEliminar.setBounds(15, 530, 80, 20);
         botonModificar.setBounds(105, 530, 80, 20);
-        botonReporte.setBounds(195, 530, 80, 20);
+        botonMenu.setBounds(195, 530, 80, 20);
+        
 
         container.add(tabla);
         container.add(botonEliminar);
         container.add(botonModificar);
-        container.add(botonReporte);
+        container.add(botonMenu);
 
         setSize(800, 600);
         setVisible(true);
         setLocationRelativeTo(null);
     }
+
 
     private void configurarCamposDelFormulario(Container container) {
         labelNombre = new JLabel("Nombre");
@@ -224,7 +222,6 @@ public class ListaClientesFrame extends JFrame {
         });
 
         botonModificar.addActionListener(new ActionListener() {
-        	
             public void actionPerformed(ActionEvent e) { 
             	atualizar();          	
                 limpiarTabla();
@@ -232,23 +229,20 @@ public class ListaClientesFrame extends JFrame {
             }
             
         });
-
-     /*   botonReporte.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                try {
-					abrirReporte();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+        
+        botonMenu.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) { 
+            	volverMenu();          	
             }
-        });*/
+            
+        });
+
     }
 
     
-   // private void abrirReporte() throws SQLException {
-   //     new ReporteClientes(this);
-    //}
+    private void volverMenu(){
+        menuFrame = new MenuFrame();
+    }
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -259,6 +253,7 @@ public class ListaClientesFrame extends JFrame {
     }
     
     //*****************************************
+   
     private void atualizar() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
@@ -315,9 +310,12 @@ public class ListaClientesFrame extends JFrame {
     }
     
     
+    
+    
+    
     private void cargarTabla() {
-        List<Map<String, String>> clientes = new ArrayList<Map<String, String>>();
-
+    	List<Map<String, String>> clientes = new ArrayList<Map<String, String>>();
+        
         try {
         	clientes = this.clienteController.listar();
         } catch (SQLException e) {
@@ -325,14 +323,15 @@ public class ListaClientesFrame extends JFrame {
             throw new RuntimeException(e);
         }
 
-        clientes.forEach(producto -> modelo.addRow(
+        
+        clientes.forEach(cliente -> modelo.addRow(
                 new Object[] {
-                		 producto.get("id"),
-                         producto.get("fechaAlta"),
-                         producto.get("nombre"),
-                         producto.get("apellido"),
-                         producto.get("direccion"), 
-                         producto.get("precio")}));
+                		 cliente.get("id"),
+                         cliente.get("fechaAlta"),
+                         cliente.get("nombre"),
+                         cliente.get("apellido"),
+                         cliente.get("direccion"), 
+                         cliente.get("precio")}));
     }
         
     //------------------------------------------
@@ -355,6 +354,8 @@ public class ListaClientesFrame extends JFrame {
     
     //******************************************
 
+    
+    
    
     //formula limpiar fomulario
     private void limpiarFormulario() {

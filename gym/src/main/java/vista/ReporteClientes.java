@@ -116,24 +116,12 @@ public class ReporteClientes extends JFrame {
 
         tabla.setBounds(10, 205, 760, 280);
 
-        botonEliminar = new JButton("Deudores");
-        botonModificar = new JButton("Modificar");
-        botonReporte = new JButton("Ver Reporte");
-        botonEliminar.setBounds(10, 500, 80, 20);
-        botonModificar.setBounds(100, 500, 80, 20);
-        botonReporte.setBounds(190, 500, 80, 20);
-
         container.add(tabla);
-        /*container.add(botonEliminar);
-        container.add(botonModificar);
-        container.add(botonReporte);*/
 
         setSize(800, 600);
         setVisible(true);
         setLocationRelativeTo(null);
     }
-
-
 
     private void cargarTabla() {
         List<Map<String, String>> clientes = new ArrayList<Map<String, String>>();
