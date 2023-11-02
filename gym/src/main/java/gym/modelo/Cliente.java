@@ -4,12 +4,12 @@ import java.sql.Date;
 
 public class Cliente {
 
-	Integer id;
-	Date fechaAlta;
-	String nombre;
-	String apellido;
-	String direccion;
-	double precio;
+	private Integer id;
+	private Date fechaAlta;
+	private String nombre;
+	private String apellido;
+	private String direccion;
+	private double precio;
 	
 	public Cliente(Integer id, Date fechaAlta, String nombre, String apellido, String direccion,
 			double precio) {
@@ -24,6 +24,13 @@ public class Cliente {
 
 	public Cliente(Date fechaAlta, String nombre, String apellido, String direccion, double precio) {
 		this.fechaAlta = fechaAlta;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.direccion = direccion;
+		this.precio = precio;
+	}
+
+	public Cliente(String nombre, String apellido, String direccion, double precio) {
 		this.nombre = nombre;
 		this.apellido = apellido;
 		this.direccion = direccion;

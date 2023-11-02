@@ -42,5 +42,7 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mchange-commons-java-0.2.16"/>
 	<classpathentry kind="lib" path="C:/Users/brent/eclipse-workspace/drivers/mysql-connector-j-8.1.0/mysql-connector-j-8.1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Users/brent/eclipse-workspace/drivers/jcalendar-1.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/brent/eclipse-workspace/drivers/jar_files/c3p0-0.9.5.4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/brent/eclipse-workspace/drivers/jar_files/mchange-commons-java-0.2.15.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
