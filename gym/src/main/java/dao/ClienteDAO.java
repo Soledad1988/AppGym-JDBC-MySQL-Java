@@ -54,20 +54,20 @@ public class ClienteDAO {
 	}
     
     //EDITAR
-    public void actualizar(Date fechaAlta, String nombre, String apellido, String direccion, Double precio, Integer id) {
-    	String sql = "UPDATE clientes SET fechaAlta = ? nombre = ?, apellido = ?, direccion = ? precio = ? WHERE id = ?";
+    public void actualizar(String nombre, String apellido, String direccion, double precio, Integer id) {
+    	String sql = "UPDATE clientes SET nombre = ?, apellido = ?, direccion = ?, precio = ? WHERE id = ?";
 		try (PreparedStatement stm = con.prepareStatement(sql)) {
-			stm.setDate(1, fechaAlta);
-			stm.setString(2, nombre);
-			stm.setString(3, apellido);
-			stm.setString(4, direccion);
-			stm.setDouble(5, precio);
-			stm.setInt(6, id);
-			stm.execute();
+			stm.setString(1, nombre);
+			stm.setString(2, apellido);
+			stm.setString(3, direccion);
+			stm.setDouble(4, precio);
+			stm.setInt(5, id);
+			stm.executeUpdate();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
+    
     
     //nuevo
     public List<Cliente> listar() {
@@ -89,9 +89,9 @@ public class ClienteDAO {
     private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) throws SQLException {
 		try (ResultSet rst = pstm.getResultSet()) {
 			while (rst.next()) {
-				Cliente cli = new Cliente(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
+				Cliente cliente = new Cliente(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
 						rst.getString(5), rst.getDouble(6));
-				clientes.add((Cliente) clientes);
+				clientes.add(cliente);
 			}
 		}				
 	}
