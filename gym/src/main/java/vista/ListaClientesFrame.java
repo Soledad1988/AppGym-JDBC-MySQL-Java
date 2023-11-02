@@ -26,7 +26,9 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
+import controller.ClienteController;
 import gym.modelo.Cliente;
+
 import java.sql.Date;
 
 
@@ -162,7 +164,7 @@ public class ListaClientesFrame extends JFrame {
         labelNombre.setBounds(10, 82, 240, 15);
         labelApellido.setBounds(10, 128, 240, 15);
         labelDireccion.setBounds(10, 174, 240, 15);
-
+        
         labelNombre.setForeground(Color.BLACK);
         labelApellido.setForeground(Color.BLACK);
         labelDireccion.setForeground(Color.BLACK);
@@ -223,7 +225,7 @@ public class ListaClientesFrame extends JFrame {
 
         botonModificar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) { 
-            	atualizar();          	
+            	actualizar();         	
                 limpiarTabla();
                 cargarTabla();
             }
@@ -252,36 +254,23 @@ public class ListaClientesFrame extends JFrame {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
     
-    //*****************************************
-   
-    private void atualizar() {
-        if (tieneFilaElegida()) {
-            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
-            return;
-        }
-
-        Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-                .ifPresentOrElse(fila -> {
-                	Date fechaAlta = (Date) modelo.getValueAt(tabla.getSelectedRow(), 1);
-                	String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-                    String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
-                    String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 4);
-                    Double precio = Double.parseDouble(textPrecio.getText());
-                    Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-
-                    int cantidadActualizada;
-                    try {
-                    	cantidadActualizada = this.clienteController.actualizar(fechaAlta, nombre, apellido, direccion, precio, id);	
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
-                    
-                    modelo.removeRow(tabla.getSelectedRow());
-
-                    JOptionPane.showMessageDialog(this, cantidadActualizada + " Item Modificado con éxito!");
-                }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
-    }
+    private void actualizar() {		
+		Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
+        .ifPresentOrElse(fila -> {
+        	
+        	String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
+            String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+            String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
+            Double precio = Double.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 4).toString());
+            Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+			
+			this.clienteController.actualizar(nombre,apellido,direccion, precio, id);
+			JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
+		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
+		
+	}
+    
+    
     //****************************************
  
     
@@ -294,67 +283,49 @@ public class ListaClientesFrame extends JFrame {
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
                     Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-
-                    int cantidadEliminada;
-                    try {
-                    	cantidadEliminada = this.clienteController.eliminar(id);	
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
-                    
+                    this.clienteController.eliminar(id);	
+            
                     modelo.removeRow(tabla.getSelectedRow());
 
-                    JOptionPane.showMessageDialog(this, cantidadEliminada + " Item eliminado con éxito!");
+                    JOptionPane.showMessageDialog(this, " Item eliminado con éxito!");
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
     }
     
-    
-    
-    
-    
-    private void cargarTabla() {
-    	List<Map<String, String>> clientes = new ArrayList<Map<String, String>>();
-        
-        try {
-        	clientes = this.clienteController.listar();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
-        
-        clientes.forEach(cliente -> modelo.addRow(
-                new Object[] {
-                		 cliente.get("id"),
-                         cliente.get("fechaAlta"),
-                         cliente.get("nombre"),
-                         cliente.get("apellido"),
-                         cliente.get("direccion"), 
-                         cliente.get("precio")}));
-    }
-        
-    //------------------------------------------
+    //----------------------------------------- 
+     
+   private List<Cliente> ListarClientes() {
+		return this.clienteController.listar();
+   }
+     
+   private void cargarTabla() {			       
+	    //Llenar Tabla
+		List<Cliente> cliente = ListarClientes();
+		try {
+			for (Cliente clientes : cliente) {
+				modelo.addRow(new Object[] { clientes.getId(), clientes.getFechaAlta(), clientes.getNombre(), clientes.getApellido(), 
+						clientes.getDireccion(),clientes.getPrecio() });
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+  
     
     private void guardar() throws SQLException {
              
     	String fechaIngreso = ((JTextField)textFechaIngreso.getDateEditor().getUiComponent()).getText();
     	Double precio = Double.parseDouble(textPrecio.getText());
 		
-		  Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
-          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),precio);
-		
-		this.clienteController.guardar(cliente);
+		 Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
+          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),precio);		
+		this.clienteController.guardar(cliente);	
  			
  		JOptionPane.showMessageDialog(this, "Registrado con éxito!");
 
  	    this.limpiarFormulario();
     							
     }
-    
-    //******************************************
-
-    
     
    
     //formula limpiar fomulario
