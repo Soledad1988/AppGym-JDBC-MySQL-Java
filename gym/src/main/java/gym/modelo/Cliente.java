@@ -9,10 +9,15 @@ public class Cliente {
 	private String nombre;
 	private String apellido;
 	private String direccion;
-	private double precio;
+	private Double precio;
+	
+	public Cliente() {
+		
+	}
+	
 	
 	public Cliente(Integer id, Date fechaAlta, String nombre, String apellido, String direccion,
-			double precio) {
+			Double precio) {
 		super();
 		this.id = id;
 		this.fechaAlta = fechaAlta;
@@ -22,7 +27,7 @@ public class Cliente {
 		this.precio = precio;
 	}
 
-	public Cliente(Date fechaAlta, String nombre, String apellido, String direccion, double precio) {
+	public Cliente(Date fechaAlta, String nombre, String apellido, String direccion, Double precio) {
 		this.fechaAlta = fechaAlta;
 		this.nombre = nombre;
 		this.apellido = apellido;
@@ -30,12 +35,16 @@ public class Cliente {
 		this.precio = precio;
 	}
 
-	public Cliente(String nombre, String apellido, String direccion, double precio) {
-		this.nombre = nombre;
-		this.apellido = apellido;
-		this.direccion = direccion;
-		this.precio = precio;
+
+
+	public Cliente(String nombre, String apellido, String direccion, Integer id) {
+		this.id = id;
+	    this.nombre = nombre;
+	    this.apellido = apellido;
+	    this.direccion = direccion;
 	}
+	
+	
 
 	public Integer getId() {
 		return id;
@@ -84,5 +93,6 @@ public class Cliente {
 	public void setPrecio(double precio) {
 		this.precio = precio;
 	}
+	
 
 }
