@@ -2,6 +2,7 @@ package controller;
 
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.util.List;
 
 import conexion.Conexion;
@@ -13,24 +14,25 @@ public class ClienteController {
 
 	private ClienteDAO clienteDAO;
 	 
-	 public ClienteController() {
-		 Connection connection = new Conexion().recuperarConexion();
+	 public ClienteController() throws SQLException {
+		 Connection connection = new Conexion().recuperaConexion();
 		 this.clienteDAO = new ClienteDAO(connection);
 		}
 	 
 		public void guardar(Cliente cliente) {
 			this.clienteDAO.guardar(cliente);
 		}
+		
 		public List<Cliente> listar() {
 			return this.clienteDAO.listar();
 		}
 		
-		public void actualizar(String nombre, String apellido, String direccion, Double precio, Integer id) {
-			this.clienteDAO.actualizar(nombre, apellido, direccion, precio, id);
-		}
-		
 		public void eliminar(Integer id) {
 			this.clienteDAO.eliminar(id);
+		}
+
+		public void actualizar(String nombre, String apellido, String direccion, Integer id) {
+			this.clienteDAO.actualizar(nombre, apellido, direccion, id);
 		}
 
 }

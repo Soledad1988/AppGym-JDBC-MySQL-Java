@@ -19,7 +19,7 @@ public class ReporteController {
 	//listar reporte
 		public List<Map<String,String>> reporte() throws SQLException {
 			Conexion factory = new Conexion();
-			final Connection con = factory.recuperarConexion();
+			final Connection con = factory.recuperaConexion();
 			  
 				final PreparedStatement statement = con.prepareStatement("SELECT fechaAlta, nombre, apellido, precio FROM clientes");
 		        

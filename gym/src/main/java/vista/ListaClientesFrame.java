@@ -61,7 +61,7 @@ public class ListaClientesFrame extends JFrame {
 		});
 	}
 
-    public ListaClientesFrame() {
+    public ListaClientesFrame() throws SQLException {
         super("Clientes");
 
         this.clienteController = new ClienteController();
@@ -224,10 +224,8 @@ public class ListaClientesFrame extends JFrame {
         });
 
         botonModificar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) { 
-            	actualizar();         	
-                limpiarTabla();
-                cargarTabla();
+            public void actionPerformed(ActionEvent e) {
+            	actualizar();
             }
             
         });
@@ -253,25 +251,27 @@ public class ListaClientesFrame extends JFrame {
     private boolean tieneFilaElegida() {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
-    
+
     private void actualizar() {		
 		Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
         .ifPresentOrElse(fila -> {
         	
-        	String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 1);
-            String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-            String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
-            Double precio = Double.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 4).toString());
-            Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-			
-			this.clienteController.actualizar(nombre,apellido,direccion, precio, id);
+        	  String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+              String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
+              String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 4);
+              Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+              System.out.println("ID to update: " + id);
+              
+              System.out.println("Texto Nombre: " + textoNombre.getText());
+              System.out.println("Texto Apellido: " + textoApellido.getText());
+              System.out.println("Texto Direccion: " + textoDireccion.getText());
+            
+              
+              this.clienteController.actualizar(nombre, apellido, direccion, id);
 			JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
 		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
 		
 	}
-    
-    
-    //****************************************
  
     
     private void eliminar() {
@@ -291,7 +291,6 @@ public class ListaClientesFrame extends JFrame {
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
     }
     
-    //----------------------------------------- 
      
    private List<Cliente> ListarClientes() {
 		return this.clienteController.listar();
@@ -318,7 +317,8 @@ public class ListaClientesFrame extends JFrame {
     	Double precio = Double.parseDouble(textPrecio.getText());
 		
 		 Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
-          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),precio);		
+          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),precio);	
+		 	
 		this.clienteController.guardar(cliente);	
  			
  		JOptionPane.showMessageDialog(this, "Registrado con éxito!");
@@ -328,7 +328,6 @@ public class ListaClientesFrame extends JFrame {
     }
     
    
-    //formula limpiar fomulario
     private void limpiarFormulario() {
     	this.textFechaIngreso.setDate(null);
         this.textoNombre.setText("");
