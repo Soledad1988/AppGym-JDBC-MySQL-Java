@@ -144,7 +144,7 @@ public class ReporteClientes extends JFrame {
         List<Map<String, String>> clientes = new ArrayList<Map<String, String>>();
 
         try {
-        	clientes = this.reporteControler.reporte();
+        	clientes = this.reporteControler.reporteClientes();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
