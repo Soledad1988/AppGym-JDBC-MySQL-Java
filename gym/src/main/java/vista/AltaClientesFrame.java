@@ -33,7 +33,7 @@ import java.sql.Date;
 
 
 
-public class ListaClientesFrame extends JFrame {
+public class AltaClientesFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
@@ -52,7 +52,7 @@ public class ListaClientesFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ListaClientesFrame frame = new ListaClientesFrame();
+					AltaClientesFrame frame = new AltaClientesFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -61,7 +61,7 @@ public class ListaClientesFrame extends JFrame {
 		});
 	}
 
-    public ListaClientesFrame() throws SQLException {
+    public AltaClientesFrame() throws SQLException {
         super("Clientes");
 
         this.clienteController = new ClienteController();

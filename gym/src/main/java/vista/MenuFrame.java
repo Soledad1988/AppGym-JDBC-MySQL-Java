@@ -18,7 +18,8 @@ public class MenuFrame extends JFrame {
 	private JPanel contentPane;
 	 private JButton botonNuevoClientes;
 	 
-	 ListaClientesFrame listaClientesFrame;
+	 AltaClientesFrame listaClientesFrame;
+	 AltaGastosFrame altaGastosFrame;
 	 ReporteClientes reporteClientes;
 	 ReporteGastos reporteGastos;
 	
@@ -53,7 +54,7 @@ public class MenuFrame extends JFrame {
 		contentPane.add(titulo);
 		
 		JButton botonNuevoClientes = new JButton("Nuevo Cliente");
-		botonNuevoClientes.setBounds(91, 102, 115, 23);
+		botonNuevoClientes.setBounds(22, 105, 125, 23);
 		contentPane.add(botonNuevoClientes);
 		
 		botonNuevoClientes.addActionListener(new ActionListener() {
@@ -70,7 +71,7 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton listaClientes = new JButton("Lista Clientes");
-		listaClientes.setBounds(91, 149, 115, 23);
+		listaClientes.setBounds(157, 105, 115, 23);
 		contentPane.add(listaClientes);
 		
 		listaClientes.addActionListener(new ActionListener() {
@@ -87,7 +88,7 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton reporteGastos = new JButton("Reporte Gastos");
-		reporteGastos.setBounds(91, 200, 115, 23);
+		reporteGastos.setBounds(157, 167, 115, 23);
 		contentPane.add(reporteGastos);
 		
 		reporteGastos.addActionListener(new ActionListener() {
@@ -107,6 +108,23 @@ public class MenuFrame extends JFrame {
 		logo.setIcon(new ImageIcon("C:\\Users\\brent\\eclipse-workspace\\gym.png"));
 		logo.setBounds(326, 34, 274, 243);
 		contentPane.add(logo);
+		
+		JButton btnAltaGastos = new JButton("Registrar Gastos");
+		btnAltaGastos.setBounds(23, 167, 124, 23);
+		contentPane.add(btnAltaGastos);
+		
+		btnAltaGastos.addActionListener(new ActionListener() {
+        	
+            public void actionPerformed(ActionEvent e) { 
+            	try {
+            		abrirAltaGastos();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            }
+            
+        });
 
 		setLocationRelativeTo(null);
 		
@@ -114,7 +132,7 @@ public class MenuFrame extends JFrame {
 	}
 	
 	   private void abrirNuevoCliente() throws SQLException {
-	       listaClientesFrame = new ListaClientesFrame();
+	       listaClientesFrame = new AltaClientesFrame();
 	    }
 	   
 	   private void abrirReporte() throws SQLException {
@@ -124,6 +142,10 @@ public class MenuFrame extends JFrame {
 	   private void abrirReporteGastos() throws SQLException {
 	       reporteGastos = new ReporteGastos();
 	    }
+	   
+	   private void abrirAltaGastos() throws SQLException {
+		   altaGastosFrame = new AltaGastosFrame();
+	   }
 	   
 	   public void mostrarVentana() {
 	        setVisible(true);
