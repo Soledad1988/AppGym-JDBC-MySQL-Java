@@ -5,7 +5,7 @@ import java.sql.SQLException;
 
 import javax.swing.JFrame;
 
-import vista.ListaClientesFrame;
+import vista.AltaClientesFrame;
 import vista.MenuFrame;
 
 public class GymMein {
