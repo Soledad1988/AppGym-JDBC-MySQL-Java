@@ -21,6 +21,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 
 import com.toedter.calendar.JDateChooser;
@@ -193,7 +195,10 @@ public class AltaClientesFrame extends JFrame {
         container.add(botonGuardar);
         container.add(botonLimpiar);
        
+        
     }
+
+    
 
     private void configurarAccionesDelFormulario() {
         botonGuardar.addActionListener(new ActionListener() {
@@ -257,27 +262,34 @@ public class AltaClientesFrame extends JFrame {
     private boolean tieneFilaElegida() {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
+    
+    private void actualizar() {
+        if (tieneFilaElegida()) {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+        }
 
-    private void actualizar() {		
-		Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-        .ifPresentOrElse(fila -> {
-        	
-        	  String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-              String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
-              String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 4);
-              Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-              System.out.println("ID to update: " + id);
-              
-              System.out.println("Texto Nombre: " + textoNombre.getText());
-              System.out.println("Texto Apellido: " + textoApellido.getText());
-              System.out.println("Texto Direccion: " + textoDireccion.getText());
-            
-              
-              this.clienteController.actualizar(nombre, apellido, direccion, id);
-			JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
-		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
-		
-	}
+        Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
+                .ifPresentOrElse(fila -> {
+                    Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+
+                    // Actualizar los campos con los valores de la interfaz
+                    textoNombre.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 2));
+                    textoApellido.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
+                    textoDireccion.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 4));
+
+                    // Luego, puedes imprimir los valores para verificar
+                    System.out.println("ID to update: " + id);
+                    System.out.println("Texto Nombre: " + textoNombre.getText());
+                    System.out.println("Texto Apellido: " + textoApellido.getText());
+                    System.out.println("Texto Direccion: " + textoDireccion.getText());
+
+                    // Finalmente, llamar al método actualizar del controlador
+                    this.clienteController.actualizar(textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(), id);
+
+                    JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
+                }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
+    }
  
     
     private void eliminar() {

@@ -54,7 +54,15 @@ public class ClienteDAO {
 	}
     
     public void actualizar(String nombre, String apellido, String direccion, Integer id) {
-        String sql = "UPDATE clientes SET nombre = ?, apellido = ?, direccion = ? WHERE id = ?";
+    	
+    	String sql = "UPDATE clientes SET nombre = ?, apellido = ?, direccion = ? WHERE id = ?";
+    	System.out.println("Consulta SQL: " + sql);
+        
+        System.out.println("ID: " + id);
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Apellido: " + apellido);
+        System.out.println("Dirección: " + direccion);
+        
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setString(1, nombre);
             stm.setString(2, apellido);
@@ -63,8 +71,6 @@ public class ClienteDAO {
 
             int rowsUpdated = stm.executeUpdate();
             System.out.println(rowsUpdated + " fila(s) modificadas.");
-            System.out.println("Nombre: " + nombre);
-            System.out.println("Apellido: " + apellido);
             
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -83,6 +89,7 @@ public class ClienteDAO {
 			}
 			return cliente;
 		} catch (SQLException e) {
+			 e.printStackTrace(); 
 			throw new RuntimeException(e);
 		}
 	}
