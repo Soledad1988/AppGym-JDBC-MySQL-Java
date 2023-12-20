@@ -43,5 +43,32 @@ public class ReporteController {
 			return resultado;
 		
 		}
+		
+		
+	    public static double realizarSuma() throws SQLException {
+	    	
+	    	Conexion factory = new Conexion();
+			final Connection con = factory.recuperaConexion();
+			 ResultSet resultSet = null;
+
+	        try {
+	            String consulta = "SELECT SUM(precio) AS resultado FROM clientes";
+	            PreparedStatement statement = con.prepareStatement(consulta);
+
+	            // Ejecutar la consulta
+	            resultSet = statement.executeQuery();
+
+	            // Procesar el resultado
+	            if (resultSet.next()) {
+	                // Obtener el resultado de la suma
+	                return resultSet.getDouble("resultado");
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        } 
+
+	        // En caso de error, retornar un valor indicativo
+	        return -1;
+	    }
 
 }

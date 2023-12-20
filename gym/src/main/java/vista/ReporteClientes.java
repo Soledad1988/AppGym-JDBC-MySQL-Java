@@ -5,6 +5,8 @@ import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
@@ -89,16 +91,31 @@ public class ReporteClientes extends JFrame {
     	BoxPeriodo.setBounds(429, 105, 148, 22);
     	getContentPane().add(BoxPeriodo);
     	
-    	JLabel total = new JLabel("Total");
-    	total.setFont(new Font("Tahoma", Font.PLAIN, 15));
-    	total.setBounds(339, 494, 65, 20);
-    	getContentPane().add(total);
-    	
     	textTotal = new JTextField();
     	textTotal.setEditable(false);
     	textTotal.setBounds(455, 497, 86, 20);
     	getContentPane().add(textTotal);
     	textTotal.setColumns(10);
+    	
+    	 // Crear un botón u otro evento que desencadene la acción de la suma
+        JButton btnCalcularSuma = new JButton("Calcular Suma");
+        btnCalcularSuma.setBounds(300, 497, 120, 25);
+        getContentPane().add(btnCalcularSuma);
+
+        // Agregar un ActionListener al botón para manejar la acción
+        btnCalcularSuma.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Llamar a la función realizarSuma y mostrar el resultado en textTotal
+                double resultadoSuma = 0;
+				try {
+					resultadoSuma = reporteControler.realizarSuma();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+                textTotal.setText(String.valueOf(resultadoSuma));
+            }
+        });
     	
     }
     
@@ -140,4 +157,5 @@ public class ReporteClientes extends JFrame {
                         producto.get("apellido"),
                         producto.get("precio")}));
     }
+
 }
