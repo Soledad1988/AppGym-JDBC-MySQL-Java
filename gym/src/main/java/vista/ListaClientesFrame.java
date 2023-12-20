@@ -240,9 +240,15 @@ public class ListaClientesFrame extends JFrame {
     }
 
     
-    private void volverMenu(){
-        menuFrame = new MenuFrame();
+    private void volverMenu() {
+        // Cerrar la ventana actual
+        dispose();
+
+        // Crear y mostrar la instancia del menú
+        MenuFrame menuFrame = new MenuFrame();
+        menuFrame.setVisible(true);
     }
+
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();

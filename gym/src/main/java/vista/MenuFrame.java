@@ -37,7 +37,7 @@ public class MenuFrame extends JFrame {
 
 	
 	public MenuFrame() {
-		super("Gym-Fittnes");
+		super("Gym-Fitness");
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 647, 375);
@@ -47,7 +47,7 @@ public class MenuFrame extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel titulo = new JLabel("Gym - FITTNES");
+		JLabel titulo = new JLabel("Gym - FITNESS");
 		titulo.setFont(new Font("Tw Cen MT", Font.BOLD | Font.ITALIC, 26));
 		titulo.setBounds(245, 11, 180, 40);
 		contentPane.add(titulo);
@@ -123,5 +123,9 @@ public class MenuFrame extends JFrame {
 	   
 	   private void abrirReporteGastos() throws SQLException {
 	       reporteGastos = new ReporteGastos();
+	    }
+	   
+	   public void mostrarVentana() {
+	        setVisible(true);
 	    }
 }
