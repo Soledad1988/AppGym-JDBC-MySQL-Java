@@ -54,7 +54,7 @@ public class MenuFrame extends JFrame {
 		contentPane.add(titulo);
 		
 		JButton botonNuevoClientes = new JButton("Nuevo Cliente");
-		botonNuevoClientes.setBounds(22, 105, 125, 23);
+		botonNuevoClientes.setBounds(22, 105, 146, 23);
 		contentPane.add(botonNuevoClientes);
 		
 		botonNuevoClientes.addActionListener(new ActionListener() {
@@ -71,7 +71,7 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton listaClientes = new JButton("Lista Clientes");
-		listaClientes.setBounds(157, 105, 115, 23);
+		listaClientes.setBounds(178, 105, 138, 23);
 		contentPane.add(listaClientes);
 		
 		listaClientes.addActionListener(new ActionListener() {
@@ -88,7 +88,7 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton reporteGastos = new JButton("Reporte Gastos");
-		reporteGastos.setBounds(157, 167, 115, 23);
+		reporteGastos.setBounds(178, 167, 138, 23);
 		contentPane.add(reporteGastos);
 		
 		reporteGastos.addActionListener(new ActionListener() {
@@ -110,7 +110,7 @@ public class MenuFrame extends JFrame {
 		contentPane.add(logo);
 		
 		JButton btnAltaGastos = new JButton("Registrar Gastos");
-		btnAltaGastos.setBounds(23, 167, 124, 23);
+		btnAltaGastos.setBounds(23, 167, 145, 23);
 		contentPane.add(btnAltaGastos);
 		
 		btnAltaGastos.addActionListener(new ActionListener() {

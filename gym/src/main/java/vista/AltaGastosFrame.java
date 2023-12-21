@@ -4,35 +4,25 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
 
-import com.toedter.calendar.JDateChooser;
-
-import controller.ClienteController;
 import controller.GastosController;
-import controller.ClienteController;
-import gym.modelo.Cliente;
+
 import gym.modelo.Gastos;
 
-import java.sql.Date;
 import javax.swing.JComboBox;
 
 
@@ -41,8 +31,8 @@ public class AltaGastosFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private JLabel labelNombreGasto, labelTipo, labelCosto;
-    private JTextField textoNombreGasto, textoTipo, textoCosto;
+    private JLabel labelNombreGasto, labelDescripcion, labelCosto;
+    private JTextField textoNombreGasto, textoDescripcion, textoCosto;
     private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonMenu;
     private JTable tabla;
     private DefaultTableModel modelo;
@@ -103,7 +93,7 @@ public class AltaGastosFrame extends JFrame {
         modelo.addColumn("Id");
         modelo.addColumn("Perido Gasto");
         modelo.addColumn("Gasto");
-        modelo.addColumn("Tipo");
+        modelo.addColumn("Descripcion");
         modelo.addColumn("Costo");
 
 
@@ -115,9 +105,9 @@ public class AltaGastosFrame extends JFrame {
         botonModificar = new JButton("Modificar");
         botonMenu = new JButton("Menú");
         
-        botonEliminar.setBounds(254, 458, 80, 20);
-        botonModificar.setBounds(344, 458, 80, 20);
-        botonMenu.setBounds(434, 458, 80, 20);
+        botonEliminar.setBounds(254, 458, 96, 20);
+        botonModificar.setBounds(364, 458, 94, 20);
+        botonMenu.setBounds(475, 458, 96, 20);
         
 
         container.add(tabla);
@@ -134,39 +124,39 @@ public class AltaGastosFrame extends JFrame {
     private void configurarCamposDelFormulario(Container container) {
         labelNombreGasto = new JLabel("Gasto");
         labelNombreGasto.setFont(new Font("Tahoma", Font.BOLD, 12));
-        labelTipo = new JLabel("Tipo");
-        labelTipo.setFont(new Font("Tahoma", Font.BOLD, 12));
+        labelDescripcion = new JLabel("Descripcion");
+        labelDescripcion.setFont(new Font("Tahoma", Font.BOLD, 12));
         labelCosto = new JLabel("Costo");
         labelCosto.setFont(new Font("Tahoma", Font.BOLD, 12));
 
         labelNombreGasto.setBounds(35, 102, 240, 15);
-        labelTipo.setBounds(35, 148, 240, 15);
+        labelDescripcion.setBounds(35, 148, 240, 15);
         labelCosto.setBounds(35, 194, 240, 15);
         
         labelNombreGasto.setForeground(Color.BLACK);
-        labelTipo.setForeground(Color.BLACK);
+        labelDescripcion.setForeground(Color.BLACK);
         labelCosto.setForeground(Color.BLACK);
 
         textoNombreGasto = new JTextField();
-        textoTipo = new JTextField();
+        textoDescripcion = new JTextField();
         textoCosto = new JTextField();
 
         // TODO
         
         textoNombreGasto.setBounds(345, 100, 265, 20);
-        textoTipo.setBounds(345, 148, 265, 20);
+        textoDescripcion.setBounds(345, 148, 265, 20);
         textoCosto.setBounds(345, 197, 265, 20);
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(288, 262, 80, 20);
-        botonLimpiar.setBounds(378, 262, 80, 20);
+        botonGuardar.setBounds(276, 262, 92, 20);
+        botonLimpiar.setBounds(378, 262, 92, 20);
 
         container.add(labelNombreGasto);
-        container.add(labelTipo);
+        container.add(labelDescripcion);
         container.add(labelCosto);
         container.add(textoNombreGasto);
-        container.add(textoTipo);
+        container.add(textoDescripcion);
         container.add(textoCosto);
         container.add(botonGuardar);
         container.add(botonLimpiar);
@@ -236,25 +226,49 @@ public class AltaGastosFrame extends JFrame {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
 
-    private void actualizar2() {		
-		Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-        .ifPresentOrElse(fila -> {
-        	
-        	  String gasto = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
-              String tipo = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
-              Double costo = (Double) modelo.getValueAt(tabla.getSelectedRow(), 4);
-              Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-              System.out.println("ID to update: " + id);
-           
-            
-              
-              this.gastoController.actualizar(gasto, tipo, costo, id);
-			JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
-		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
-		
-	}
-    
     private void actualizar() {
+        if (tieneFilaElegida()) {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+        }
+
+        int filaSeleccionada = tabla.getSelectedRow();
+
+        if (filaSeleccionada != -1) {
+            Integer id = Integer.valueOf(modelo.getValueAt(filaSeleccionada, 0).toString());
+
+            // Obtener los valores actuales de la fila seleccionada
+            String nombreGastoActual = (String) modelo.getValueAt(filaSeleccionada, 2);
+            String descripcionActual = (String) modelo.getValueAt(filaSeleccionada, 3);
+
+            // Mostrar un cuadro de diálogo o utilizar algún otro método para obtener el nuevo valor de costo
+            String nuevoCostoString = JOptionPane.showInputDialog(this, "Ingrese el nuevo valor de costo:");
+
+            try {
+                // Convertir a double
+                double nuevoCosto = Double.parseDouble(nuevoCostoString);
+
+                // Luego, puedes imprimir los valores para verificar
+                System.out.println("ID to update: " + id);
+                System.out.println("Texto Gasto: " + nombreGastoActual);
+                System.out.println("Texto Descripcion: " + descripcionActual);
+                System.out.println("Nuevo Costo: " + nuevoCosto);
+
+                // Finalmente, llamar al método actualizar del controlador
+                this.gastoController.actualizar(nombreGastoActual, descripcionActual, nuevoCosto, id);
+
+                JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Ingrese un valor de costo válido.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un registro");
+        }
+    }
+    
+    
+    
+    private void actualizar2() {
         if (tieneFilaElegida()) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
@@ -266,22 +280,36 @@ public class AltaGastosFrame extends JFrame {
 
             // Actualizar los campos con los valores de la interfaz
             textoNombreGasto.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 2));
-            textoTipo.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
+            textoDescripcion.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
 
             // Obtener el valor de textoCosto
-            String textoCostoString = textoCosto.getText();
+            //String textoCostoString = textoCosto.getText();
+            
+            String textoCostoString = textoCosto.getText().trim();
+            System.out.println("Texto Costo String: " + textoCostoString);
+
+            if (!textoCostoString.isEmpty() && !textoCostoString.isBlank()) {
+                // Convertir a double y realizar la actualización
+                double costo = Double.parseDouble(textoCostoString);
+                // Resto de la lógica de actualización aquí...
+            } else {
+                // Mostrar un mensaje de error al usuario o tomar alguna acción apropiada
+            }
 
             // Verificar si la cadena está vacía o nula antes de intentar la conversión
             double costo = textoCostoString.isEmpty() ? 0 : Double.parseDouble(textoCostoString);
+            
 
             // Luego, puedes imprimir los valores para verificar
             System.out.println("ID to update: " + id);
             System.out.println("Texto Nombre Gasto: " + textoNombreGasto.getText());
-            System.out.println("Texto Tipo: " + textoTipo.getText());
+            System.out.println("Texto Tipo: " + textoDescripcion.getText());
             System.out.println("Texto Costo: " + costo);
+            
+            System.out.println("Texto Costo String: " + textoCostoString);
 
             // Finalmente, llamar al método actualizar del controlador
-            this.gastoController.actualizar(textoNombreGasto.getText(), textoTipo.getText(), costo, id);
+            this.gastoController.actualizar(textoNombreGasto.getText(), textoDescripcion.getText(), costo, id);
 
             JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
         }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
@@ -318,7 +346,7 @@ public class AltaGastosFrame extends JFrame {
 		try {
 			for (Gastos gastos : gasto) {
 				modelo.addRow(new Object[] { gastos.getIdGasto(), gastos.getPeriodoGasto(), gastos.getNombreGasto(),
-						gastos.getTipo(),gastos.getCosto()});
+						gastos.getDescripcion(),gastos.getCosto()});
 			}
 		} catch (Exception e) {
 			throw e;
@@ -331,7 +359,7 @@ public class AltaGastosFrame extends JFrame {
 	    String mesSeleccionado = (String) BoxPeriodo.getSelectedItem();
 	    Double costo = Double.parseDouble(textoCosto.getText());
 
-	    Gastos gasto = new Gastos(mesSeleccionado, textoNombreGasto.getText(), textoTipo.getText(), costo);
+	    Gastos gasto = new Gastos(mesSeleccionado, textoNombreGasto.getText(), textoDescripcion.getText(), costo);
 	    this.gastoController.guardar(gasto);
 
 	    JOptionPane.showMessageDialog(this, "Registrado con éxito!");
@@ -343,7 +371,7 @@ public class AltaGastosFrame extends JFrame {
     private void limpiarFormulario() {
     	this.BoxPeriodo.setAction(null);;
         this.textoNombreGasto.setText("");
-        this.textoTipo.setText("");
+        this.textoDescripcion.setText("");
         this.textoCosto.setText("");
     }
 }

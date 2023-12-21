@@ -140,11 +140,11 @@ public class AltaClientesFrame extends JFrame {
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
-        botonMenu = new JButton("Menù");
+        botonMenu = new JButton("Menú");
         
-        botonEliminar.setBounds(15, 530, 80, 20);
-        botonModificar.setBounds(105, 530, 80, 20);
-        botonMenu.setBounds(195, 530, 80, 20);
+        botonEliminar.setBounds(238, 532, 98, 20);
+        botonModificar.setBounds(346, 532, 93, 20);
+        botonMenu.setBounds(449, 532, 98, 20);
         
 
         container.add(tabla);
@@ -183,8 +183,8 @@ public class AltaClientesFrame extends JFrame {
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(15, 265, 80, 20);
-        botonLimpiar.setBounds(105, 265, 80, 20);
+        botonGuardar.setBounds(20, 265, 99, 20);
+        botonLimpiar.setBounds(129, 265, 99, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);

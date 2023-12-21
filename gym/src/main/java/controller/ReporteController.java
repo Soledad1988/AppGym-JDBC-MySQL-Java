@@ -86,7 +86,7 @@ public class ReporteController {
 	        Conexion factory = new Conexion();
 	        final Connection con = factory.recuperaConexion();
 
-	        final PreparedStatement statement = con.prepareStatement("SELECT periodoGasto, nombreGasto, tipo, costo FROM gastos");
+	        final PreparedStatement statement = con.prepareStatement("SELECT periodoGasto, nombreGasto, descripcion, costo FROM gastos");
 
 	        statement.execute();
 
@@ -99,7 +99,7 @@ public class ReporteController {
 	            Gastos gasto = new Gastos();
 	            gasto.setPeriodoGasto(resultSet.getString("periodoGasto"));
 	            gasto.setNombreGasto(resultSet.getString("nombreGasto"));
-	            gasto.setTipo(resultSet.getString("tipo"));
+	            gasto.setDescripcion(resultSet.getString("descripcion"));
 	            gasto.setCosto(resultSet.getDouble("costo"));
 
 	            resultado.add(gasto);
@@ -215,7 +215,7 @@ public class ReporteController {
 	                        Gastos gasto = new Gastos(
 	                                resultSet.getString("periodoGasto"),
 	                                resultSet.getString("nombreGasto"),
-	                                resultSet.getString("tipo"),
+	                                resultSet.getString("descripcion"),
 	                                resultSet.getDouble("costo")
 	                        );
 	                        gastos.add(gasto);

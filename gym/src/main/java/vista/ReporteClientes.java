@@ -69,7 +69,7 @@ public class ReporteClientes extends JFrame {
 	}
 
     public ReporteClientes() {
-    	super("Lista Clientes");
+    	super("Reporte Clientes");
     	this.reporteControler = new ReporteController();
     	
     	Container container = getContentPane();

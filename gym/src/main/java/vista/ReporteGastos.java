@@ -167,7 +167,7 @@ public class ReporteGastos extends JFrame {
                 new Object[] {
                         gasto.getPeriodoGasto(),
                         gasto.getNombreGasto(),
-                        gasto.getTipo(),
+                        gasto.getDescripcion(),
                         gasto.getCosto()
                 }));
     }
@@ -178,7 +178,7 @@ public class ReporteGastos extends JFrame {
         modelo = (DefaultTableModel) tabla.getModel();
         modelo.addColumn("Periodo Gasto");
         modelo.addColumn("Nombre Gasto");
-        modelo.addColumn("Tipo");
+        modelo.addColumn("Descripcion");
         modelo.addColumn("Costo");
     
         cargarTabla();
@@ -226,7 +226,7 @@ public class ReporteGastos extends JFrame {
                 new Object[] {
                         gasto.getPeriodoGasto(),
                         gasto.getNombreGasto(),
-                        gasto.getTipo(),
+                        gasto.getDescripcion(),
                         gasto.getCosto()
                 }));
     }
