@@ -7,26 +7,26 @@ public class Gastos {
 	private Integer idGasto;
 	private String periodoGasto;
 	private String nombreGasto;
-	private String tipo;
+	private String descripcion;
 	private Double costo;
 	
 	public Gastos() {
 		
 	}
 	
-	public Gastos(Integer idGasto, String periodoGasto, String nombreGasto, String tipo, Double costo) {
+	public Gastos(Integer idGasto, String periodoGasto, String nombreGasto, String descripcion, Double costo) {
 		super();
 		this.idGasto = idGasto;
 		this.periodoGasto = periodoGasto;
 		this.nombreGasto = nombreGasto;
-		this.tipo = tipo;
+		this.descripcion = descripcion;
 		this.costo = costo;
 	}
 
-	public Gastos(String periodoGasto, String nombreGasto, String tipo, Double costo) {
+	public Gastos(String periodoGasto, String nombreGasto, String descripcion, Double costo) {
 		this.periodoGasto = periodoGasto;
 		this.nombreGasto = nombreGasto;
-		this.tipo = tipo;
+		this.descripcion = descripcion;
 		this.costo = costo;
 	}
 
@@ -55,12 +55,12 @@ public class Gastos {
 		this.nombreGasto = nombreGasto;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public String getDescripcion() {
+		return descripcion;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setDescripcion(String descripcion) {
+		this.descripcion = descripcion;
 	}
 
 	public Double getCosto() {

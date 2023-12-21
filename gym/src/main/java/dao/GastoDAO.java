@@ -26,11 +26,11 @@ public class GastoDAO {
 	//guardar
     public void guardar(Gastos gastos) {
 		try {
-			String sql = "INSERT INTO gastos (periodoGasto, nombreGasto, tipo, costo) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO gastos (periodoGasto, nombreGasto, descripcion, costo) VALUES (?, ?, ?, ?)";
 			try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				stm.setString(1, gastos.getPeriodoGasto());
 				stm.setString(2, gastos.getNombreGasto());
-				stm.setString(3, gastos.getTipo());
+				stm.setString(3, gastos.getDescripcion());
 				stm.setDouble(4, gastos.getCosto());
 				stm.execute();
 				try (ResultSet rst = stm.getGeneratedKeys()) {
@@ -54,11 +54,11 @@ public class GastoDAO {
 		}
 	}
     
-    public void actualizar(String nombreGasto, String tipo, Double costo, Integer idGasto) {
-        String sql = "UPDATE gastos SET nombreGasto = ?, tipo = ?, costo = ? WHERE idGasto = ?";
+    public void actualizar(String nombreGasto, String descripcion, Double costo, Integer idGasto) {
+        String sql = "UPDATE gastos SET nombreGasto = ?, descripcion = ?, costo = ? WHERE idGasto = ?";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setString(1, nombreGasto);
-            stm.setString(2, tipo);
+            stm.setString(2, descripcion);
             stm.setDouble(3, costo);
             stm.setInt(4, idGasto);
 
@@ -73,7 +73,7 @@ public class GastoDAO {
     public List<Gastos> listar() {
 		List<Gastos> gasto = new ArrayList<Gastos>();
 		try {
-			String sql = "SELECT idGasto, periodoGasto, nombreGasto, tipo, costo FROM gastos";
+			String sql = "SELECT idGasto, periodoGasto, nombreGasto, descripcion, costo FROM gastos";
 
 			try (PreparedStatement pstm = con.prepareStatement(sql)) {
 				pstm.execute();
