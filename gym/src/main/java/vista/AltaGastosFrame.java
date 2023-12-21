@@ -236,7 +236,7 @@ public class AltaGastosFrame extends JFrame {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
 
-    private void actualizar() {		
+    private void actualizar2() {		
 		Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
         .ifPresentOrElse(fila -> {
         	
@@ -253,6 +253,41 @@ public class AltaGastosFrame extends JFrame {
 		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
 		
 	}
+    
+    private void actualizar() {
+        if (tieneFilaElegida()) {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+        }
+
+        Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
+        .ifPresentOrElse(fila -> {
+            Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+
+            // Actualizar los campos con los valores de la interfaz
+            textoNombreGasto.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 2));
+            textoTipo.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
+
+            // Obtener el valor de textoCosto
+            String textoCostoString = textoCosto.getText();
+
+            // Verificar si la cadena está vacía o nula antes de intentar la conversión
+            double costo = textoCostoString.isEmpty() ? 0 : Double.parseDouble(textoCostoString);
+
+            // Luego, puedes imprimir los valores para verificar
+            System.out.println("ID to update: " + id);
+            System.out.println("Texto Nombre Gasto: " + textoNombreGasto.getText());
+            System.out.println("Texto Tipo: " + textoTipo.getText());
+            System.out.println("Texto Costo: " + costo);
+
+            // Finalmente, llamar al método actualizar del controlador
+            this.gastoController.actualizar(textoNombreGasto.getText(), textoTipo.getText(), costo, id);
+
+            JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
+        }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
+
+    }
+ 
  
     
     private void eliminar() {
