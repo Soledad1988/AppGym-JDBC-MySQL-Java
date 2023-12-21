@@ -24,7 +24,7 @@
 <h4>
 :clapper: Vista previa :clapper:</h4>
 
-[GymFitness.webm](https://github.com/Soledad1988/AppGym-JDBC-MySQL-Java/assets/99606808/a770f116-5619-4605-866e-a5547a5abd75)
+[GymFitness.webm](https://github.com/Soledad1988/AppGym-JDBC-MySQL-Java/assets/99606808/b0557d03-0f11-41cf-95b4-24f223cd9f5e)
 
 
 ## Tecnologia Utilizada
