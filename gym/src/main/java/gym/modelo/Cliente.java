@@ -46,6 +46,14 @@ public class Cliente {
 	
 	
 
+	public Cliente(Date fechaAlta, String nombre, String apellido, Double precio) {
+		this.fechaAlta = fechaAlta;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.precio = precio;
+	}
+
+
 	public Integer getId() {
 		return id;
 	}

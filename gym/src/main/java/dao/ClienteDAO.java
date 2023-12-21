@@ -104,3 +104,46 @@ public class ClienteDAO {
 		}				
 	}
 }
+
+
+/*
+public List<Cliente> listarClientesPorMes(int numeroMes) {
+    // Aquí asumimos que la fecha de ingreso está almacenada en la columna 'fecha_alta'
+    String consultaSQL = "SELECT * FROM clientes WHERE MONTH(fecha_alta) = ?";
+
+    try (Connection connection = obtenerConexion();
+         PreparedStatement preparedStatement = connection.prepareStatement(consultaSQL)) {
+
+        preparedStatement.setInt(1, numeroMes);
+
+        try (ResultSet resultSet = preparedStatement.executeQuery()) {
+            List<Cliente> clientes = new ArrayList<>();
+
+            while (resultSet.next()) {
+                // Asumimos que tienes un constructor de Cliente que acepta los valores de la consulta
+                Cliente cliente = new Cliente(
+                        resultSet.getInt("id"),
+                        resultSet.getDate("fecha_alta"),
+                        resultSet.getString("nombre"),
+                        resultSet.getString("apellido"),
+                        resultSet.getString("direccion"),
+                        resultSet.getDouble("precio")
+                        // Otros campos según tu estructura
+                );
+                clientes.add(cliente);
+            }
+
+            return clientes;
+        }
+    } catch (SQLException e) {
+        // Manejo de excepciones
+        e.printStackTrace();
+        return Collections.emptyList();
+    }
+}
+
+
+int numeroMes = 1; // Cambia esto según el mes que estás buscando
+List<Cliente> clientesPorMes = clienteController.listarClientesPorMes(numeroMes);
+
+ Ahora, la lista `clientesPorMes` contiene los clientes para el mes especificado*/
