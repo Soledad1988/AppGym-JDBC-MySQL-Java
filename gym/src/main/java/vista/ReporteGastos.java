@@ -27,6 +27,8 @@ import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
 import controller.ReporteController;
+import gym.modelo.Cliente;
+import gym.modelo.Gastos;
 
 import javax.swing.JList;
 import javax.swing.JComboBox;
@@ -97,28 +99,78 @@ public class ReporteGastos extends JFrame {
     	getContentPane().add(textTotal);
     	textTotal.setColumns(10);
     	
-    	 // Crear un botón u otro evento que desencadene la acción de la suma
-        JButton btnCalcularSuma = new JButton("Calcular Suma");
-        btnCalcularSuma.setBounds(300, 497, 120, 25);
-        getContentPane().add(btnCalcularSuma);
+    	
+    	// Nuevo botón para aplicar el filtro
+        JButton btnFiltrar = new JButton("Filtrar por Mes");
+        btnFiltrar.setBounds(600, 105, 150, 22);
+        getContentPane().add(btnFiltrar);
 
+        // Agregar un ActionListener al botón de filtro
+        btnFiltrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Obtener el mes seleccionado en el JComboBox
+                int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+
+                // Limpiar la tabla antes de cargar los nuevos datos
+                limpiarTabla();
+
+                // Recargar la tabla con los clientes del mes seleccionado
+                cargarTablaPorMes(numeroMes);
+            }
+        });
+        
+        
+        // Botón para calcular la suma por mes
+           JButton btnCalcularSuma = new JButton("Calcular Suma");
+           btnCalcularSuma.setBounds(300, 497, 120, 25);
+           getContentPane().add(btnCalcularSuma);
+    	
         // Agregar un ActionListener al botón para manejar la acción
         btnCalcularSuma.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Llamar a la función realizarSuma y mostrar el resultado en textTotal
+                // Obtener el mes seleccionado del JComboBox
+                int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+
+                // Llamar a la función realizarSumaPorMes y mostrar el resultado en textTotal
                 double resultadoSuma = 0;
-				try {
-					resultadoSuma = reporteControler.realizarSumaGastos();
-				} catch (SQLException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+                try {
+                    resultadoSuma = reporteControler.obtenerSumaCostosPorMes(numeroMes);
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
                 textTotal.setText(String.valueOf(resultadoSuma));
             }
         });
-    	
     }
     
+ // Método para limpiar la tabla antes de cargar nuevos datos
+    private void limpiarTabla() {
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        model.setRowCount(0);
+    }
+    
+ // Método para cargar la tabla con clientes del mes seleccionado
+    private void cargarTablaPorMes(int numeroMes) {
+        limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos
+
+        List<Gastos> gastos = new ArrayList<>();
+
+        try {
+            // Utiliza el método listarGastosPorMes de tu ReporteController
+            gastos = this.reporteControler.listarGastosPorMes(numeroMes);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        gastos.forEach(gasto -> modelo.addRow(
+                new Object[] {
+                        gasto.getPeriodoGasto(),
+                        gasto.getNombreGasto(),
+                        gasto.getTipo(),
+                        gasto.getCosto()
+                }));
+    }
     
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
@@ -140,7 +192,7 @@ public class ReporteGastos extends JFrame {
         setLocationRelativeTo(null);
     }
 
-    private void cargarTabla() {
+   /* private void cargarTabla() {
         List<Map<String, String>> gastos = new ArrayList<Map<String, String>>();
 
         try {
@@ -156,6 +208,27 @@ public class ReporteGastos extends JFrame {
                         producto.get("Gasto"),
                         producto.get("Tipo"),
                         producto.get("Costo")}));
+    }*/
+    
+    private void cargarTabla() {
+        limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos
+
+        List<Gastos> gastos = new ArrayList<>();
+
+        try {
+            gastos = this.reporteControler.reporteGastos();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        gastos.forEach(gasto -> modelo.addRow(
+                new Object[] {
+                        gasto.getPeriodoGasto(),
+                        gasto.getNombreGasto(),
+                        gasto.getTipo(),
+                        gasto.getCosto()
+                }));
     }
 
 }

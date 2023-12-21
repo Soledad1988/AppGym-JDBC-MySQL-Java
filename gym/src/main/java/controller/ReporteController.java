@@ -5,12 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import conexion.Conexion;
 import dao.ClienteDAO;
+import gym.modelo.Cliente;
+import gym.modelo.Gastos;
 
 public class ReporteController {
 	
@@ -44,16 +47,18 @@ public class ReporteController {
 		
 		}
 		
-		
-	    public static double realizarSuma() throws SQLException {
-	    	
-	    	Conexion factory = new Conexion();
-			final Connection con = factory.recuperaConexion();
-			 ResultSet resultSet = null;
+	    
+	    public static double realizarSumaPorMes(int numeroMes) throws SQLException {
+	        Conexion factory = new Conexion();
+	        final Connection con = factory.recuperaConexion();
+	        ResultSet resultSet = null;
 
 	        try {
-	            String consulta = "SELECT SUM(precio) AS resultado FROM clientes";
+	            String consulta = "SELECT SUM(precio) AS resultado FROM clientes WHERE MONTH(fechaAlta) = ?";
 	            PreparedStatement statement = con.prepareStatement(consulta);
+
+	            // Establecer el parámetro del mes en la consulta
+	            statement.setInt(1, numeroMes);
 
 	            // Ejecutar la consulta
 	            resultSet = statement.executeQuery();
@@ -65,40 +70,43 @@ public class ReporteController {
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
-	        } 
+	        } finally {
+	            // Asegurar el cierre del ResultSet y el Statement
+	            if (resultSet != null) {
+	                resultSet.close();
+	            }
+	        }
 
 	        // En caso de error, retornar un valor indicativo
 	        return -1;
 	    }
 	    
-		//listar reporte
-  		public List<Map<String,String>> reporteGastos() throws SQLException {
-  			Conexion factory = new Conexion();
-  			final Connection con = factory.recuperaConexion();
-  			  
-  				final PreparedStatement statement = con.prepareStatement("SELECT periodoGasto, nombreGasto, tipo,"
-  						+ " costo FROM gastos");
-  		        
-  				statement.execute();
+	 // Listar reporte de gastos
+	    public List<Gastos> reporteGastos() throws SQLException {
+	        Conexion factory = new Conexion();
+	        final Connection con = factory.recuperaConexion();
 
-  		        ResultSet resultSet = statement.getResultSet();
+	        final PreparedStatement statement = con.prepareStatement("SELECT periodoGasto, nombreGasto, tipo, costo FROM gastos");
 
-  		        List<Map<String, String>> resultado = new ArrayList<>();
+	        statement.execute();
 
-  		      //leemos el contendio para agregrlo a un listado
-  		        while (resultSet.next()) {
-  		            Map<String, String> fila = new HashMap<>();
-  		            fila.put("periodoGasto", resultSet.getString("periodoGasto"));
-  		            fila.put("nombreGasto", resultSet.getString("nombreGasto"));
-  		            fila.put("tipo", resultSet.getString("tipo"));
-  		            fila.put("costo", String.valueOf(resultSet.getDouble("costo")));
+	        ResultSet resultSet = statement.getResultSet();
 
-  		            resultado.add(fila);
-  		        }
-  				
-  			return resultado;
-  		
-  		}
+	        List<Gastos> resultado = new ArrayList<>();
+
+	        // Leemos el contenido para agregarlo a un listado de objetos Gastos
+	        while (resultSet.next()) {
+	            Gastos gasto = new Gastos();
+	            gasto.setPeriodoGasto(resultSet.getString("periodoGasto"));
+	            gasto.setNombreGasto(resultSet.getString("nombreGasto"));
+	            gasto.setTipo(resultSet.getString("tipo"));
+	            gasto.setCosto(resultSet.getDouble("costo"));
+
+	            resultado.add(gasto);
+	        }
+
+	        return resultado;
+	    }
 	    
 	    public static double realizarSumaGastos() throws SQLException {
 	    	
@@ -124,6 +132,113 @@ public class ReporteController {
 
 	        // En caso de error, retornar un valor indicativo
 	        return -1;
+	    }
+	    
+	    
+	    public List<Cliente> listarClientesPorMes(int numeroMes) throws SQLException {
+	    	
+	    	Conexion factory = new Conexion();
+			final Connection con = factory.recuperaConexion();
+	        // Aquí asumimos que la fecha de ingreso está almacenada en la columna 'fecha_alta'
+	        String consultaSQL = "SELECT * FROM clientes WHERE MONTH(fechaAlta) = ?";
+
+	        try (PreparedStatement preparedStatement = con.prepareStatement(consultaSQL)) {
+
+	            preparedStatement.setInt(1, numeroMes);
+
+	            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	                List<Cliente> clientes = new ArrayList<>();
+
+	                while (resultSet.next()) {
+	                    // Asumimos que tienes un constructor de Cliente que acepta los valores de la consulta
+	                    Cliente cliente = new Cliente(
+	                            resultSet.getDate("fechaAlta"),
+	                            resultSet.getString("nombre"),
+	                            resultSet.getString("apellido"),
+	                            resultSet.getDouble("precio")
+	                    );
+	                    clientes.add(cliente);
+	                }
+
+	                return clientes;
+	            }
+	        } catch (SQLException e) {
+	            // Manejo de excepciones
+	            e.printStackTrace();
+	            return Collections.emptyList();
+	        }
+	    }
+	    
+	    public double obtenerSumaCostosPorMes(int numeroMes) throws SQLException {
+	        Conexion factory = new Conexion();
+	             final Connection con = factory.recuperaConexion();
+
+	            String nombreMes = obtenerNombreMes(numeroMes);
+
+	            String consulta = "SELECT SUM(costo) AS resultado FROM gastos WHERE UPPER(periodoGasto) = UPPER(?)";
+
+	            try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
+	                preparedStatement.setString(1, nombreMes);
+
+	                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	                    if (resultSet.next()) {
+	                        // Obtener el resultado de la suma
+	                        return resultSet.getDouble("resultado");
+	                    }
+	                }
+	            } catch (SQLException e) {
+	                // Manejo de excepciones
+	                e.printStackTrace();
+	            }
+
+	            // En caso de error o si no hay resultados, retornar un valor indicativo
+	            return 0;
+	        
+	    }
+	    
+	    public List<Gastos> listarGastosPorMes(int numeroDeMes) throws SQLException {
+	        Conexion factory = new Conexion();
+	             final Connection con = factory.recuperaConexion();
+
+	            String consulta = "SELECT * FROM gastos WHERE UPPER(periodoGasto) = UPPER(?)";
+
+	            try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
+	                // Obtén el nombre del mes según el número proporcionado
+	                String nombreMes = obtenerNombreMes(numeroDeMes);
+
+	                preparedStatement.setString(1, nombreMes);
+
+	                try (ResultSet resultSet = preparedStatement.executeQuery()) {
+	                    List<Gastos> gastos = new ArrayList<>();
+
+	                    while (resultSet.next()) {
+	                        Gastos gasto = new Gastos(
+	                                resultSet.getString("periodoGasto"),
+	                                resultSet.getString("nombreGasto"),
+	                                resultSet.getString("tipo"),
+	                                resultSet.getDouble("costo")
+	                        );
+	                        gastos.add(gasto);
+	                    }
+
+	                    return gastos;
+	                }
+	            } catch (SQLException e) {
+	                // Manejo de excepciones
+	                e.printStackTrace();
+	                return Collections.emptyList();
+	            }
+	        
+	    }
+	    
+	 // Método auxiliar para obtener el nombre del mes según su número
+	    private String obtenerNombreMes(int numeroDeMes) {
+	        String[] nombresMeses = {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"};
+	        if (numeroDeMes >= 1 && numeroDeMes <= nombresMeses.length) {
+	            return nombresMeses[numeroDeMes - 1];
+	        } else {
+	            throw new IllegalArgumentException("Número de mes no válido: " + numeroDeMes);
+	        }
 	    }
 
 }
