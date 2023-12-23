@@ -1,6 +1,5 @@
 package gym.modelo;
 
-import java.sql.Date;
 
 public class Gastos {
 

@@ -3,9 +3,6 @@ package controller;
 import java.awt.EventQueue;
 import java.sql.SQLException;
 
-import javax.swing.JFrame;
-
-import vista.AltaClientesFrame;
 import vista.MenuFrame;
 
 public class GymMein {
