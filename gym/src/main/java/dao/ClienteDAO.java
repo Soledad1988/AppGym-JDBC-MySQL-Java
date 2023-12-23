@@ -1,12 +1,10 @@
 package dao;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,6 +91,38 @@ public class ClienteDAO {
 			throw new RuntimeException(e);
 		}
 	}
+    
+    
+    /*nuevooooooooo*/
+    
+    public List<Cliente> buscarPorApellido(String apellido) throws SQLException {
+	    List<Cliente> clientes = new ArrayList<>();
+
+	    String sql = "SELECT * FROM clientes WHERE apellido LIKE ?";
+	    try (PreparedStatement statement = con.prepareStatement(sql)) {
+	        statement.setString(1, "%" + apellido + "%");
+
+	        try (ResultSet resultSet = statement.executeQuery()) {
+	            while (resultSet.next()) {
+	                Integer id = resultSet.getInt("id");
+	                String nombre = resultSet.getString("nombre");
+	                String apellidoCliente = resultSet.getString("apellido");
+
+	                Cliente cliente = new Cliente();
+	                cliente.setId(id);
+	                cliente.setNombre(nombre);
+	                cliente.setApellido(apellidoCliente);
+
+	                clientes.add(cliente);
+	            }
+	        }
+	    }
+
+	    return clientes;
+	}
+
+
+
     
     private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) throws SQLException {
 		try (ResultSet rst = pstm.getResultSet()) {

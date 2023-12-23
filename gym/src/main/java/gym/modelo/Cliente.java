@@ -11,6 +11,8 @@ public class Cliente {
 	private String direccion;
 	private Double precio;
 	
+	 
+	 
 	public Cliente() {
 		
 	}
@@ -52,7 +54,6 @@ public class Cliente {
 		this.apellido = apellido;
 		this.precio = precio;
 	}
-
 
 
 	public Integer getId() {

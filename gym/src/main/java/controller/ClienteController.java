@@ -1,7 +1,6 @@
 package controller;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -33,6 +32,12 @@ public class ClienteController {
 
 		public void actualizar(String nombre, String apellido, String direccion, Integer id) {
 			this.clienteDAO.actualizar(nombre, apellido, direccion, id);
+		}
+		
+		/*nuevooooo*/
+		 
+		 public List<Cliente> buscarPorApellido(String apellido) throws SQLException {
+		        return this.clienteDAO.buscarPorApellido(apellido);
 		}
 
 }
