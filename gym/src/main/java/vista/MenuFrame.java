@@ -23,7 +23,7 @@ public class MenuFrame extends JFrame {
 	 AltaGastosFrame altaGastosFrame;
 	 ReporteClientes reporteClientes;
 	 ReporteGastos reporteGastos;
-	 RegistroIngresos registroIngresos;
+	 RegistroCuotas registroIngresos;
 	
 	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -167,7 +167,7 @@ public class MenuFrame extends JFrame {
 	   }
 	   
 	   private void abrirCuotas() throws SQLException {
-		   registroIngresos = new RegistroIngresos();
+		   registroIngresos = new RegistroCuotas();
 		   registroIngresos.setVisible(true);
 	   }
 	   
