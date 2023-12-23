@@ -18,8 +18,8 @@ public class PagoDAO {
 	
 	public void pagos() {
 		// Consulta para obtener clientes y sus pagos
-	     String consulta = "SELECT clientes.id, clientes.nombre, clientes.apellido, clientes.direccion, " +
-	                    "pagos.monto, pagos.fecha_pago FROM clientes " +
+	     String consulta = "SELECT clientes.id, clientes.nombre, clientes.apellido, " +
+	                    "pagos.monto, pagos.periodoPago FROM clientes " +
 	                    "LEFT JOIN pagos ON clientes.id = pagos.cliente_id";
 	     
 	    try (PreparedStatement stm = con.prepareStatement(consulta)){
@@ -27,16 +27,15 @@ public class PagoDAO {
 	 
 	                while (resultSet.next()) {
 	                    // Procesar resultados
-	                    int idCliente = resultSet.getInt("clientes.id");
+	                    Integer idCliente = resultSet.getInt("clientes.id");
 	                    String nombreCliente = resultSet.getString("clientes.nombre");
 	                    String apellidoCliente = resultSet.getString("clientes.apellido");
-	                    String direccionCliente = resultSet.getString("clientes.direccion");
 
-	                    double montoPago = resultSet.getDouble("pagos.monto");
+	                    Double montoPago = resultSet.getDouble("pagos.monto");
 	                    String periodoPago = resultSet.getString("pagos.fecha_pago");
 
 	                    System.out.println("Cliente ID: " + idCliente + ", Nombre: " + nombreCliente +
-	                            ", Apellido: " + apellidoCliente + ", Dirección: " + direccionCliente +
+	                            ", Apellido: " + apellidoCliente + ", Dirección: " +
 	                            ", Monto del Pago: " + montoPago + ", Fecha del Pago: " + periodoPago);
 	                }
 	            }

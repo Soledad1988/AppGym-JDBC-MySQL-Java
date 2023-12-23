@@ -12,16 +12,18 @@ import java.sql.SQLException;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+import java.awt.Button;
 
 public class MenuFrame extends JFrame {
 
 	private JPanel contentPane;
-	 private JButton botonNuevoClientes;
+	private JButton botonNuevoClientes;
 	 
 	 AltaClientesFrame listaClientesFrame;
 	 AltaGastosFrame altaGastosFrame;
 	 ReporteClientes reporteClientes;
 	 ReporteGastos reporteGastos;
+	 RegistroIngresos registroIngresos;
 	
 	/*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -71,7 +73,7 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton listaClientes = new JButton("Lista Clientes");
-		listaClientes.setBounds(178, 105, 138, 23);
+		listaClientes.setBounds(107, 139, 138, 23);
 		contentPane.add(listaClientes);
 		
 		listaClientes.addActionListener(new ActionListener() {
@@ -88,7 +90,7 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton reporteGastos = new JButton("Reporte Gastos");
-		reporteGastos.setBounds(178, 167, 138, 23);
+		reporteGastos.setBounds(177, 183, 138, 23);
 		contentPane.add(reporteGastos);
 		
 		reporteGastos.addActionListener(new ActionListener() {
@@ -110,7 +112,7 @@ public class MenuFrame extends JFrame {
 		contentPane.add(logo);
 		
 		JButton btnAltaGastos = new JButton("Registrar Gastos");
-		btnAltaGastos.setBounds(23, 167, 145, 23);
+		btnAltaGastos.setBounds(22, 183, 145, 23);
 		contentPane.add(btnAltaGastos);
 		
 		btnAltaGastos.addActionListener(new ActionListener() {
@@ -118,6 +120,23 @@ public class MenuFrame extends JFrame {
             public void actionPerformed(ActionEvent e) { 
             	try {
             		abrirAltaGastos();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            }
+            
+        });
+	
+		JButton botonRegistroCuotas = new JButton("Registro Cuotas");
+		botonRegistroCuotas.setBounds(178, 105, 146, 23);
+		contentPane.add(botonRegistroCuotas);
+		
+		botonRegistroCuotas.addActionListener(new ActionListener() {
+        	
+            public void actionPerformed(ActionEvent e) { 
+            	try {
+            		abrirCuotas();
 				} catch (SQLException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -145,6 +164,11 @@ public class MenuFrame extends JFrame {
 	   
 	   private void abrirAltaGastos() throws SQLException {
 		   altaGastosFrame = new AltaGastosFrame();
+	   }
+	   
+	   private void abrirCuotas() throws SQLException {
+		   registroIngresos = new RegistroIngresos();
+		   registroIngresos.setVisible(true);
 	   }
 	   
 	   public void mostrarVentana() {
