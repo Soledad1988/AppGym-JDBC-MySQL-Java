@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -25,9 +26,10 @@ import javax.swing.JTextField;
 
 import javax.swing.table.DefaultTableModel;
 
-import controller.IngresosController;
-import dao.IngresosDAO;
+import controller.ClienteController;
+import controller.CuotaController;
 import gym.modelo.Cliente;
+import gym.modelo.Cuota;
 
 import javax.swing.JOptionPane;
 import com.toedter.calendar.JDateChooser;
@@ -37,7 +39,7 @@ import java.awt.SystemColor;
 import java.awt.Font;
 
 
-public class RegistroIngresos extends JFrame {
+public class RegistroCuotas extends JFrame {
 	
 	private JTextField textoApellido;
     private JButton botonBuscar;
@@ -45,7 +47,10 @@ public class RegistroIngresos extends JFrame {
     private JCheckBox[] checkboxes;
     private JButton botonAsignarPago;
     private JTextField textoMonto;
-    private IngresosController ingresosController;
+    
+    //nuevos
+    private ClienteController clienteController;
+    private CuotaController cuotaController;
     private JDateChooser textFechaPago;
     
     
@@ -53,7 +58,7 @@ public class RegistroIngresos extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					RegistroIngresos frame = new RegistroIngresos();
+					RegistroCuotas frame = new RegistroCuotas();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -64,14 +69,15 @@ public class RegistroIngresos extends JFrame {
     } 
     
 
-    public RegistroIngresos() {
+    public RegistroCuotas() {
         // Configuración de la ventana principal
-        super("Asignación de Pagos");
+        super("Registro de Cuotas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
 
         try {
-            ingresosController = new IngresosController();
+            cuotaController = new CuotaController();
+            clienteController = new ClienteController();
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al inicializar el controlador.");
@@ -131,7 +137,7 @@ public class RegistroIngresos extends JFrame {
         textFechaPago.setBorder(new LineBorder(SystemColor.window));
         textFechaPago.setBackground(Color.WHITE);
         panelAsignacion.add(textFechaPago);
-        botonAsignarPago = new JButton("Asignar Pago");
+        botonAsignarPago = new JButton("Asignar Cuotas");
         panelAsignacion.add(botonAsignarPago);
         
                 // Configuración de acciones para el botón de asignación de pagos
@@ -140,6 +146,7 @@ public class RegistroIngresos extends JFrame {
                     public void actionPerformed(ActionEvent e) {
                         // Lógica de asignación de pagos
                         asignarPagos();
+                        limpiarCampos();
                     }
                 });
        
@@ -153,12 +160,12 @@ public class RegistroIngresos extends JFrame {
             }
         });
     }
-
+    
     private void buscarClientesPorApellido() {
         String apellido = textoApellido.getText().trim();
 
         try {
-            List<Cliente> clientes = ingresosController.buscarPorApellido(apellido);;
+            List<Cliente> clientes = clienteController.buscarPorApellido(apellido);
 
             DefaultTableModel modeloTabla = (DefaultTableModel) tablaClientes.getModel();
             modeloTabla.setRowCount(0);
@@ -173,13 +180,7 @@ public class RegistroIngresos extends JFrame {
         }
     }
     
-    
-    
-    private double obtenerMontoPago() {
-        // Implementa la lógica para obtener el monto de pago (puedes usar un cuadro de diálogo, etc.)
-        // Por ahora, devuelve un valor ficticio
-        return 100.0;
-    }
+
 
     private void asignarPagos() {
         DefaultTableModel modeloTabla = (DefaultTableModel) tablaClientes.getModel();
@@ -187,20 +188,17 @@ public class RegistroIngresos extends JFrame {
         for (int i = 0; i < modeloTabla.getRowCount(); i++) {
             boolean seleccionado = (boolean) modeloTabla.getValueAt(i, 3);
             if (seleccionado) {
-                int idCliente = (int) modeloTabla.getValueAt(i, 0);
+                Integer idCliente = (Integer) modeloTabla.getValueAt(i, 0);
 
                 // Obtener el monto y la fecha ingresados manualmente
                 Double montoPago = Double.parseDouble(textoMonto.getText());
-                // Obtener la fecha seleccionada del JDateChooser
-                LocalDate fechaSeleccionada = Instant.ofEpochMilli(textFechaPago.getDate().getTime())
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDate();
-
-                // Convertir la fecha a una cadena
-                String fechaPago = fechaSeleccionada.toString();
+              
+             // Obtener la fecha seleccionada del JDateChooser
+                java.util.Date fechaPago = textFechaPago.getDate();
+                
 
                 try {
-                    ingresosController.asignarPagos(idCliente, montoPago, fechaPago);
+                    cuotaController.asignarCuota(idCliente, montoPago, fechaPago);;
                     System.out.println("Pago asignado al cliente con ID " + idCliente + " por un monto de " + montoPago +
                             " en la fecha " + fechaPago);
                 } catch (SQLException ex) {
@@ -211,6 +209,12 @@ public class RegistroIngresos extends JFrame {
         }
 
         JOptionPane.showMessageDialog(this, "Pagos asignados con éxito");
+    }
+    
+    private void limpiarCampos() {
+    	this.textFechaPago.setDate(null);
+        this.textoMonto.setText("");
+        this.textoApellido.setText("");
     }
     
 }
