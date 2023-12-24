@@ -4,16 +4,15 @@ import java.sql.Date;
 
 public class Cuota {
 
-	 private Integer idCuota;
-	 private Integer clienteId;
-	 private Double monto;
-	 private Date fechaPago;
+	private Integer idCuota;
+	private Integer clienteId;
+	private Double monto;
+	private Date fechaPago;
 	 
-	 public Cuota() {
+	public Cuota() {
 			
-		}
-	 
-	 
+	}
+	  
 	public Cuota(Integer idCuota, Integer clienteId, Double monto, Date fechaPago) {
 		super();
 		this.idCuota = idCuota;
@@ -21,7 +20,6 @@ public class Cuota {
 		this.monto = monto;
 		this.fechaPago = fechaPago;
 	}
-
 
 	public Cuota(Integer clienteId, Double monto, Date fechaPago) {
 		this.clienteId = clienteId;
@@ -68,8 +66,5 @@ public class Cuota {
 	public void setFechaPago(Date fechaPago) {
 		this.fechaPago = fechaPago;
 	}
-	
-	
-	 
-	 
+		 
 }
