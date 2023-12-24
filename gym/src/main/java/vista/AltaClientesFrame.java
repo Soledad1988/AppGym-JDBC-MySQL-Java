@@ -1,5 +1,6 @@
 package vista;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;
@@ -39,10 +40,9 @@ public class AltaClientesFrame extends JFrame {
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
-    private MenuFrame menuFrame;
     
     public static JDateChooser textFechaIngreso;
-    private JTextField textPrecio;
+    private JTextField textTelefono;
     
     public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -93,14 +93,14 @@ public class AltaClientesFrame extends JFrame {
 		//panel.add(textFechaIngreso);
         getContentPane().add(textFechaIngreso);
         
-        JLabel lblPrecio = new JLabel("Precio");
-        lblPrecio.setForeground(Color.BLACK);
-        lblPrecio.setBounds(10, 220, 240, 15);
-        getContentPane().add(lblPrecio);
+        JLabel lblTelefono = new JLabel("Telefono");
+        lblTelefono.setForeground(Color.BLACK);
+        lblTelefono.setBounds(10, 220, 240, 15);
+        getContentPane().add(lblTelefono);
         
-        textPrecio = new JTextField();
-        textPrecio.setBounds(10, 234, 265, 20);
-        getContentPane().add(textPrecio);
+        textTelefono = new JTextField();
+        textTelefono.setBounds(10, 234, 265, 20);
+        getContentPane().add(textTelefono);
         
         JLabel Logo = new JLabel("");
         Logo.setIcon(new ImageIcon("C:\\Users\\brent\\eclipse-workspace\\gym.png"));
@@ -125,12 +125,20 @@ public class AltaClientesFrame extends JFrame {
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
-        modelo.addColumn("Pago");
+        modelo.addColumn("Telefono");
+        
+        // Establecer los nombres de las columnas
+        String[] nombresColumnas = {"Id", "Fecha Alta", "Nombre", "Apellido", "Dirección", "Telefono"};
+        modelo.setColumnIdentifiers(nombresColumnas);
+        
+     // Configurar la tabla con el modelo
+        tabla.setModel(modelo);
+        
 
-
+        
         cargarTabla();
 
-        tabla.setBounds(10, 286, 760, 240);
+        tabla.setBounds(10, 307, 760, 219);
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
@@ -314,7 +322,7 @@ public class AltaClientesFrame extends JFrame {
 		try {
 			for (Cliente clientes : cliente) {
 				modelo.addRow(new Object[] { clientes.getId(), clientes.getFechaAlta(), clientes.getNombre(), clientes.getApellido(), 
-						clientes.getDireccion(),clientes.getPrecio() });
+						clientes.getDireccion(),clientes.getTelefono() });
 			}
 		} catch (Exception e) {
 			throw e;
@@ -326,10 +334,10 @@ public class AltaClientesFrame extends JFrame {
     private void guardar() throws SQLException {
              
     	String fechaIngreso = ((JTextField)textFechaIngreso.getDateEditor().getUiComponent()).getText();
-    	Double precio = Double.parseDouble(textPrecio.getText());
+    	//Double precio = Double.parseDouble(textTelefono.getText());
 		
 		 Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
-          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),precio);	
+          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),textTelefono.getText());	
 		 	
 		this.clienteController.guardar(cliente);	
  			
@@ -345,7 +353,7 @@ public class AltaClientesFrame extends JFrame {
         this.textoNombre.setText("");
         this.textoApellido.setText("");
         this.textoDireccion.setText("");
-        this.textPrecio.setText("");
+        this.textTelefono.setText("");
     }
 
 }

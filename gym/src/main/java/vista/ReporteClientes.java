@@ -28,6 +28,7 @@ import com.toedter.calendar.JDateChooser;
 import controller.ClienteController;
 import controller.ReporteController;
 import gym.modelo.Cliente;
+import gym.modelo.Cuota;
 
 import javax.swing.JList;
 import javax.swing.JComboBox;
@@ -155,11 +156,11 @@ public class ReporteClientes extends JFrame {
     private void cargarTablaPorMes(int numeroMes) {
         limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos
 
-        List<Cliente> clientes = new ArrayList<>();
+        List<Map<String, String>> clientes = new ArrayList<>();
 
         try {
             // Utiliza el método listarClientesPorMes de tu ReporteController
-            clientes = this.reporteControler.listarClientesPorMes(numeroMes);
+            clientes = this.reporteControler.reporteCuotasPorMes(numeroMes);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -167,10 +168,10 @@ public class ReporteClientes extends JFrame {
 
         clientes.forEach(cliente -> modelo.addRow(
                 new Object[] {
-                        cliente.getFechaAlta(),
-                        cliente.getNombre(),
-                        cliente.getApellido(),
-                        cliente.getPrecio()
+                        cliente.get("Fecha Pago"),
+                        cliente.get("Nombre"),
+                        cliente.get("Apellido"),
+                        cliente.get("Monto")
                 }));
     }
     
@@ -179,10 +180,10 @@ public class ReporteClientes extends JFrame {
         tabla = new JTable();
 
         modelo = (DefaultTableModel) tabla.getModel();
-        modelo.addColumn("Fecha Alta");
+        modelo.addColumn("Fecha Pago");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
-        modelo.addColumn("Precio");
+        modelo.addColumn("Monto");
     
         cargarTabla();
 
