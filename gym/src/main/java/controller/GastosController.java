@@ -9,28 +9,29 @@ import dao.GastoDAO;
 import gym.modelo.Gastos;
 
 public class GastosController {
-
-	private GastoDAO gastoDAO;
 	
-	public GastosController() throws SQLException {
-		 Connection connection = new Conexion().recuperaConexion();
-		 this.gastoDAO = new GastoDAO(connection);
-		}
-	 
-		public void guardar(Gastos gasto) {
-			this.gastoDAO.guardar(gasto);
-		}
-		
-		public List<Gastos> listar() {
-			return this.gastoDAO.listar();
-		}
-		
-		public void eliminar(Integer id) {
-			this.gastoDAO.eliminar(id);
-		}
 
-		public void actualizar(String nombreGasto, String tipo, Double costo, Integer idGasto) {
-			this.gastoDAO.actualizar(nombreGasto, tipo, costo, idGasto);
-		}
-  		
+		private GastoDAO gastoDAO;
+		
+		public GastosController() throws SQLException {
+			 Connection connection = new Conexion().recuperaConexion();
+			 this.gastoDAO = new GastoDAO(connection);
+			}
+		 
+			public void guardar(Gastos gasto) {
+				this.gastoDAO.guardar(gasto);
+			}
+			
+			public List<Gastos> listar() {
+				return this.gastoDAO.listar();
+			}
+			
+			public void eliminar(Integer id) {
+				this.gastoDAO.eliminar(id);
+			}
+
+			public void actualizar(String nombreGasto, String tipo, Double costo, Integer idGasto) {
+				this.gastoDAO.actualizar(nombreGasto, tipo, costo, idGasto);
+			}
+	  
 }

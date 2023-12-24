@@ -12,19 +12,20 @@ import java.util.Map;
 
 import conexion.Conexion;
 import dao.ClienteDAO;
+import dao.GastoDAO;
 import gym.modelo.Cliente;
+import gym.modelo.Cuota;
 import gym.modelo.Gastos;
 
 public class ReporteController {
 	
-	private ClienteDAO clienteDAO;
 	
 	//listar reporte
 		public List<Map<String,String>> reporteClientes() throws SQLException {
 			Conexion factory = new Conexion();
 			final Connection con = factory.recuperaConexion();
 			  
-				final PreparedStatement statement = con.prepareStatement("SELECT fechaAlta, nombre, apellido, precio FROM clientes");
+				final PreparedStatement statement = con.prepareStatement("SELECT fechaAlta, nombre, apellido, telefono FROM clientes");
 		        
 				statement.execute();
 
@@ -38,7 +39,7 @@ public class ReporteController {
 		            fila.put("fechaAlta", String.valueOf(resultSet.getDate("fechaAlta")));
 		            fila.put("nombre", resultSet.getString("nombre"));
 		            fila.put("apellido", resultSet.getString("apellido"));
-		            fila.put("precio", String.valueOf(resultSet.getDouble("precio")));
+		            fila.put("telefono", resultSet.getString("telefono"));
 
 		            resultado.add(fila);
 		        }
@@ -54,7 +55,7 @@ public class ReporteController {
 	        ResultSet resultSet = null;
 
 	        try {
-	            String consulta = "SELECT SUM(precio) AS resultado FROM clientes WHERE MONTH(fechaAlta) = ?";
+	            String consulta = "SELECT SUM(monto) AS resultado FROM cuotas WHERE MONTH(fechaPago) = ?";
 	            PreparedStatement statement = con.prepareStatement(consulta);
 
 	            // Establecer el parámetro del mes en la consulta
@@ -135,7 +136,7 @@ public class ReporteController {
 	    }
 	    
 	    
-	    public List<Cliente> listarClientesPorMes(int numeroMes) throws SQLException {
+	    public List<Cliente> listarClientesPorMes2(int numeroMes) throws SQLException {
 	    	
 	    	Conexion factory = new Conexion();
 			final Connection con = factory.recuperaConexion();
@@ -155,7 +156,7 @@ public class ReporteController {
 	                            resultSet.getDate("fechaAlta"),
 	                            resultSet.getString("nombre"),
 	                            resultSet.getString("apellido"),
-	                            resultSet.getDouble("precio")
+	                            resultSet.getString("telefono")
 	                    );
 	                    clientes.add(cliente);
 	                }
@@ -240,5 +241,40 @@ public class ReporteController {
 	            throw new IllegalArgumentException("Número de mes no válido: " + numeroDeMes);
 	        }
 	    }
+	    
+	    
+	    /*+++++++++++++++++++++++++++++++++++++++++++++++++*/
+	  //listar reporte
+	    
+	    public List<Map<String, String>> reporteCuotasPorMes(int numeroMes) throws SQLException {
+	        Conexion factory = new Conexion();
+	        final Connection con = factory.recuperaConexion();
 
+	        // Consulta para obtener clientes y sus pagos en el mes especificado
+	        final String consulta = "SELECT clientes.nombre, clientes.apellido, cuotas.monto, cuotas.fechaPago " +
+	                                "FROM clientes LEFT JOIN cuotas ON clientes.id = cuotas.clienteId " +
+	                                "WHERE MONTH(cuotas.fechaPago) = ?";
+
+	        try (PreparedStatement statement = con.prepareStatement(consulta)) {
+	            statement.setInt(1, numeroMes);
+	            statement.execute();
+
+	            ResultSet resultSet = statement.getResultSet();
+
+	            List<Map<String, String>> resultado = new ArrayList<>();
+
+	            // Leemos el contenido para agregarlo a un listado
+	            while (resultSet.next()) {
+	                Map<String, String> fila = new HashMap<>();
+	                fila.put("Fecha Pago", String.valueOf(resultSet.getDate("cuotas.fechaPago")));
+	                fila.put("Nombre", resultSet.getString("clientes.nombre"));
+	                fila.put("Apellido", resultSet.getString("clientes.apellido"));
+	                fila.put("Monto", String.valueOf(resultSet.getDouble("cuotas.monto")));
+
+	                resultado.add(fila);
+	            }
+
+	            return resultado;
+	        }
+	    }
 }
