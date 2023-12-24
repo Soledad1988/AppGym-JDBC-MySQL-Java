@@ -22,13 +22,13 @@ public class ClienteDAO {
     //guardar
     public void guardar(Cliente cliente) {
 		try {
-			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, precio) VALUES (?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, telefono) VALUES (?, ?, ?, ?, ?)";
 			try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				stm.setDate(1, cliente.getFechaAlta());
 				stm.setString(2, cliente.getNombre());
 				stm.setString(3, cliente.getApellido());
 				stm.setString(4, cliente.getDireccion());
-				stm.setDouble(5, cliente.getPrecio());
+				stm.setString(5, cliente.getTelefono());
 				stm.execute();
 				try (ResultSet rst = stm.getGeneratedKeys()) {
 					while (rst.next()) {
@@ -78,7 +78,7 @@ public class ClienteDAO {
     public List<Cliente> listar() {
 		List<Cliente> cliente = new ArrayList<Cliente>();
 		try {
-			String sql = "SELECT id, fechaAlta, nombre, apellido, direccion, precio FROM clientes";
+			String sql = "SELECT id, fechaAlta, nombre, apellido, direccion, telefono FROM clientes";
 
 			try (PreparedStatement pstm = con.prepareStatement(sql)) {
 				pstm.execute();
@@ -121,59 +121,14 @@ public class ClienteDAO {
 	    return clientes;
 	}
 
-
-
     
     private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) throws SQLException {
 		try (ResultSet rst = pstm.getResultSet()) {
 			while (rst.next()) {
 				Cliente cliente = new Cliente(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
-						rst.getString(5), rst.getDouble(6));
+						rst.getString(5), rst.getString(6));
 				clientes.add(cliente);
 			}
 		}				
 	}
 }
-
-
-/*
-public List<Cliente> listarClientesPorMes(int numeroMes) {
-    // Aquí asumimos que la fecha de ingreso está almacenada en la columna 'fecha_alta'
-    String consultaSQL = "SELECT * FROM clientes WHERE MONTH(fecha_alta) = ?";
-
-    try (Connection connection = obtenerConexion();
-         PreparedStatement preparedStatement = connection.prepareStatement(consultaSQL)) {
-
-        preparedStatement.setInt(1, numeroMes);
-
-        try (ResultSet resultSet = preparedStatement.executeQuery()) {
-            List<Cliente> clientes = new ArrayList<>();
-
-            while (resultSet.next()) {
-                // Asumimos que tienes un constructor de Cliente que acepta los valores de la consulta
-                Cliente cliente = new Cliente(
-                        resultSet.getInt("id"),
-                        resultSet.getDate("fecha_alta"),
-                        resultSet.getString("nombre"),
-                        resultSet.getString("apellido"),
-                        resultSet.getString("direccion"),
-                        resultSet.getDouble("precio")
-                        // Otros campos según tu estructura
-                );
-                clientes.add(cliente);
-            }
-
-            return clientes;
-        }
-    } catch (SQLException e) {
-        // Manejo de excepciones
-        e.printStackTrace();
-        return Collections.emptyList();
-    }
-}
-
-
-int numeroMes = 1; // Cambia esto según el mes que estás buscando
-List<Cliente> clientesPorMes = clienteController.listarClientesPorMes(numeroMes);
-
- Ahora, la lista `clientesPorMes` contiene los clientes para el mes especificado*/

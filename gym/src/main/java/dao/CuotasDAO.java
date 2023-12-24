@@ -3,7 +3,12 @@ package dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
+
+import gym.modelo.Cuota;
 
 public class CuotasDAO {
 
@@ -12,27 +17,33 @@ public class CuotasDAO {
 	public CuotasDAO(Connection con) {
 		this.con = con;
 	}
-	
-	public void asignarCuota(Integer clienteId, Double monto, java.util.Date fechaPago) throws SQLException {
-        String query = "INSERT INTO Cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
-        try (PreparedStatement preparedStatement = con.prepareStatement(query)) {
-            preparedStatement.setInt(1, clienteId);
-            preparedStatement.setDouble(2, monto);
-            preparedStatement.setDate(3, new java.sql.Date(fechaPago.getTime()));
-            preparedStatement.executeUpdate();
-        }
-    }
-	
-	public void asignarPago(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
-	    // Modifica tu consulta SQL para incluir el monto, la fecha y el periodo
-	    String sql = "INSERT INTO pagos (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
-	    try (PreparedStatement statement = con.prepareStatement(sql)) {
-	        statement.setInt(1, idCliente);
-	        statement.setDouble(2, monto);
-	        statement.setDate(3, fechaPago);
 
-	        statement.executeUpdate();
+	
+	public void asignarCuota(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
+		String sql = "INSERT INTO cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
+		System.out.println("Consulta SQL: " + sql);
+	    
+	    try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+	    	stm.setInt(1, idCliente);
+	    	stm.setDouble(2, monto);
+	    	stm.setDate(3, fechaPago);
+	        
+	        stm.executeUpdate();
+	      
+	    }  catch (SQLException e) {
+	        
+	        e.printStackTrace();
+	        throw e;
 	    }
 	}
+	
+	 private void transformarResultSetEnCuota(List<Cuota> cuotas, PreparedStatement pstm) throws SQLException {
+			try (ResultSet rst = pstm.getResultSet()) {
+				while (rst.next()) {
+					Cuota cuota = new Cuota(rst.getInt(1), rst.getInt(2), rst.getDouble(3), rst.getDate(4));
+					cuotas.add(cuota);
+				}
+			}				
+		}
     
 }
