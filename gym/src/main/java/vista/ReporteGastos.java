@@ -191,24 +191,6 @@ public class ReporteGastos extends JFrame {
         setVisible(true);
         setLocationRelativeTo(null);
     }
-
-   /* private void cargarTabla() {
-        List<Map<String, String>> gastos = new ArrayList<Map<String, String>>();
-
-        try {
-        	gastos = this.reporteControler.reporteGastos();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
-        gastos.forEach(producto -> modelo.addRow(
-                new Object[] {
-                		producto.get("Periodo"),
-                        producto.get("Gasto"),
-                        producto.get("Tipo"),
-                        producto.get("Costo")}));
-    }*/
     
     private void cargarTabla() {
         limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos

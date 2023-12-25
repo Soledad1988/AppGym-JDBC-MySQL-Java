@@ -8,7 +8,9 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.ImageIcon;
@@ -24,12 +26,14 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
+import controller.ClienteController;
 import gym.modelo.Cliente;
 
+import java.sql.Date;
 
 
 
-public class AltaClientesFrame extends JFrame {
+public class ListaClientesFrame extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
@@ -39,6 +43,7 @@ public class AltaClientesFrame extends JFrame {
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
+    private MenuFrame menuFrame;
     
     public static JDateChooser textFechaIngreso;
     private JTextField textTelefono;
@@ -47,7 +52,7 @@ public class AltaClientesFrame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					AltaClientesFrame frame = new AltaClientesFrame();
+					ListaClientesFrame frame = new ListaClientesFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -56,7 +61,7 @@ public class AltaClientesFrame extends JFrame {
 		});
 	}
 
-    public AltaClientesFrame() throws SQLException {
+    public ListaClientesFrame() throws SQLException {
         super("Clientes");
 
         this.clienteController = new ClienteController();
@@ -124,28 +129,20 @@ public class AltaClientesFrame extends JFrame {
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
-        modelo.addColumn("Telefono");
-        
-        // Establecer los nombres de las columnas
-        String[] nombresColumnas = {"Id", "Fecha Alta", "Nombre", "Apellido", "Dirección", "Telefono"};
-        modelo.setColumnIdentifiers(nombresColumnas);
-        
-     // Configurar la tabla con el modelo
-        tabla.setModel(modelo);
-        
+        modelo.addColumn("Pago");
 
-        
+
         cargarTabla();
 
-        tabla.setBounds(10, 307, 760, 219);
+        tabla.setBounds(10, 286, 760, 240);
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
-        botonMenu = new JButton("Menú");
+        botonMenu = new JButton("Menù");
         
-        botonEliminar.setBounds(238, 532, 98, 20);
-        botonModificar.setBounds(346, 532, 93, 20);
-        botonMenu.setBounds(449, 532, 98, 20);
+        botonEliminar.setBounds(15, 530, 80, 20);
+        botonModificar.setBounds(105, 530, 80, 20);
+        botonMenu.setBounds(195, 530, 80, 20);
         
 
         container.add(tabla);
@@ -184,8 +181,8 @@ public class AltaClientesFrame extends JFrame {
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(20, 265, 99, 20);
-        botonLimpiar.setBounds(129, 265, 99, 20);
+        botonGuardar.setBounds(15, 265, 80, 20);
+        botonLimpiar.setBounds(105, 265, 80, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);
@@ -196,10 +193,7 @@ public class AltaClientesFrame extends JFrame {
         container.add(botonGuardar);
         container.add(botonLimpiar);
        
-        
     }
-
-    
 
     private void configurarAccionesDelFormulario() {
         botonGuardar.addActionListener(new ActionListener() {
@@ -246,15 +240,9 @@ public class AltaClientesFrame extends JFrame {
     }
 
     
-    private void volverMenu() {
-        // Cerrar la ventana actual
-        dispose();
-
-        // Crear y mostrar la instancia del menú
-        MenuFrame menuFrame = new MenuFrame();
-        menuFrame.setVisible(true);
+    private void volverMenu(){
+        menuFrame = new MenuFrame();
     }
-
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -263,34 +251,27 @@ public class AltaClientesFrame extends JFrame {
     private boolean tieneFilaElegida() {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
-    
-    private void actualizar() {
-        if (tieneFilaElegida()) {
-            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
-            return;
-        }
 
-        Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-                .ifPresentOrElse(fila -> {
-                    Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-
-                    // Actualizar los campos con los valores de la interfaz
-                    textoNombre.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 2));
-                    textoApellido.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
-                    textoDireccion.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 4));
-
-                    // Luego, puedes imprimir los valores para verificar
-                    System.out.println("ID to update: " + id);
-                    System.out.println("Texto Nombre: " + textoNombre.getText());
-                    System.out.println("Texto Apellido: " + textoApellido.getText());
-                    System.out.println("Texto Direccion: " + textoDireccion.getText());
-
-                    // Finalmente, llamar al método actualizar del controlador
-                    this.clienteController.actualizar(textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(), id);
-
-                    JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
-                }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
-    }
+    private void actualizar() {		
+		Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
+        .ifPresentOrElse(fila -> {
+        	
+        	  String nombre = (String) modelo.getValueAt(tabla.getSelectedRow(), 2);
+              String apellido = (String) modelo.getValueAt(tabla.getSelectedRow(), 3);
+              String direccion = (String) modelo.getValueAt(tabla.getSelectedRow(), 4);
+              Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+              System.out.println("ID to update: " + id);
+              
+              System.out.println("Texto Nombre: " + textoNombre.getText());
+              System.out.println("Texto Apellido: " + textoApellido.getText());
+              System.out.println("Texto Direccion: " + textoDireccion.getText());
+            
+              
+              this.clienteController.actualizar(nombre, apellido, direccion, id);
+			JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
+		}, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
+		
+	}
  
     
     private void eliminar() {
@@ -333,7 +314,7 @@ public class AltaClientesFrame extends JFrame {
     private void guardar() throws SQLException {
              
     	String fechaIngreso = ((JTextField)textFechaIngreso.getDateEditor().getUiComponent()).getText();
-    	//Double precio = Double.parseDouble(textTelefono.getText());
+    	Double precio = Double.parseDouble(textTelefono.getText());
 		
 		 Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
           		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),textTelefono.getText());	

@@ -57,6 +57,7 @@ public class ReporteController {
 	        try {
 	            String consulta = "SELECT SUM(monto) AS resultado FROM cuotas WHERE MONTH(fechaPago) = ?";
 	            PreparedStatement statement = con.prepareStatement(consulta);
+	            
 
 	            // Establecer el parámetro del mes en la consulta
 	            statement.setInt(1, numeroMes);
@@ -109,66 +110,7 @@ public class ReporteController {
 	        return resultado;
 	    }
 	    
-	    public static double realizarSumaGastos() throws SQLException {
-	    	
-	    	Conexion factory = new Conexion();
-			final Connection con = factory.recuperaConexion();
-			 ResultSet resultSet = null;
-
-	        try {
-	            String consulta = "SELECT SUM(costo) AS resultado FROM gastos";
-	            PreparedStatement statement = con.prepareStatement(consulta);
-
-	            // Ejecutar la consulta
-	            resultSet = statement.executeQuery();
-
-	            // Procesar el resultado
-	            if (resultSet.next()) {
-	                // Obtener el resultado de la suma
-	                return resultSet.getDouble("resultado");
-	            }
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        } 
-
-	        // En caso de error, retornar un valor indicativo
-	        return -1;
-	    }
 	    
-	    
-	    public List<Cliente> listarClientesPorMes2(int numeroMes) throws SQLException {
-	    	
-	    	Conexion factory = new Conexion();
-			final Connection con = factory.recuperaConexion();
-	        // Aquí asumimos que la fecha de ingreso está almacenada en la columna 'fecha_alta'
-	        String consultaSQL = "SELECT * FROM clientes WHERE MONTH(fechaAlta) = ?";
-
-	        try (PreparedStatement preparedStatement = con.prepareStatement(consultaSQL)) {
-
-	            preparedStatement.setInt(1, numeroMes);
-
-	            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-	                List<Cliente> clientes = new ArrayList<>();
-
-	                while (resultSet.next()) {
-	                    // Asumimos que tienes un constructor de Cliente que acepta los valores de la consulta
-	                    Cliente cliente = new Cliente(
-	                            resultSet.getDate("fechaAlta"),
-	                            resultSet.getString("nombre"),
-	                            resultSet.getString("apellido"),
-	                            resultSet.getString("telefono")
-	                    );
-	                    clientes.add(cliente);
-	                }
-
-	                return clientes;
-	            }
-	        } catch (SQLException e) {
-	            // Manejo de excepciones
-	            e.printStackTrace();
-	            return Collections.emptyList();
-	        }
-	    }
 	    
 	    public double obtenerSumaCostosPorMes(int numeroMes) throws SQLException {
 	        Conexion factory = new Conexion();
@@ -196,6 +138,7 @@ public class ReporteController {
 	            return 0;
 	        
 	    }
+	    
 	    
 	    public List<Gastos> listarGastosPorMes(int numeroDeMes) throws SQLException {
 	        Conexion factory = new Conexion();
@@ -242,10 +185,8 @@ public class ReporteController {
 	        }
 	    }
 	    
-	    
-	    /*+++++++++++++++++++++++++++++++++++++++++++++++++*/
-	  //listar reporte
-	    
+	   
+	   //Listado de cuotas asignadas por mes 
 	    public List<Map<String, String>> reporteCuotasPorMes(int numeroMes) throws SQLException {
 	        Conexion factory = new Conexion();
 	        final Connection con = factory.recuperaConexion();
@@ -256,6 +197,7 @@ public class ReporteController {
 	                                "WHERE MONTH(cuotas.fechaPago) = ?";
 
 	        try (PreparedStatement statement = con.prepareStatement(consulta)) {
+	        	
 	            statement.setInt(1, numeroMes);
 	            statement.execute();
 
@@ -277,4 +219,6 @@ public class ReporteController {
 	            return resultado;
 	        }
 	    }
+	    
+	   
 }
