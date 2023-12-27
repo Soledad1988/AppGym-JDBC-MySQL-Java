@@ -4,11 +4,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import gym.modelo.Rol;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
@@ -18,6 +21,8 @@ public class MenuFrame extends JFrame {
 
 	private JPanel contentPane;
 	private JButton botonNuevoClientes;
+	private JButton btnNuevoUsuario;
+    private JButton btnListarClientes;
 	 
 	 AltaClientesFrame listaClientesFrame;
 	 AltaGastosFrame altaGastosFrame;
@@ -132,6 +137,14 @@ public class MenuFrame extends JFrame {
 		botonRegistroCuotas.setBounds(178, 105, 146, 23);
 		contentPane.add(botonRegistroCuotas);
 		
+		JButton btnNuevoUsuario = new JButton("Nuevo Usuario");
+		btnNuevoUsuario.setBounds(22, 272, 145, 23);
+		contentPane.add(btnNuevoUsuario);
+		
+		JButton btnCerrarSesesio = new JButton("Cerrar Sesión");
+		btnCerrarSesesio.setBounds(392, 272, 138, 23);
+		contentPane.add(btnCerrarSesesio);
+		
 		botonRegistroCuotas.addActionListener(new ActionListener() {
         	
             public void actionPerformed(ActionEvent e) { 
@@ -150,7 +163,8 @@ public class MenuFrame extends JFrame {
        
 	}
 	
-	   private void abrirNuevoCliente() throws SQLException {
+
+	private void abrirNuevoCliente() throws SQLException {
 	       listaClientesFrame = new AltaClientesFrame();
 	    }
 	   
@@ -173,5 +187,18 @@ public class MenuFrame extends JFrame {
 	   
 	   public void mostrarVentana() {
 	        setVisible(true);
+	    }
+	   
+	    public MenuFrame(Set<Rol> roles) {
+	    	 btnNuevoUsuario = new JButton("Nuevo Usuario");
+	         btnListarClientes = new JButton("Listar Clientes");
+	        // Lógica para habilitar o deshabilitar botones según roles
+	        if (roles.contains(Rol.ADMINISTRADOR)) {
+	            btnNuevoUsuario.setEnabled(true);
+	            btnListarClientes.setEnabled(true);
+	        } else {
+	            btnNuevoUsuario.setEnabled(false);
+	            btnListarClientes.setEnabled(false);
+	        }
 	    }
 }
