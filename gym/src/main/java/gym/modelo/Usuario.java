@@ -1,5 +1,6 @@
 package gym.modelo;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public class Usuario {
@@ -7,7 +8,8 @@ public class Usuario {
 	private Integer idUsuario; 
 	private String nombreUsuario;
 	private String contrasena;
-	private Set<Rol> roles;
+	//private Set<Rol> roles;
+	private Set<Rol> roles = new HashSet<>();
 	
 	public Usuario() {
 		
@@ -16,6 +18,13 @@ public class Usuario {
 	public Usuario(Integer idUsuario, String nombreUsuario, String contrasena) {
 		super();
 		this.idUsuario = idUsuario;
+		this.nombreUsuario = nombreUsuario;
+		this.contrasena = contrasena;
+	}
+
+	
+	public Usuario(String nombreUsuario, String contrasena) {
+		super();
 		this.nombreUsuario = nombreUsuario;
 		this.contrasena = contrasena;
 	}
@@ -44,12 +53,17 @@ public class Usuario {
 		this.contrasena = contrasena;
 	}
 	
-	public Set<Rol> getRoles() {
-        return roles;
-    }
 
     public void setRoles(Set<Rol> roles) {
         this.roles = roles;
+    }
+    
+    public void addRol(Rol rol) {
+        roles.add(rol);
+    }
+
+    public Set<Rol> getRoles() {
+        return roles;
     }
 
 	

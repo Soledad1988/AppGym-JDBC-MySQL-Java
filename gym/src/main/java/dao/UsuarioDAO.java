@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -23,29 +24,140 @@ public class UsuarioDAO {
 		this.con = con;
 	}
 	
-	public List<Usuario> buscar2(String nombreUsuario, String password) throws SQLException {
-	    List<Usuario> usuarios = new ArrayList<>();
-	    String sql = "SELECT * FROM usuarios WHERE nombreUsuario = ? AND contrasena = ?";
-	    try (PreparedStatement statement = con.prepareStatement(sql)) {
-	        statement.setString(1, nombreUsuario);
-	        statement.setString(2, password);
+	public void guardar2(Usuario usuario) {
+		try {
+			String sql = "INSERT INTO usuarios (nombreUsuario, contrasena) VALUES (?, ?)";
+			try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+				stm.setString(1, usuario.getNombreUsuario());
+				stm.setString(2, usuario.getContrasena());
+				stm.execute();
+				try (ResultSet rst = stm.getGeneratedKeys()) {
+					while (rst.next()) {
+						usuario.setIdUsuario(rst.getInt(1));
+					}
+				}
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
-	        try (ResultSet resultSet = statement.executeQuery()) {
-	            while (resultSet.next()) {
-	                String usuario = resultSet.getString("nombreUsuario");
-	                String pass = resultSet.getString("contrasena");
+	
+	
+	 
+	public void guardar(Usuario usuario, String nombreRol) {
+        try {
+            String sqlUsuario = "INSERT INTO usuarios (nombreUsuario, contrasena) VALUES (?, ?)";
+            try (PreparedStatement stmUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
+                stmUsuario.setString(1, usuario.getNombreUsuario());
+                stmUsuario.setString(2, usuario.getContrasena());
+                stmUsuario.executeUpdate();
 
-	                Usuario usu = new Usuario();
-	                usu.setNombreUsuario(usuario);
-	                usu.setContrasena(pass);
+                try (ResultSet rstUsuario = stmUsuario.getGeneratedKeys()) {
+                    while (rstUsuario.next()) {
+                        usuario.setIdUsuario(rstUsuario.getInt(1));
+                    }
+                }
+            }
 
-	                usuarios.add(usu);
-	            }
-	        }
-	    }
-		return usuarios;
-	    
-	 }
+            String sqlRoles = "INSERT INTO usuarios_roles (idUsuario, idRol) VALUES (?, ?)";
+            try (PreparedStatement stmRoles = con.prepareStatement(sqlRoles)) {
+                int idRol = obtenerIdRol(nombreRol); // Método para obtener el ID del rol
+                stmRoles.setInt(1, usuario.getIdUsuario());
+                stmRoles.setInt(2, idRol);
+                stmRoles.executeUpdate();
+            
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private int obtenerIdRol(String nombreRol) throws SQLException {
+        String sql = "SELECT idRol FROM roles WHERE nombreRol = ?";
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, nombreRol);
+
+            try (ResultSet rst = stm.executeQuery()) {
+                if (rst.next()) {
+                    return rst.getInt("idRol");
+                } else {
+                    throw new RuntimeException("No se encontró el ID del rol para el nombre: " + nombreRol);
+                }
+            }
+        }
+    }
+	
+	
+    
+    public void eliminar(Integer idUsuario) {
+    	String sql = "DELETE FROM usuarios WHERE id = ?";
+		try (PreparedStatement stm = con.prepareStatement(sql)) {
+			stm.setInt(1, idUsuario);
+			stm.execute();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+    
+    public void actualizar(String nombreUsuario, String password, Integer idUsuario) {
+    	
+    	String sql = "UPDATE usuarios SET nombreUsuario = ?, contrasena = ? WHERE idUsuario = ?";
+    	System.out.println("Consulta SQL: " + sql);
+        
+        System.out.println("ID: " + idUsuario);
+        System.out.println("Nombre: " + nombreUsuario);
+        System.out.println("Apellido: " + password);
+        
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, nombreUsuario);
+            stm.setString(2, password);
+            stm.setInt(3, idUsuario);
+
+            int rowsUpdated = stm.executeUpdate();
+            System.out.println(rowsUpdated + " fila(s) modificadas.");
+            
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+ 
+    public List<Usuario> listar() {
+        List<Usuario> usuarios = new ArrayList<>();
+        try {
+            String sql = "SELECT u.idUsuario, u.nombreUsuario, r.nombreRol " +
+                         "FROM usuarios u " +
+                         "INNER JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
+                         "INNER JOIN roles r ON ur.idRol = r.idRol";
+
+            try (PreparedStatement pstm = con.prepareStatement(sql);
+                 ResultSet rs = pstm.executeQuery()) {
+
+                while (rs.next()) {
+                    int idUsuario = rs.getInt("idUsuario");
+                    String nombreUsuario = rs.getString("nombreUsuario");
+                    String rolAsignado = rs.getString("nombreRol");
+
+                    usuarios.add(new Usuario(idUsuario, nombreUsuario, rolAsignado));
+                }
+            }
+            return usuarios;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+    
+    private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) throws SQLException {
+		try (ResultSet rst = pstm.getResultSet()) {
+			while (rst.next()) {
+				Usuario usuario = new Usuario(rst.getInt(1), rst.getString(2), rst.getString(3));
+				usuarios.add(usuario);
+			}
+		}				
+	}
+	
+	
 	
 	public List<Usuario> buscar(String usuario, String password) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
