@@ -4,6 +4,7 @@ import java.awt.EventQueue;
 import java.sql.SQLException;
 
 import vista.MenuFrame;
+import vista.UsuarioFrame;
 
 public class GymMein {
 
@@ -15,7 +16,7 @@ public class GymMein {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuFrame frame = new MenuFrame();
+					UsuarioFrame frame = new UsuarioFrame();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
