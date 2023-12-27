@@ -25,6 +25,7 @@ import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
 import gym.modelo.Cliente;
+import gym.modelo.Usuario;
 
 
 
@@ -42,6 +43,7 @@ public class AltaClientesFrame extends JFrame {
     
     public static JDateChooser textFechaIngreso;
     private JTextField textTelefono;
+    
     
     public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -253,6 +255,7 @@ public class AltaClientesFrame extends JFrame {
         // Crear y mostrar la instancia del menú
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
+        
     }
 
 

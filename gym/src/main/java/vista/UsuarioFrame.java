@@ -37,6 +37,8 @@ public class UsuarioFrame extends JFrame {
 	 private JLabel lblMensaje;
 	 private JPasswordField textPassword;
 	 private UsuarioDAO usuarioDAO;
+	 private Set<Rol> rolesUsuario;
+	 private Usuario usuarioLogueado;
 	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -153,7 +155,7 @@ public class UsuarioFrame extends JFrame {
 		        lblMensaje.setText("Usuario o contraseña incorrectos");
 		    } else {
 		        // Autenticación exitosa, puedes abrir la siguiente ventana aquí
-		        menu = new MenuFrame();
+		        //menu = new MenuFrame();
 		        menu.mostrarVentana();  // Asegúrate de tener un método similar en tu MenuFrame
 		        setVisible(false);  // Oculta la ventana actual
 		    }
@@ -163,11 +165,33 @@ public class UsuarioFrame extends JFrame {
 	        setVisible(true);
 	    }
 	   
-	   private void abrirMenuFrame(Set<Rol> roles) {
+	  /* private void abrirMenuFrame(Set<Rol> roles) {
 		    MenuFrame menuFrame = new MenuFrame(roles);
 		    menuFrame.setVisible(true);
 		    // Resto del código para cerrar la ventana actual, etc.
 		}
+	   
+	   private void abrirMenuFrame2() {
+		    MenuFrame menuFrame = new MenuFrame();
+		    menuFrame.setVisible(true);
+		    // Resto del código para cerrar la ventana actual, etc.
+		}*/
+	   
+	   private void abrirMenuFrame() {
+		    if (usuarioLogueado != null) {
+		        // Obtener roles del usuario desde la base de datos
+		        Set<Rol> roles = obtenerRolesDesdeBaseDeDatos(usuarioLogueado.getIdUsuario());
+
+		        // Pasar los roles a MenuFrame
+		        menu = new MenuFrame(roles);
+		        menu.mostrarVentana();
+		        setVisible(false);
+		    } else {
+		        // Manejar el caso en el que usuarioLogueado es null
+		        System.out.println("El usuarioLogueado es null");
+		    }
+		}
+
 	   
 	   private void abrirIniciarSesion() throws SQLException {
 		    String usuario = textUsuario.getText();
@@ -176,16 +200,16 @@ public class UsuarioFrame extends JFrame {
 		    List<Usuario> usuarios = new UsuarioController().buscar(usuario, password);
 
 		    if (!usuarios.isEmpty()) {
-		        Usuario usuarioLogueado = usuarios.get(0);
+		        usuarioLogueado = usuarios.get(0);  // Utiliza la variable de instancia en lugar de declarar una nueva
 		        // Obtener roles del usuario desde la base de datos
 		        Set<Rol> roles = obtenerRolesDesdeBaseDeDatos(usuarioLogueado.getIdUsuario());
+
 		        // Habilitar o deshabilitar botones según roles
 		        habilitarBotonesSegunRoles(roles);
 
 		        // Abrir MenuFrame y pasar roles
-		        abrirMenuFrame(roles);
+		        abrirMenuFrame();
 
-		        // Resto del código para cerrar la ventana actual, etc.
 		    } else {
 		        lblMensaje.setText("Usuario o contraseña incorrectos");
 		    }
@@ -212,8 +236,8 @@ public class UsuarioFrame extends JFrame {
 		        try {
 		            return usuarioDAO.obtenerRolesDesdeBaseDeDatos(idUsuario);
 		        } catch (SQLException e) {
-		            e.printStackTrace(); // o manejo de la excepción según tus necesidades
-		            return Collections.emptySet(); // o null u otro manejo de error
+		            e.printStackTrace();
+		            return Collections.emptySet();
 		        }
 		    }
 
