@@ -25,9 +25,6 @@ import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
 import gym.modelo.Cliente;
-import gym.modelo.Usuario;
-
-
 
 
 public class AltaClientesFrame extends JFrame {
