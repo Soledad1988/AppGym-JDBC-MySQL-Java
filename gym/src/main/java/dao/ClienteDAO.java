@@ -80,10 +80,10 @@ public class ClienteDAO {
 		try {
 			String sql = "SELECT id, fechaAlta, nombre, apellido, direccion, telefono FROM clientes";
 
-			try (PreparedStatement pstm = con.prepareStatement(sql)) {
-				pstm.execute();
+			try (PreparedStatement stm = con.prepareStatement(sql)) {
+				stm.execute();
 
-				transformarResultSetEnCliente(cliente, pstm);
+				transformarResultSetEnCliente(cliente, stm);
 			}
 			return cliente;
 		} catch (SQLException e) {
@@ -99,10 +99,10 @@ public class ClienteDAO {
 	    List<Cliente> clientes = new ArrayList<>();
 
 	    String sql = "SELECT * FROM clientes WHERE apellido LIKE ?";
-	    try (PreparedStatement statement = con.prepareStatement(sql)) {
-	        statement.setString(1, "%" + apellido + "%");
+	    try (PreparedStatement stm = con.prepareStatement(sql)) {
+	    	stm.setString(1, "%" + apellido + "%");
 
-	        try (ResultSet resultSet = statement.executeQuery()) {
+	        try (ResultSet resultSet = stm.executeQuery()) {
 	            while (resultSet.next()) {
 	                Integer id = resultSet.getInt("id");
 	                String nombre = resultSet.getString("nombre");

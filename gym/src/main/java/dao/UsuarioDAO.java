@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import gym.modelo.Cliente;
 import gym.modelo.Rol;
 import gym.modelo.Usuario;
 
@@ -130,13 +129,13 @@ public class UsuarioDAO {
                          "INNER JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
                          "INNER JOIN roles r ON ur.idRol = r.idRol";
 
-            try (PreparedStatement pstm = con.prepareStatement(sql);
-                 ResultSet rs = pstm.executeQuery()) {
+            try (PreparedStatement stm = con.prepareStatement(sql);
+                 ResultSet rst = stm.executeQuery()) {
 
-                while (rs.next()) {
-                    int idUsuario = rs.getInt("idUsuario");
-                    String nombreUsuario = rs.getString("nombreUsuario");
-                    String rolAsignado = rs.getString("nombreRol");
+                while (rst.next()) {
+                    int idUsuario = rst.getInt("idUsuario");
+                    String nombreUsuario = rst.getString("nombreUsuario");
+                    String rolAsignado = rst.getString("nombreRol");
 
                     usuarios.add(new Usuario(idUsuario, nombreUsuario, rolAsignado));
                 }
@@ -168,18 +167,18 @@ public class UsuarioDAO {
                      "JOIN roles r ON ur.idRol = r.idRol " +
                      "WHERE u.nombreUsuario = ? AND u.contrasena = ?";
 
-        try (PreparedStatement statement = con.prepareStatement(sql)) {
-            statement.setString(1, usuario);
-            statement.setString(2, password);
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+        	stm.setString(1, usuario);
+        	stm.setString(2, password);
 
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (ResultSet rst = stm.executeQuery()) {
                 Map<Integer, Usuario> usuariosMap = new HashMap<>();
 
-                while (resultSet.next()) {
-                    Integer idUsuario = resultSet.getInt("idUsuario");
-                    String nombreUsuario = resultSet.getString("nombreUsuario");
-                    String contrasena = resultSet.getString("contrasena");
-                    String nombreRol = resultSet.getString("nombreRol");
+                while (rst.next()) {
+                    Integer idUsuario = rst.getInt("idUsuario");
+                    String nombreUsuario = rst.getString("nombreUsuario");
+                    String contrasena = rst.getString("contrasena");
+                    String nombreRol = rst.getString("nombreRol");
 
                     Usuario usu = usuariosMap.computeIfAbsent(idUsuario,
                             k -> new Usuario(idUsuario, nombreUsuario, contrasena));
@@ -208,12 +207,12 @@ public class UsuarioDAO {
 	                 "JOIN usuarios_roles ur ON r.idRol = ur.idRol " +
 	                 "WHERE ur.idUsuario = ?";
 
-	    try (PreparedStatement statement = con.prepareStatement(sql)) {
-	        statement.setInt(1, idUsuario);
+	    try (PreparedStatement stm = con.prepareStatement(sql)) {
+	    	stm.setInt(1, idUsuario);
 
-	        try (ResultSet resultSet = statement.executeQuery()) {
-	            while (resultSet.next()) {
-	                String nombreRol = resultSet.getString("nombreRol");
+	        try (ResultSet rst = stm.executeQuery()) {
+	            while (rst.next()) {
+	                String nombreRol = rst.getString("nombreRol");
 	                roles.add(Rol.valueOf(nombreRol)); // Asumiendo que el nombreRol coincide con el nombre del Enum
 	            }
 	        }

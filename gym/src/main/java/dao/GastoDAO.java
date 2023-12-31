@@ -72,10 +72,10 @@ public class GastoDAO {
 		try {
 			String sql = "SELECT idGasto, periodoGasto, nombreGasto, descripcion, costo FROM gastos";
 
-			try (PreparedStatement pstm = con.prepareStatement(sql)) {
-				pstm.execute();
+			try (PreparedStatement stm = con.prepareStatement(sql)) {
+				stm.execute();
 
-				transformarResultSetEnCliente(gasto, pstm);
+				transformarResultSetEnCliente(gasto, stm);
 			}
 			return gasto;
 		} catch (SQLException e) {
