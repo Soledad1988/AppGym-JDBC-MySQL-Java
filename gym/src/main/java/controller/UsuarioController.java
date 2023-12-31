@@ -6,7 +6,6 @@ import java.util.List;
 
 import conexion.Conexion;
 import dao.UsuarioDAO;
-import gym.modelo.Cliente;
 import gym.modelo.Usuario;
 
 public class UsuarioController {

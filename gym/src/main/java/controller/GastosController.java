@@ -10,7 +10,6 @@ import gym.modelo.Gastos;
 
 public class GastosController {
 	
-
 		private GastoDAO gastoDAO;
 		
 		public GastosController() throws SQLException {

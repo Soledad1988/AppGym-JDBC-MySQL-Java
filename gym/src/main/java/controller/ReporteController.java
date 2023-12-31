@@ -11,10 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import conexion.Conexion;
-import dao.ClienteDAO;
-import dao.GastoDAO;
-import gym.modelo.Cliente;
-import gym.modelo.Cuota;
 import gym.modelo.Gastos;
 
 public class ReporteController {
