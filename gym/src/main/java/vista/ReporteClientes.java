@@ -171,7 +171,8 @@ public class ReporteClientes extends JFrame {
                         cliente.get("Fecha Pago"),
                         cliente.get("Nombre"),
                         cliente.get("Apellido"),
-                        cliente.get("Monto")
+                        cliente.get("Monto"),
+                        cliente.get("Estado")
                 }));
     }
     
@@ -184,6 +185,7 @@ public class ReporteClientes extends JFrame {
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Monto");
+        modelo.addColumn("Estado");
     
         cargarTabla();
 
@@ -206,12 +208,13 @@ public class ReporteClientes extends JFrame {
             throw new RuntimeException(e);
         }
 
-        clientes.forEach(producto -> modelo.addRow(
+        clientes.forEach(cliente -> modelo.addRow(
                 new Object[] {
-                		producto.get("fechaAlta"),
-                        producto.get("nombre"),
-                        producto.get("apellido"),
-                        producto.get("precio")}));
+                		cliente.get("fechaAlta"),
+                		cliente.get("nombre"),
+                		cliente.get("apellido"),
+                		cliente.get("precio"),
+                		cliente.get("pago")}));
     }
 
 }

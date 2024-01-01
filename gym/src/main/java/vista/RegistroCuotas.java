@@ -7,12 +7,9 @@ import java.awt.Font;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -27,7 +24,6 @@ import com.toedter.calendar.JDateChooser;
 import controller.ClienteController;
 import controller.CuotaController;
 import gym.modelo.Cliente;
-import gym.modelo.Cuota;
 
 
 public class RegistroCuotas extends JFrame {
@@ -75,7 +71,7 @@ public class RegistroCuotas extends JFrame {
         
         JLabel labelFecha = new JLabel("Fecha Pago");
         labelFecha.setForeground(Color.BLACK);
-        labelFecha.setBounds(449, 326, 117, 15);
+        labelFecha.setBounds(321, 323, 99, 15);
         getContentPane().add(labelFecha);
         
         /*----------------------------------*/
@@ -87,7 +83,7 @@ public class RegistroCuotas extends JFrame {
         });
         textFechaPago.getCalendarButton().setBackground(SystemColor.textHighlight);
         textFechaPago.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
-        textFechaPago.setBounds(549, 326, 175, 23);
+        textFechaPago.setBounds(426, 323, 175, 23);
         textFechaPago.getCalendarButton().setBounds(268, 0, 21, 33);
         textFechaPago.setBackground(Color.WHITE);
         textFechaPago.setBorder(new LineBorder(SystemColor.window));
@@ -98,11 +94,11 @@ public class RegistroCuotas extends JFrame {
         
         JLabel lblMonto = new JLabel("Monto");
         lblMonto.setForeground(Color.BLACK);
-        lblMonto.setBounds(83, 326, 117, 15);
+        lblMonto.setBounds(83, 326, 57, 15);
         getContentPane().add(lblMonto);
         
         textMonto = new JTextField();
-        textMonto.setBounds(167, 323, 144, 20);
+        textMonto.setBounds(150, 323, 144, 20);
         getContentPane().add(textMonto);
         
         JLabel lblTitulo = new JLabel("Registro Cuotas");
@@ -123,7 +119,6 @@ public class RegistroCuotas extends JFrame {
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
-        modelo.addColumn("Pago");
 
 
         //cargarTabla();
@@ -171,17 +166,6 @@ public class RegistroCuotas extends JFrame {
     
 
     private void configurarAccionesDelFormulario() {
-    	
-       /* botonAsignarCuota.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-            	
-            	asignarPagos();
-            	buscarClientesPorApellido();
-				
-                limpiarTabla();
-                cargarTabla();
-            }
-        });*/
         
      // Configuración de acciones para el botón de asignación de pagos
         botonAsignarCuota.addActionListener(new ActionListener() {
@@ -229,47 +213,30 @@ public class RegistroCuotas extends JFrame {
     private boolean tieneFilaElegida() {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
     }
- 
-    
-    
+     
      
    private List<Cliente> ListarClientes() {
 		return this.clienteController.listar();
    }
      
-   private void cargarTabla() {			       
-	    //Llenar Tabla
-		List<Cliente> cliente = ListarClientes();
-		try {
-			for (Cliente clientes : cliente) {
-				modelo.addRow(new Object[] { clientes.getId(), clientes.getFechaAlta(), clientes.getNombre(), clientes.getApellido(), 
-						clientes.getDireccion(),clientes.getTelefono() });
-			}
-		} catch (Exception e) {
-			throw e;
-		}
+   private void cargarTabla() {               
+	    // Llenar Tabla
+	    List<Cliente> clientes = ListarClientes();
+	    try {
+	        for (Cliente cliente : clientes) {
+	            modelo.addRow(new Object[] {
+	                cliente.getId(), // Asegúrate de que esto es el ID del cliente
+	                cliente.getFechaAlta(), 
+	                cliente.getNombre(), 
+	                cliente.getApellido(), 
+	                cliente.getDireccion()
+	            });
+	        }
+	    } catch (Exception e) {
+	        throw e;
+	    }
 	}
 	
-  
-    
-  /* private void guardar() {
-	    try {
-	        
-	            Integer idCliente = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-	            String fechaPago = ((JTextField) textFechaPago.getDateEditor().getUiComponent()).getText();
-	            Double monto = Double.parseDouble(textMonto.getText());
-
-	            this.cuotaController.asignarCuota(idCliente, monto, java.sql.Date.valueOf(fechaPago));
-
-	            JOptionPane.showMessageDialog(this, "Registrado con éxito!");
-	            this.limpiarFormulario();
-	        
-	    } catch (SQLException | NumberFormatException e) {
-	        // Manejar excepciones adecuadamente, mostrar mensaje de error, etc.
-	        e.printStackTrace();
-	        JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
-	    }
-	}*/
    
    private void buscarClientesPorApellido() {
        String apellido = textoApellido.getText().trim();
@@ -298,7 +265,7 @@ public class RegistroCuotas extends JFrame {
 	        int filaSeleccionada = tabla.getSelectedRow();
 
 	        if (filaSeleccionada != -1) {
-	        	Integer idCliente = Integer.valueOf(modelo.getValueAt(filaSeleccionada, 0).toString());
+	            Integer idCliente = Integer.valueOf(modelo.getValueAt(filaSeleccionada, 0).toString()); // Índice 0 para el ID   
 	            String fechaPago = ((JTextField) textFechaPago.getDateEditor().getUiComponent()).getText();
 	            Double monto = Double.parseDouble(textMonto.getText());
 

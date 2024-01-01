@@ -28,6 +28,7 @@ public class MenuFrame extends JFrame {
 	 private ReporteGastos reporteGastos;
 	 private RegistroCuotas registroIngresos;
 	 private AltaUsuario altaUsuario;
+	 private UsuarioFrame usuario;
 	 
 	 private JButton btnNuevoUsuario;
 	 private JButton listaClientes;
@@ -172,6 +173,14 @@ public class MenuFrame extends JFrame {
 		
 		JButton btnCerrarSesesio = new JButton("Cerrar Sesión");
 		btnCerrarSesesio.setBounds(392, 272, 138, 23);
+		
+		btnCerrarSesesio.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) { 
+            	cerrarSesion();          	
+            }
+            
+        });
+		
 		contentPane.add(btnCerrarSesesio);
 		
 		botonRegistroCuotas.addActionListener(new ActionListener() {
@@ -200,6 +209,15 @@ public class MenuFrame extends JFrame {
 	        setBounds(100, 100, 647, 375);
 	        // ... otros componentes y configuraciones
 	    }*/
+	
+    
+    private void cerrarSesion() {
+        dispose();
+
+        UsuarioFrame usuario = new UsuarioFrame();
+        usuario.setVisible(true);
+        
+    }
 
 	private void abrirNuevoCliente() throws SQLException {
 	       listaClientesFrame = new AltaClientesFrame();

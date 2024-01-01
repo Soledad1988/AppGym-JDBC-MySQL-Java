@@ -22,7 +22,6 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
-import java.awt.Button;
 import java.awt.Color;
 import java.awt.EventQueue;
 
@@ -123,14 +122,6 @@ public class UsuarioFrame extends JFrame {
 		textPassword = new JPasswordField();
 		textPassword.setBounds(127, 164, 96, 20);
 		contentPane.add(textPassword);
-		
-		JButton administrador = new JButton("Administrador");
-		administrador.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		administrador.setBounds(71, 276, 138, 23);
-		contentPane.add(administrador);
 
 		setLocationRelativeTo(null);
 		
