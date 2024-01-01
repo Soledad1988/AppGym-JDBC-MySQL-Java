@@ -1,6 +1,7 @@
 package controller;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +15,6 @@ import conexion.Conexion;
 import gym.modelo.Gastos;
 
 public class ReporteController {
-	
 	
 	//listar reporte
 		public List<Map<String,String>> reporteClientes() throws SQLException {
@@ -54,8 +54,6 @@ public class ReporteController {
 	            String consulta = "SELECT SUM(monto) AS resultado FROM cuotas WHERE MONTH(fechaPago) = ?";
 	            PreparedStatement statement = con.prepareStatement(consulta);
 	            
-
-	            // Establecer el parámetro del mes en la consulta
 	            statement.setInt(1, numeroMes);
 
 	            // Ejecutar la consulta
@@ -63,13 +61,12 @@ public class ReporteController {
 
 	            // Procesar el resultado
 	            if (resultSet.next()) {
-	                // Obtener el resultado de la suma
 	                return resultSet.getDouble("resultado");
 	            }
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        } finally {
-	            // Asegurar el cierre del ResultSet y el Statement
+	          
 	            if (resultSet != null) {
 	                resultSet.close();
 	            }
@@ -113,7 +110,6 @@ public class ReporteController {
 	             final Connection con = factory.recuperaConexion();
 
 	            String nombreMes = obtenerNombreMes(numeroMes);
-
 	            String consulta = "SELECT SUM(costo) AS resultado FROM gastos WHERE UPPER(periodoGasto) = UPPER(?)";
 
 	            try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
@@ -131,8 +127,7 @@ public class ReporteController {
 	            }
 
 	            // En caso de error o si no hay resultados, retornar un valor indicativo
-	            return 0;
-	        
+	            return 0;   
 	    }
 	    
 	    
@@ -187,13 +182,12 @@ public class ReporteController {
 	        Conexion factory = new Conexion();
 	        final Connection con = factory.recuperaConexion();
 
-	        // Consulta para obtener clientes y sus pagos en el mes especificado
-	        final String consulta = "SELECT clientes.nombre, clientes.apellido, cuotas.monto, cuotas.fechaPago " +
-	                                "FROM clientes LEFT JOIN cuotas ON clientes.id = cuotas.clienteId " +
-	                                "WHERE MONTH(cuotas.fechaPago) = ?";
+	        final String consulta = "SELECT clientes.nombre, clientes.apellido, " +
+	                                "IFNULL(cuotas.monto, 0) AS monto, cuotas.fechaPago " +
+	                                "FROM clientes " +
+	                                "LEFT JOIN cuotas ON clientes.id = cuotas.clienteId AND MONTH(cuotas.fechaPago) = ?";
 
 	        try (PreparedStatement statement = con.prepareStatement(consulta)) {
-	        	
 	            statement.setInt(1, numeroMes);
 	            statement.execute();
 
@@ -201,13 +195,21 @@ public class ReporteController {
 
 	            List<Map<String, String>> resultado = new ArrayList<>();
 
-	            // Leemos el contenido para agregarlo a un listado
 	            while (resultSet.next()) {
 	                Map<String, String> fila = new HashMap<>();
-	                fila.put("Fecha Pago", String.valueOf(resultSet.getDate("cuotas.fechaPago")));
-	                fila.put("Nombre", resultSet.getString("clientes.nombre"));
-	                fila.put("Apellido", resultSet.getString("clientes.apellido"));
-	                fila.put("Monto", String.valueOf(resultSet.getDouble("cuotas.monto")));
+	                Date fechaPago = resultSet.getDate("fechaPago");
+	                fila.put("Fecha Pago", (fechaPago != null) ? fechaPago.toString() : "N/A");
+	                fila.put("Nombre", resultSet.getString("nombre"));
+	                fila.put("Apellido", resultSet.getString("apellido"));
+	                fila.put("Monto", String.valueOf(resultSet.getDouble("monto")));
+
+	                // Lógica para determinar si el cliente ha pagado o debe
+	                if (resultSet.getDouble("monto") > 0) {
+	                	
+	                    fila.put("Estado", "Pagado");
+	                } else {
+						fila.put("Estado", "Debe");
+	                }
 
 	                resultado.add(fila);
 	            }
@@ -216,5 +218,4 @@ public class ReporteController {
 	        }
 	    }
 	    
-	   
 }
