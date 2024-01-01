@@ -19,7 +19,7 @@ public class CuotasDAO {
 	}
 
 	
-	public void asignarCuota(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
+	public void asignarCuota2(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
 		String sql = "INSERT INTO cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
 		System.out.println("Consulta SQL: " + sql);
 	    
@@ -32,6 +32,34 @@ public class CuotasDAO {
 	      
 	    }  catch (SQLException e) {
 	        
+	        e.printStackTrace();
+	        throw e;
+	    }
+	}
+	
+	public void asignarCuota(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
+	    // Primero, insertar la cuota.
+	    String sqlCuota = "INSERT INTO cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
+	    System.out.println("Consulta SQL para Cuota: " + sqlCuota);
+
+	    // Segundo, actualizar el estado de pago del cliente.
+	    String sqlCliente = "UPDATE clientes SET pago = true WHERE id = ?";
+	    System.out.println("Consulta SQL para Cliente: " + sqlCliente);
+
+	    try (PreparedStatement stmCuota = con.prepareStatement(sqlCuota, Statement.RETURN_GENERATED_KEYS);
+	         PreparedStatement stmCliente = con.prepareStatement(sqlCliente)) {
+
+	        // Inserción de la cuota
+	        stmCuota.setInt(1, idCliente);
+	        stmCuota.setDouble(2, monto);
+	        stmCuota.setDate(3, new java.sql.Date(fechaPago.getTime()));
+	        stmCuota.executeUpdate();
+
+	        // Actualización del estado de pago del cliente
+	        stmCliente.setInt(1, idCliente);
+	        stmCliente.executeUpdate();
+
+	    } catch (SQLException e) {
 	        e.printStackTrace();
 	        throw e;
 	    }
