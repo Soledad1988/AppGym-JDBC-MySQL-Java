@@ -10,13 +10,15 @@ public class Cliente {
 	private String apellido;
 	private String direccion;
 	private String telefono;
+	private Boolean pago = false;
 	
 	public Cliente() {
 		
 	}
 	
-	public Cliente(Integer id, Date fechaAlta, String nombre, String apellido, String direccion,
-			String telefono) {
+
+	public Cliente(Integer id, Date fechaAlta, String nombre, String apellido, String direccion, String telefono,
+			Boolean pago) {
 		super();
 		this.id = id;
 		this.fechaAlta = fechaAlta;
@@ -24,7 +26,9 @@ public class Cliente {
 		this.apellido = apellido;
 		this.direccion = direccion;
 		this.telefono = telefono;
+		this.pago = pago;
 	}
+
 
 	public Cliente(Date fechaAlta, String nombre, String apellido, String direccion, String telefono) {
 		this.fechaAlta = fechaAlta;
@@ -98,5 +102,17 @@ public class Cliente {
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
+
+
+	public Boolean getPago() {
+		return pago;
+	}
+
+
+	public void setPago(Boolean pago) {
+		this.pago = pago;
+	}
+	
+	
 	
 }

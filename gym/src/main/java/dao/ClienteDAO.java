@@ -22,13 +22,14 @@ public class ClienteDAO {
     //guardar
     public void guardar(Cliente cliente) {
 		try {
-			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, telefono) VALUES (?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, telefono, pago) VALUES (?, ?, ?, ?, ?,?)";
 			try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				stm.setDate(1, cliente.getFechaAlta());
 				stm.setString(2, cliente.getNombre());
 				stm.setString(3, cliente.getApellido());
 				stm.setString(4, cliente.getDireccion());
 				stm.setString(5, cliente.getTelefono());
+				stm.setBoolean(6, false);
 				stm.execute();
 				try (ResultSet rst = stm.getGeneratedKeys()) {
 					while (rst.next()) {
@@ -126,7 +127,7 @@ public class ClienteDAO {
 		try (ResultSet rst = pstm.getResultSet()) {
 			while (rst.next()) {
 				Cliente cliente = new Cliente(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
-						rst.getString(5), rst.getString(6));
+						rst.getString(5), rst.getString(6), null);
 				clientes.add(cliente);
 			}
 		}				
