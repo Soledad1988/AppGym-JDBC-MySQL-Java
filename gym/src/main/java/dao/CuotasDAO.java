@@ -18,7 +18,6 @@ public class CuotasDAO {
 		this.con = con;
 	}
 
-	
 	public void asignarCuota2(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
 		String sql = "INSERT INTO cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
 		System.out.println("Consulta SQL: " + sql);
