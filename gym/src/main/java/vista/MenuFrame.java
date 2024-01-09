@@ -29,12 +29,15 @@ public class MenuFrame extends JFrame {
 	 private RegistroCuotas registroIngresos;
 	 private AltaUsuario altaUsuario;
 	 private UsuarioFrame usuario;
+	 private ReporteGananciaPerdida reporteGananciaPerdida;
 	 
 	 private JButton btnNuevoUsuario;
 	 private JButton listaClientes;
+	 private JButton btnGananciaPerdida;
+
 	
 	
-	/*public static void main(String[] args) {
+	 /*public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -57,10 +60,7 @@ public class MenuFrame extends JFrame {
 	
 	public MenuFrame(Set<Rol> roles) {
 		super("Gym-Fitness");
-		
-		//initComponents();
-        setLocationRelativeTo(null);
-      //  habilitarBotonesSegunRoles(roles);
+
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 647, 375);
@@ -76,7 +76,8 @@ public class MenuFrame extends JFrame {
 		contentPane.add(titulo);
 		
 		JButton botonNuevoClientes = new JButton("Nuevo Cliente");
-		botonNuevoClientes.setBounds(22, 105, 146, 23);
+		botonNuevoClientes.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		botonNuevoClientes.setBounds(31, 59, 168, 23);
 		contentPane.add(botonNuevoClientes);
 		
 		botonNuevoClientes.addActionListener(new ActionListener() {
@@ -93,8 +94,9 @@ public class MenuFrame extends JFrame {
         });
 		
 		listaClientes = new JButton("Lista Clientes");
+		listaClientes.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		//JButton listaClientes = new JButton("Lista Clientes");
-		listaClientes.setBounds(107, 139, 138, 23);
+		listaClientes.setBounds(31, 195, 168, 23);
 		contentPane.add(listaClientes);
 		
 		listaClientes.addActionListener(new ActionListener() {
@@ -111,7 +113,8 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton reporteGastos = new JButton("Reporte Gastos");
-		reporteGastos.setBounds(177, 183, 138, 23);
+		reporteGastos.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		reporteGastos.setBounds(31, 161, 168, 23);
 		contentPane.add(reporteGastos);
 		
 		reporteGastos.addActionListener(new ActionListener() {
@@ -133,7 +136,8 @@ public class MenuFrame extends JFrame {
 		contentPane.add(logo);
 		
 		JButton btnAltaGastos = new JButton("Registrar Gastos");
-		btnAltaGastos.setBounds(22, 183, 145, 23);
+		btnAltaGastos.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnAltaGastos.setBounds(31, 127, 168, 23);
 		contentPane.add(btnAltaGastos);
 		
 		btnAltaGastos.addActionListener(new ActionListener() {
@@ -150,12 +154,14 @@ public class MenuFrame extends JFrame {
         });
 	
 		JButton botonRegistroCuotas = new JButton("Registro Cuotas");
-		botonRegistroCuotas.setBounds(178, 105, 146, 23);
+		botonRegistroCuotas.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		botonRegistroCuotas.setBounds(31, 93, 168, 23);
 		contentPane.add(botonRegistroCuotas);
 		
 		btnNuevoUsuario = new JButton("Nuevo Usuario");
+		btnNuevoUsuario.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		//JButton btnNuevoUsuario = new JButton("Nuevo Usuario");
-		btnNuevoUsuario.setBounds(22, 272, 145, 23);
+		btnNuevoUsuario.setBounds(32, 272, 168, 23);
 		contentPane.add(btnNuevoUsuario);
 		
 		btnNuevoUsuario.addActionListener(new ActionListener() {
@@ -172,6 +178,7 @@ public class MenuFrame extends JFrame {
         });
 		
 		JButton btnCerrarSesesio = new JButton("Cerrar Sesión");
+		btnCerrarSesesio.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnCerrarSesesio.setBounds(392, 272, 138, 23);
 		
 		btnCerrarSesesio.addActionListener(new ActionListener() {
@@ -182,6 +189,25 @@ public class MenuFrame extends JFrame {
         });
 		
 		contentPane.add(btnCerrarSesesio);
+		
+		btnGananciaPerdida = new JButton("Reporte Ganancia/Perdida");
+		//JButton reporteGananciaPerdida = new JButton("Reporte Ganancia/Perdida");
+		btnGananciaPerdida.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		btnGananciaPerdida.setBounds(31, 229, 168, 23);
+		contentPane.add(btnGananciaPerdida);
+		
+		btnGananciaPerdida.addActionListener(new ActionListener() {
+	        	
+	            public void actionPerformed(ActionEvent e) { 
+	            	try {
+	            		abrirReporteGananciaPerdida();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+	            }
+	            
+	        });
 		
 		botonRegistroCuotas.addActionListener(new ActionListener() {
         	
@@ -195,31 +221,20 @@ public class MenuFrame extends JFrame {
             }
             
         });
-
-		setLocationRelativeTo(null);
-		
-		habilitarBotonesSegunRoles(roles);
 	
+		 setLocationRelativeTo(null);
+	     habilitarBotonesSegunRoles(roles);
        
 	}
 	
-	/* private void initComponents() {
-	        // Aquí colocas la lógica de inicialización común para ambos constructores
-	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	        setBounds(100, 100, 647, 375);
-	        // ... otros componentes y configuraciones
-	    }*/
-	
     
-    private void cerrarSesion() {
-        dispose();
+	    private void cerrarSesion() {
+	        dispose();
+	        UsuarioFrame usuario = new UsuarioFrame();
+	        usuario.setVisible(true);
+	    }
 
-        UsuarioFrame usuario = new UsuarioFrame();
-        usuario.setVisible(true);
-        
-    }
-
-	private void abrirNuevoCliente() throws SQLException {
+		private void abrirNuevoCliente() throws SQLException {
 	       listaClientesFrame = new AltaClientesFrame();
 	    }
 	   
@@ -227,6 +242,11 @@ public class MenuFrame extends JFrame {
 	       reporteClientes = new ReporteClientes();
 	    }
 	   
+	   private void abrirReporteGananciaPerdida() throws SQLException {
+		   reporteGananciaPerdida = new ReporteGananciaPerdida();
+	    }
+	   
+	
 	   private void abrirReporteGastos() throws SQLException {
 	       reporteGastos = new ReporteGastos();
 	    }
@@ -258,10 +278,12 @@ public class MenuFrame extends JFrame {
 		            // Habilitar botones de administrador
 		            btnNuevoUsuario.setVisible(true);
 		            listaClientes.setVisible(true);
+		            btnGananciaPerdida.setVisible(true);
 		        } else {
 		            // Deshabilitar botones de administrador
 		            btnNuevoUsuario.setVisible(false);
 		            listaClientes.setVisible(false);
+		            btnGananciaPerdida.setVisible(false);
 		        }
 		    } else {
 		        System.out.println("btnNuevoUsuario es null"); // Mensaje de depuración
@@ -269,5 +291,4 @@ public class MenuFrame extends JFrame {
 
 		    // ...
 		}
-	   
 }
