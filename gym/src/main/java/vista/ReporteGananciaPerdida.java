@@ -1,14 +1,10 @@
 package vista;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,21 +13,13 @@ import java.util.Map;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
-
-import com.toedter.calendar.JDateChooser;
-
-import controller.ClienteController;
-import controller.ReporteController;
-import dao.ReporteMensualDAO;
-import gym.modelo.Cliente;
+import controller.ReporteMensualController;
 import gym.modelo.Gastos;
 
-import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
@@ -40,23 +28,13 @@ public class ReporteGananciaPerdida extends JFrame {
 
     private static final long serialVersionUID = 1L;
 
-    private JTable tablaReporte;
     private JTable tablaIngresos;
-    private DefaultTableModel modelo;
-    
-    //********************************
-    private JPanel contentPane;
-    private JLabel labelPeriodo;
-	
-
-	private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonReporte;
-	
-
-    //private ClienteController clienteController;
-    private ReporteController reporteControler;
-    private ReporteMensualDAO reporteMensual;
-    private JTextField textTotal;
     private JTable tablaEgresos;
+    private DefaultTableModel modeloIngresos;
+    private DefaultTableModel modeloEgresos;
+    private ReporteMensualController reporteMensual;
+    private JTextField textTotal;
+   
     
     
     public static void main(String[] args) {
@@ -72,15 +50,14 @@ public class ReporteGananciaPerdida extends JFrame {
 		});
 	}
 
-    public ReporteGananciaPerdida() {
+    public ReporteGananciaPerdida() throws SQLException {
     	super("Reporte del Mes");
-    	//this.reporteControler = new ReporteController();
-    	this.reporteMensual = new ReporteMensualDAO(null);
+    	this.reporteMensual = new ReporteMensualController();
     	
     	Container container = getContentPane();
         getContentPane().setLayout(null);
         
-    	configurarTablaDeContenido(container);
+    	configurarTablaDeContenidoGastos(container);
     	
     	JLabel lblNewLabel = new JLabel("Reporte del Mes");
     	lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
@@ -115,11 +92,9 @@ public class ReporteGananciaPerdida extends JFrame {
                 // Obtener el mes seleccionado en el JComboBox
                 int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
 
-                // Limpiar la tabla antes de cargar los nuevos datos
                 limpiarTabla();
-
-                // Recargar la tabla con los clientes del mes seleccionado
-                cargarTablaPorMes(numeroMes);
+                cargarTablaGastosPorMes(numeroMes);
+                cargarTablaIngresoPorMes(numeroMes);
             }
         });
         
@@ -134,9 +109,10 @@ public class ReporteGananciaPerdida extends JFrame {
            lblTotalDeIngresos.setBounds(10, 94, 218, 36);
            getContentPane().add(lblTotalDeIngresos);
            
-           tablaEgresos = new JTable();
-           tablaEgresos.setBounds(10, 322, 760, 164);
-           getContentPane().add(tablaEgresos);
+           tablaIngresos = new JTable();
+           tablaIngresos.setBounds(10, 129, 760, 164);
+           getContentPane().add(tablaIngresos);
+           
            
            JLabel lblTotalDeEgresos = new JLabel("Total de Egresos");
            lblTotalDeEgresos.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 18));
@@ -145,43 +121,41 @@ public class ReporteGananciaPerdida extends JFrame {
     	
         // Agregar un ActionListener al botón para manejar la acción
         btnCalcularGananciaPerdida.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Obtener el mes seleccionado del JComboBox
-                int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+        	 public void actionPerformed(ActionEvent e) {
+        	        // Obtener el mes seleccionado del JComboBox
+        	        int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
 
-                // Llamar a la función realizarSumaPorMes y mostrar el resultado en textTotal
-                double resultadoSuma = 0;
-                try {
-                    resultadoSuma = reporteMensual.obtenerSumaCostosPorMes(numeroMes);
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-                textTotal.setText(String.valueOf(resultadoSuma));
-            }
-        });
+        	        // Llamar a la función obtenerBalancePorMes y mostrar el resultado en textTotal
+        	        double resultadoBalance = 0;
+        	        try {
+        	            resultadoBalance = reporteMensual.obtenerBalancePorMes(numeroMes);
+        	        } catch (SQLException e1) {
+        	            e1.printStackTrace();
+        	            // Opcionalmente, puedes manejar el error de manera más amigable para el usuario
+        	            JOptionPane.showMessageDialog(null, "Error al calcular el balance: " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        	        }
+        	        textTotal.setText(String.format("%.2f", resultadoBalance)); // Formatea a dos decimales
+        	    }
+        	});
     }
     
- // Método para limpiar la tabla antes de cargar nuevos datos
     private void limpiarTabla() {
-        DefaultTableModel model = (DefaultTableModel) tablaIngresos.getModel();
-        model.setRowCount(0);
+        modeloIngresos.setRowCount(0);
+        modeloEgresos.setRowCount(0);
     }
     
- // Método para cargar la tabla con clientes del mes seleccionado
-    private void cargarTablaPorMes(int numeroMes) {
-        limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos
-
+    
+    private void cargarTablaGastosPorMes(int numeroMes) {
         List<Gastos> gastos = new ArrayList<>();
 
         try {
-            // Utiliza el método listarGastosPorMes de tu ReporteController
             gastos = this.reporteMensual.listarGastosPorMes(numeroMes);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
 
-        gastos.forEach(gasto -> modelo.addRow(
+        gastos.forEach(gasto -> modeloEgresos.addRow(
                 new Object[] {
                         gasto.getPeriodoGasto(),
                         gasto.getNombreGasto(),
@@ -190,44 +164,56 @@ public class ReporteGananciaPerdida extends JFrame {
                 }));
     }
     
-    private void configurarTablaDeContenido(Container container) {
-        tablaIngresos = new JTable();
+    private void cargarTablaIngresoPorMes(int numeroMes) {
 
-        modelo = (DefaultTableModel) tablaIngresos.getModel();
-        modelo.addColumn("Periodo Gasto");
-        modelo.addColumn("Nombre Gasto");
-        modelo.addColumn("Descripcion");
-        modelo.addColumn("Costo");
+        List<Map<String, String>> clientes = new ArrayList<>();
+
+        try {
+            clientes = this.reporteMensual.reporteCuotasPagadasPorMes(numeroMes);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        clientes.forEach(cliente -> modeloIngresos.addRow(
+                new Object[] {
+                        cliente.get("Fecha Pago"),
+                        cliente.get("Nombre"),
+                        cliente.get("Apellido"),
+                        cliente.get("Monto"),
+                        cliente.get("Estado")
+                }));
+    }
     
-        cargarTabla();
-
+    private void configurarTablaDeContenidoGastos(Container container) {
+    	// Configuración del modelo y la tabla de ingresos
+        modeloIngresos = new DefaultTableModel();
+        modeloIngresos.addColumn("Fecha Pago");
+        modeloIngresos.addColumn("Nombre");
+        modeloIngresos.addColumn("Apellido");
+        modeloIngresos.addColumn("Monto");
+        
+        tablaIngresos = new JTable(modeloIngresos);
         tablaIngresos.setBounds(10, 129, 760, 164);
-
         container.add(tablaIngresos);
+        
+        // Configuración del modelo y la tabla de egresos
+        modeloEgresos = new DefaultTableModel();
+        modeloEgresos.addColumn("Periodo Gasto");
+        modeloEgresos.addColumn("Nombre Gasto");
+        modeloEgresos.addColumn("Descripcion");
+        modeloEgresos.addColumn("Costo");
+        
+        tablaEgresos = new JTable(modeloEgresos);
+        tablaEgresos.setBounds(10, 322, 760, 164);
+        container.add(tablaEgresos);
+
 
         setSize(800, 600);
         setVisible(true);
         setLocationRelativeTo(null);
     }
     
-    private void cargarTabla() {
-        limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos
 
-        List<Gastos> gastos = new ArrayList<>();
-
-        try {
-            gastos = this.reporteMensual.reporteGastos();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
-        gastos.forEach(gasto -> modelo.addRow(
-                new Object[] {
-                        gasto.getPeriodoGasto(),
-                        gasto.getNombreGasto(),
-                        gasto.getDescripcion(),
-                        gasto.getCosto()
-                }));
-    }
+  
 }

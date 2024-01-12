@@ -1,12 +1,15 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import conexion.Conexion;
 import gym.modelo.Gastos;
@@ -107,6 +110,41 @@ public class ReporteMensualDAO {
             return 0;   
     }
     
+  //Listado de cuotas pagadas por mes
+    public List<Map<String, String>> reporteCuotasPagadasPorMes(int numeroMes) throws SQLException {
+        Conexion factory = new Conexion();
+        final Connection con = factory.recuperaConexion();
+
+        final String consulta = "SELECT clientes.nombre, clientes.apellido, " +
+                "cuotas.monto, cuotas.fechaPago " +
+                "FROM clientes " +
+                "JOIN cuotas ON clientes.id = cuotas.clienteId " +
+                "WHERE MONTH(cuotas.fechaPago) = ? AND cuotas.monto > 0";
+        
+        try (PreparedStatement statement = con.prepareStatement(consulta)) {
+            statement.setInt(1, numeroMes);
+            statement.execute();
+
+            ResultSet resultSet = statement.getResultSet();
+
+            List<Map<String, String>> resultado = new ArrayList<>();
+
+            while (resultSet.next()) {
+                Map<String, String> fila = new HashMap<>();
+                Date fechaPago = resultSet.getDate("fechaPago");
+                fila.put("Fecha Pago", (fechaPago != null) ? fechaPago.toString() : "N/A");
+                fila.put("Nombre", resultSet.getString("nombre"));
+                fila.put("Apellido", resultSet.getString("apellido"));
+                fila.put("Monto", String.valueOf(resultSet.getDouble("monto")));
+                fila.put("Estado", "Pagado");
+
+                resultado.add(fila);
+            }
+
+            return resultado;
+        }
+    }
+    
     
  // Método auxiliar para obtener el nombre del mes según su número
     private String obtenerNombreMes(int numeroDeMes) {
@@ -116,5 +154,33 @@ public class ReporteMensualDAO {
         } else {
             throw new IllegalArgumentException("Número de mes no válido: " + numeroDeMes);
         }
+    }
+    
+    public double obtenerTotalCuotasPagadasPorMes(int numeroMes) throws SQLException {
+        double totalCuotas = 0;
+
+        Conexion factory = new Conexion();
+        final Connection con = factory.recuperaConexion();
+        
+        String consulta = "SELECT SUM(monto) AS total FROM cuotas WHERE MONTH(fechaPago) = ? AND monto > 0";
+        try (PreparedStatement statement = con.prepareStatement(consulta)) {
+            statement.setInt(1, numeroMes);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    totalCuotas = resultSet.getDouble("total");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return totalCuotas;
+    }
+    
+    public double obtenerBalancePorMes(int numeroMes) throws SQLException {
+        double totalGastos = obtenerSumaCostosPorMes(numeroMes);
+        double totalCuotasPagadas = obtenerTotalCuotasPagadasPorMes(numeroMes);
+
+        // Restar los gastos del total de cuotas pagadas
+        return totalCuotasPagadas - totalGastos;
     }
 }
