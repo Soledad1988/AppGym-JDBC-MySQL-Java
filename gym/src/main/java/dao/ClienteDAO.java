@@ -19,7 +19,6 @@ public class ClienteDAO {
 		this.con = con;
 	}
     
-    //guardar
     public void guardar(Cliente cliente) {
 		try {
 			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, telefono, pago) VALUES (?, ?, ?, ?, ?,?)";
@@ -93,8 +92,6 @@ public class ClienteDAO {
 		}
 	}
     
-    
-    /*nuevooooooooo*/
     
     public List<Cliente> buscarPorApellido(String apellido) throws SQLException {
 	    List<Cliente> clientes = new ArrayList<>();

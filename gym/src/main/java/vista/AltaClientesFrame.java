@@ -248,13 +248,10 @@ public class AltaClientesFrame extends JFrame {
     private void volverMenu() {
         // Cerrar la ventana actual
         dispose();
-
-        // Crear y mostrar la instancia del menú
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
         
     }
-
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -320,23 +317,29 @@ public class AltaClientesFrame extends JFrame {
 		List<Cliente> cliente = ListarClientes();
 		try {
 			for (Cliente clientes : cliente) {
-				modelo.addRow(new Object[] { clientes.getId(), clientes.getFechaAlta(), clientes.getNombre(), clientes.getApellido(), 
-						clientes.getDireccion(),clientes.getTelefono() });
+				modelo.addRow(new Object[] { 
+						clientes.getId(), 
+						clientes.getFechaAlta(), 
+						clientes.getNombre(), 
+						clientes.getApellido(), 
+						clientes.getDireccion(),
+						clientes.getTelefono() });
 			}
 		} catch (Exception e) {
 			throw e;
 		}
 	}
-	
-  
     
     private void guardar() throws SQLException {
              
     	String fechaIngreso = ((JTextField)textFechaIngreso.getDateEditor().getUiComponent()).getText();
-    	//Double precio = Double.parseDouble(textTelefono.getText());
 		
-		 Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
-          		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),textTelefono.getText());	
+		Cliente cliente = new Cliente(
+				java.sql.Date.valueOf(fechaIngreso),
+          		textoNombre.getText(), 
+          		textoApellido.getText(), 
+          		textoDireccion.getText(),
+          		textTelefono.getText());	
 		 	
 		this.clienteController.guardar(cliente);	
  			
