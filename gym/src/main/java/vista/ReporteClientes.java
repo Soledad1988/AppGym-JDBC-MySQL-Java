@@ -29,7 +29,6 @@ import javax.swing.table.TableCellRenderer;
 import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
-import controller.ReporteController;
 import controller.ReporteCuotasController;
 import controller.ReporteIngresosController;
 import dao.ReporteIngresosDAO;
@@ -58,7 +57,6 @@ public class ReporteClientes extends JFrame {
 	
 
     //private ClienteController clienteController;
-   // private ReporteController reporteControler;
     private ReporteIngresosController reporteControler;
     private ReporteCuotasController reporteCuotas;
     private JTextField textTotal;

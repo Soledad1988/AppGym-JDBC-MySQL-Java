@@ -26,7 +26,6 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
-import controller.ReporteController;
 import controller.ReporteGastosController;
 import gym.modelo.Cliente;
 import gym.modelo.Gastos;
@@ -53,7 +52,6 @@ public class ReporteGastos extends JFrame {
 	
 
     //private ClienteController clienteController;
-    //private ReporteController reporteControler;
     private ReporteGastosController reporteControler;
     private JTextField textTotal;
     

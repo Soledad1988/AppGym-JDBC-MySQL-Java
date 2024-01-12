@@ -301,8 +301,13 @@ public class ListaClientesFrame extends JFrame {
 		List<Cliente> cliente = ListarClientes();
 		try {
 			for (Cliente clientes : cliente) {
-				modelo.addRow(new Object[] { clientes.getId(), clientes.getFechaAlta(), clientes.getNombre(), clientes.getApellido(), 
-						clientes.getDireccion(),clientes.getTelefono() });
+				modelo.addRow(new Object[] { 
+						clientes.getId(), 
+						clientes.getFechaAlta(), 
+						clientes.getNombre(), 
+						clientes.getApellido(), 
+						clientes.getDireccion(),
+						clientes.getTelefono() });
 			}
 		} catch (Exception e) {
 			throw e;
