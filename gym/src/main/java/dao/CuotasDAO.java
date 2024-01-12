@@ -17,24 +17,6 @@ public class CuotasDAO {
 	public CuotasDAO(Connection con) {
 		this.con = con;
 	}
-
-	public void asignarCuota2(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
-		String sql = "INSERT INTO cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
-		System.out.println("Consulta SQL: " + sql);
-	    
-	    try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-	    	stm.setInt(1, idCliente);
-	    	stm.setDouble(2, monto);
-	    	stm.setDate(3, fechaPago);
-	        
-	        stm.executeUpdate();
-	      
-	    }  catch (SQLException e) {
-	        
-	        e.printStackTrace();
-	        throw e;
-	    }
-	}
 	
 	public void asignarCuota(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
 	    // Primero, insertar la cuota.

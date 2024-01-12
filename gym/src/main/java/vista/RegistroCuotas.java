@@ -143,8 +143,6 @@ public class RegistroCuotas extends JFrame {
         labelApellido.setForeground(Color.BLACK);
 
         textoApellido = new JTextField();
-
-        // TODO
         
         textoApellido.setBounds(163, 62, 125, 20);
 
@@ -153,8 +151,6 @@ public class RegistroCuotas extends JFrame {
         botonAsignarCuota.setBounds(236, 366, 138, 20);
         botonBuscar.setBounds(426, 62, 99, 20);
         
-        
-
         container.add(labelApellido);
         container.add(textoApellido);
         container.add(botonAsignarCuota);
@@ -163,15 +159,12 @@ public class RegistroCuotas extends JFrame {
         
     }
 
-    
-
+ 
     private void configurarAccionesDelFormulario() {
         
-     // Configuración de acciones para el botón de asignación de pagos
         botonAsignarCuota.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica de asignación de pagos
                 guardar();
                 limpiarCampos();
             }
@@ -181,7 +174,6 @@ public class RegistroCuotas extends JFrame {
         botonBuscar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Lógica de búsqueda y actualización de la tabla
                 buscarClientesPorApellido();
             }
         });
@@ -197,10 +189,8 @@ public class RegistroCuotas extends JFrame {
 
     
     private void volverMenu() {
-        // Cerrar la ventana actual
         dispose();
 
-        // Crear y mostrar la instancia del menú
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
     }
@@ -225,7 +215,7 @@ public class RegistroCuotas extends JFrame {
 	    try {
 	        for (Cliente cliente : clientes) {
 	            modelo.addRow(new Object[] {
-	                cliente.getId(), // Asegúrate de que esto es el ID del cliente
+	                cliente.getId(),
 	                cliente.getFechaAlta(), 
 	                cliente.getNombre(), 
 	                cliente.getApellido(), 
@@ -248,7 +238,11 @@ public class RegistroCuotas extends JFrame {
            modeloTabla.setRowCount(0);
 
            for (Cliente cliente : clientes) {
-               Object[] fila = {cliente.getId(), cliente.getNombre(), cliente.getApellido(), false};
+               Object[] fila = {
+            		   cliente.getId(), 
+            		   cliente.getNombre(), 
+            		   cliente.getApellido(), 
+            		   false};
                modeloTabla.addRow(fila);
            }
        } catch (SQLException ex) {
@@ -256,9 +250,6 @@ public class RegistroCuotas extends JFrame {
            JOptionPane.showMessageDialog(this, "Error al buscar clientes.");
        }
    }
-   
-
-
    
    private void guardar() {
 	    try {
@@ -283,8 +274,6 @@ public class RegistroCuotas extends JFrame {
 	    }
 	}
 
-    
-   
     private void limpiarCampos() {
     	this.textFechaPago.setDate(null);
         this.textoApellido.setText("");
