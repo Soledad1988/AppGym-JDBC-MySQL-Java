@@ -211,12 +211,10 @@ public class AltaGastosFrame extends JFrame {
     private void volverMenu() {
         // Cerrar la ventana actual
         dispose();
-
-        // Crear y mostrar la instancia del menú
+        
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
     }
-
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -265,57 +263,6 @@ public class AltaGastosFrame extends JFrame {
             JOptionPane.showMessageDialog(this, "Por favor, elije un registro");
         }
     }
-    
-    
-    
-    private void actualizar2() {
-        if (tieneFilaElegida()) {
-            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
-            return;
-        }
-
-        Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-        .ifPresentOrElse(fila -> {
-            Integer id = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-
-            // Actualizar los campos con los valores de la interfaz
-            textoNombreGasto.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 2));
-            textoDescripcion.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
-
-            // Obtener el valor de textoCosto
-            //String textoCostoString = textoCosto.getText();
-            
-            String textoCostoString = textoCosto.getText().trim();
-            System.out.println("Texto Costo String: " + textoCostoString);
-
-            if (!textoCostoString.isEmpty() && !textoCostoString.isBlank()) {
-                // Convertir a double y realizar la actualización
-                double costo = Double.parseDouble(textoCostoString);
-                // Resto de la lógica de actualización aquí...
-            } else {
-                // Mostrar un mensaje de error al usuario o tomar alguna acción apropiada
-            }
-
-            // Verificar si la cadena está vacía o nula antes de intentar la conversión
-            double costo = textoCostoString.isEmpty() ? 0 : Double.parseDouble(textoCostoString);
-            
-
-            // Luego, puedes imprimir los valores para verificar
-            System.out.println("ID to update: " + id);
-            System.out.println("Texto Nombre Gasto: " + textoNombreGasto.getText());
-            System.out.println("Texto Tipo: " + textoDescripcion.getText());
-            System.out.println("Texto Costo: " + costo);
-            
-            System.out.println("Texto Costo String: " + textoCostoString);
-
-            // Finalmente, llamar al método actualizar del controlador
-            this.gastoController.actualizar(textoNombreGasto.getText(), textoDescripcion.getText(), costo, id);
-
-            JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
-        }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
-
-    }
- 
  
     
     private void eliminar() {
@@ -341,21 +288,22 @@ public class AltaGastosFrame extends JFrame {
    }
      
    private void cargarTabla() {			       
-	    //Llenar Tabla
 		List<Gastos> gasto = (List<Gastos>) ListarGasto();
 		try {
 			for (Gastos gastos : gasto) {
-				modelo.addRow(new Object[] { gastos.getIdGasto(), gastos.getPeriodoGasto(), gastos.getNombreGasto(),
-						gastos.getDescripcion(),gastos.getCosto()});
+				modelo.addRow(new Object[] { 
+						gastos.getIdGasto(), 
+						gastos.getPeriodoGasto(), 
+						gastos.getNombreGasto(),
+						gastos.getDescripcion(),
+						gastos.getCosto()});
 			}
 		} catch (Exception e) {
 			throw e;
 		}
 	}
-	
   
    private void guardar() throws SQLException {
-	    // No declares una nueva variable local aquí
 	    String mesSeleccionado = (String) BoxPeriodo.getSelectedItem();
 	    Double costo = Double.parseDouble(textoCosto.getText());
 
@@ -369,7 +317,7 @@ public class AltaGastosFrame extends JFrame {
     
    
     private void limpiarFormulario() {
-    	this.BoxPeriodo.setAction(null);;
+    	this.BoxPeriodo.setAction(null);
         this.textoNombreGasto.setText("");
         this.textoDescripcion.setText("");
         this.textoCosto.setText("");

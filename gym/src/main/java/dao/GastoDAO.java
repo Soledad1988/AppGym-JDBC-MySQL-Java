@@ -20,7 +20,6 @@ public class GastoDAO {
 		this.con = con;
 	}
 	
-	//guardar
     public void guardar(Gastos gastos) {
 		try {
 			String sql = "INSERT INTO gastos (periodoGasto, nombreGasto, descripcion, costo) VALUES (?, ?, ?, ?)";
