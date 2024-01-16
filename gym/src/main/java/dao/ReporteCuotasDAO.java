@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import conexion.Conexion;
+import gym.modelo.Cliente;
 
 public class ReporteCuotasDAO {
 	
@@ -59,4 +60,5 @@ public class ReporteCuotasDAO {
             return resultado;
         }
     }
+    
 }
