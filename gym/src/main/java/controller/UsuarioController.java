@@ -35,6 +35,7 @@ public class UsuarioController {
 		}
 	 
 	 
+		//Inicio sesion
 	 	public List<Usuario> buscar(String usuario, String password) throws SQLException {
 	        return this.usuarioDAO.buscar(usuario, password);
 	    }

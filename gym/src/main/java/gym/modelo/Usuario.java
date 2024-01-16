@@ -2,13 +2,13 @@ package gym.modelo;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Usuario {
 	
 	private Integer idUsuario; 
 	private String nombreUsuario;
 	private String contrasena;
-	//private Set<Rol> roles;
 	private Set<Rol> roles = new HashSet<>();
 	
 	public Usuario() {
@@ -65,6 +65,13 @@ public class Usuario {
     public Set<Rol> getRoles() {
         return roles;
     }
+    
+    //Convertir los roles a string antes, asi cargar la tabla en la vista
+    public String getRolesAsString() {
+ 	    return roles.stream()
+ 	                .map(Rol::toString)
+ 	                .collect(Collectors.joining(", "));
+ 	}
 
 	
 	

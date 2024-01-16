@@ -22,27 +22,6 @@ public class UsuarioDAO {
 	public UsuarioDAO(Connection con) {
 		this.con = con;
 	}
-	
-	public void guardar2(Usuario usuario) {
-		try {
-			String sql = "INSERT INTO usuarios (nombreUsuario, contrasena) VALUES (?, ?)";
-			try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-				stm.setString(1, usuario.getNombreUsuario());
-				stm.setString(2, usuario.getContrasena());
-				stm.execute();
-				try (ResultSet rst = stm.getGeneratedKeys()) {
-					while (rst.next()) {
-						usuario.setIdUsuario(rst.getInt(1));
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	
-	
 	 
 	public void guardar(Usuario usuario, String nombreRol) {
         try {
@@ -73,6 +52,7 @@ public class UsuarioDAO {
     }
 
     private int obtenerIdRol(String nombreRol) throws SQLException {
+    	nombreRol = nombreRol.toUpperCase().replace(" ", "_");
         String sql = "SELECT idRol FROM roles WHERE nombreRol = ?";
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setString(1, nombreRol);
@@ -90,14 +70,24 @@ public class UsuarioDAO {
 	
     
     public void eliminar(Integer idUsuario) {
-    	String sql = "DELETE FROM usuarios WHERE id = ?";
-		try (PreparedStatement stm = con.prepareStatement(sql)) {
-			stm.setInt(1, idUsuario);
-			stm.execute();
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
+        // Primero, eliminar registros relacionados de usuarios_roles
+        String sqlRoles = "DELETE FROM usuarios_roles WHERE idUsuario = ?";
+        try (PreparedStatement stmRoles = con.prepareStatement(sqlRoles)) {
+            stmRoles.setInt(1, idUsuario);
+            stmRoles.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        // Luego, eliminar el usuario de la tabla usuarios
+        String sqlUsuario = "DELETE FROM usuarios WHERE idUsuario = ?";
+        try (PreparedStatement stmUsuario = con.prepareStatement(sqlUsuario)) {
+            stmUsuario.setInt(1, idUsuario);
+            stmUsuario.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
     
     public void actualizar(String nombreUsuario, String password, Integer idUsuario) {
     	
@@ -106,7 +96,7 @@ public class UsuarioDAO {
         
         System.out.println("ID: " + idUsuario);
         System.out.println("Nombre: " + nombreUsuario);
-        System.out.println("Apellido: " + password);
+        System.out.println("Password: " + password);
         
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setString(1, nombreUsuario);
@@ -120,14 +110,15 @@ public class UsuarioDAO {
             throw new RuntimeException(e);
         }
     }
- 
+    
     public List<Usuario> listar() {
-        List<Usuario> usuarios = new ArrayList<>();
+        Map<Integer, Usuario> usuarioMap = new HashMap<>();
+
         try {
-            String sql = "SELECT u.idUsuario, u.nombreUsuario, r.nombreRol " +
-                         "FROM usuarios u " +
-                         "INNER JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
-                         "INNER JOIN roles r ON ur.idRol = r.idRol";
+            String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, r.nombreRol " +
+                    "FROM usuarios u " +
+                    "INNER JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
+                    "INNER JOIN roles r ON ur.idRol = r.idRol";
 
             try (PreparedStatement stm = con.prepareStatement(sql);
                  ResultSet rst = stm.executeQuery()) {
@@ -135,18 +126,25 @@ public class UsuarioDAO {
                 while (rst.next()) {
                     int idUsuario = rst.getInt("idUsuario");
                     String nombreUsuario = rst.getString("nombreUsuario");
-                    String rolAsignado = rst.getString("nombreRol");
+                    String password = rst.getString("contrasena");
+                    String nombreRol = rst.getString("nombreRol");
 
-                    usuarios.add(new Usuario(idUsuario, nombreUsuario, rolAsignado));
+                    Usuario usuario = usuarioMap.get(idUsuario);
+                    if (usuario == null) {
+                        usuario = new Usuario(idUsuario, nombreUsuario, password);
+                        usuarioMap.put(idUsuario, usuario);
+                    }
+                    usuario.addRol(Rol.valueOf(nombreRol.toUpperCase().replace(" ", "_")));
                 }
             }
-            return usuarios;
+
+            return new ArrayList<>(usuarioMap.values());
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
-    
+ 
     private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) throws SQLException {
 		try (ResultSet rst = pstm.getResultSet()) {
 			while (rst.next()) {
@@ -157,7 +155,7 @@ public class UsuarioDAO {
 	}
 	
 	
-	
+	//Inicio de sesión
 	public List<Usuario> buscar(String usuario, String password) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
 

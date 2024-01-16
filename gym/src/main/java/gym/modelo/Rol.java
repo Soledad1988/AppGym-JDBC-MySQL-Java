@@ -2,8 +2,8 @@ package gym.modelo;
 
 public enum Rol {
 	
-    ADMINISTRADOR("Administrador"),
-    USUARIO_REGULAR("Usuario Regular");
+	ADMINISTRADOR("ADMINISTRADOR"),
+    USUARIO_REGULAR("USUARIO_REGULAR");
 
     private final String nombre;
 
@@ -15,6 +15,5 @@ public enum Rol {
     public String toString() {
         return nombre;
     }
-    
-    
+     
 }

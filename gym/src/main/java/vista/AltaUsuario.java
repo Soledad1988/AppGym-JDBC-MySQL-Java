@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
@@ -81,13 +82,13 @@ public class AltaUsuario extends JFrame {
         
         JLabel lblUsuariosGenerados = new JLabel("Usuarios Generados");
         lblUsuariosGenerados.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-        lblUsuariosGenerados.setBounds(89, 262, 213, 30);
+        lblUsuariosGenerados.setBounds(89, 212, 213, 30);
         getContentPane().add(lblUsuariosGenerados);
         
         tabla = new JTable(modelo);
         
        // tabla = new JTable();
-        tabla.setBounds(10, 303, 390, 117);
+        tabla.setBounds(10, 253, 390, 117);
         getContentPane().add(tabla);
         
         textoPassword = new JPasswordField();
@@ -100,13 +101,11 @@ public class AltaUsuario extends JFrame {
 
     private void configurarTablaDeContenido(Container container) {
     	
-    	modelo = new DefaultTableModel(new Object[][]{}, new String[] { "IdUsuario", "Nombre Usuario", "Rol Asigando" });
-
-    	/*modelo = new DefaultTableModel();
-    	modelo.addColumn("IdUsuario");
-    	modelo.addColumn("Nombre Usuario");
-    	modelo.addColumn("Password");*/
-
+    	modelo = new DefaultTableModel(new Object[][]{}, new String[] { 
+    			"IdUsuario", 
+    			"Nombre Usuario", 
+    			"Contraseña",
+    			"Rol Asigando" });
                
         cargarTabla();
 
@@ -114,9 +113,9 @@ public class AltaUsuario extends JFrame {
         botonModificar = new JButton("Modificar");
         botonMenu = new JButton("Menú");
         
-        botonEliminar.setBounds(264, 219, 98, 20);
-        botonModificar.setBounds(155, 219, 93, 20);
-        botonMenu.setBounds(155, 431, 98, 20);
+        botonEliminar.setBounds(267, 381, 98, 20);
+        botonModificar.setBounds(158, 381, 93, 20);
+        botonMenu.setBounds(158, 412, 93, 20);
         container.add(botonEliminar);
         container.add(botonModificar);
         container.add(botonMenu);
@@ -154,7 +153,7 @@ public class AltaUsuario extends JFrame {
         container.add(listaRoles);
 
         botonGuardar = new JButton("Guardar");
-        botonGuardar.setBounds(29, 219, 99, 20);
+        botonGuardar.setBounds(32, 381, 99, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);
@@ -165,8 +164,6 @@ public class AltaUsuario extends JFrame {
        
         
     }
-
-    
 
     private void configurarAccionesDelFormulario() {
         botonGuardar.addActionListener(new ActionListener() {
@@ -205,13 +202,10 @@ public class AltaUsuario extends JFrame {
 
     
     private void volverMenu() {
-        // Cerrar la ventana actual
         dispose();
 
-        // Crear y mostrar la instancia del menú
         MenuFrame menuFrame = new MenuFrame();
-        menuFrame.setVisible(true);
-        
+        menuFrame.setVisible(true);        
     }
 
 
@@ -224,30 +218,20 @@ public class AltaUsuario extends JFrame {
     }
     
     private void actualizar() {
-        if (tieneFilaElegida()) {
+        int filaSeleccionada = tabla.getSelectedRow();
+
+        if (filaSeleccionada == -1) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
         }
 
-        Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-                .ifPresentOrElse(fila -> {
-                    Integer idUsuario = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
+        Integer idUsuario = Integer.valueOf(modelo.getValueAt(filaSeleccionada, 0).toString());
+        String nombreUsuario = (String) modelo.getValueAt(filaSeleccionada, 1);
+        String password = (String) modelo.getValueAt(filaSeleccionada, 2); // Ahora obteniendo la contraseña de la tabla
 
-                    // Actualizar los campos con los valores de la interfaz
-                    textoNombreUsuario.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 2));
-                    textoPassword.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
+        this.usuarioController.actualizar(nombreUsuario, password, idUsuario);
 
-
-                    // Luego, puedes imprimir los valores para verificar
-                    System.out.println("ID to update: " + idUsuario);
-                    System.out.println("Texto Nombre: " + textoNombreUsuario.getText());
-                    System.out.println("Texto Apellido: " + textoPassword.getText());
-
-                    // Finalmente, llamar al método actualizar del controlador
-                    this.usuarioController.actualizar(textoNombreUsuario.getText(), textoPassword.getText(), idUsuario);
-
-                    JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
-                }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
+        JOptionPane.showMessageDialog(this, "Registro modificado con éxito");
     }
  
     
@@ -272,62 +256,23 @@ public class AltaUsuario extends JFrame {
    private List<Usuario> ListarUsuarios() {
 		return this.usuarioController.listar();
    }
-     
-   private void cargarTabla() {			       
-	    // Llenar Tabla
+  
+   private void cargarTabla() {
 	    List<Usuario> usuarios = ListarUsuarios();
 	    try {
 	        for (Usuario usuario : usuarios) {
-	            modelo.addRow(new Object[] { usuario.getIdUsuario(), usuario.getNombreUsuario(), usuario.getRoles() });
+	            modelo.addRow(new Object[] { 
+	                usuario.getIdUsuario(), 
+	                usuario.getNombreUsuario(), 
+	                usuario.getContrasena(),
+	                usuario.getRolesAsString() // Usar getRolesAsString()
+	            });
 	        }
 	    } catch (Exception e) {
 	        throw e;
 	    }
 	}
-	
-  
-    
-  /*  private void guardar2() throws SQLException {
-		
-		 Usuario usuario = new Usuario(textoNombreUsuario.getText(), 
-				 			textoPassword.getText());	
-		 	
-		this.usuarioController.guardar(usuario);	
- 			
- 		JOptionPane.showMessageDialog(this, "Registrado con éxito!");
-
- 	    this.limpiarFormulario();
-    							
-    }*/
-    
-   private void guardar() {
-	    try {
-	        String nombreUsuario = textoNombreUsuario.getText();
-	        String password = textoPassword.getText();
-	        String rolSeleccionado = (String) listaRoles.getSelectedItem(); // Obtener el rol seleccionado
-
-	        if (nombreUsuario.isEmpty() || password.isEmpty() || rolSeleccionado == null) {
-	            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
-	            return;
-	        }
-
-	        Usuario usuario = new Usuario(nombreUsuario, password);
-	        usuario.addRol(Rol.valueOf(rolSeleccionado));
-
-	        try {
-	            this.usuarioController.guardar(usuario, rolSeleccionado);
-	            JOptionPane.showMessageDialog(this, "Registrado con éxito!");
-	            limpiarFormulario();
-	        } catch (RuntimeException ex) {
-	            JOptionPane.showMessageDialog(this, "Error al guardar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-	            ex.printStackTrace(); // Puedes ajustar el manejo de la excepción según tus necesidades
-	        }
-	    } catch (IllegalArgumentException e) {
-	        JOptionPane.showMessageDialog(this, "Rol seleccionado no válido.", "Error", JOptionPane.ERROR_MESSAGE);
-	        e.printStackTrace(); // Puedes ajustar el manejo de la excepción según tus necesidades
-	    }
-	}
-   
+     
    private void cargarRoles() {
 	    // Obtener los valores del enum Rol
 	    Rol[] roles = Rol.values();
@@ -343,11 +288,42 @@ public class AltaUsuario extends JFrame {
 	    listaRoles.setModel(comboBoxModel);
 	}
    
+   private void guardar() {
+	    try {
+	        String nombreUsuario = textoNombreUsuario.getText();
+	        String password = textoPassword.getText();
+	        String rolSeleccionado = (String) listaRoles.getSelectedItem(); // Obtener el rol seleccionado
+
+	        if (nombreUsuario.isEmpty() || password.isEmpty() || rolSeleccionado == null) {
+	            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
+	            return;
+	        }
+
+	        // Asegúrate de que el valor del rol coincida con los valores del enum Rol
+	        Rol rol;
+	        try {
+	            rol = Rol.valueOf(rolSeleccionado.replace(" ", "_").toUpperCase());
+	        } catch (IllegalArgumentException e) {
+	            JOptionPane.showMessageDialog(this, "Rol seleccionado no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	            return; // No continuar si el rol no es válido
+	        }
+
+	        Usuario usuario = new Usuario(nombreUsuario, password);
+	        usuario.addRol(rol);
+
+	        this.usuarioController.guardar(usuario, rolSeleccionado);
+	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+	        limpiarFormulario();
+	    } catch (RuntimeException ex) {
+	        JOptionPane.showMessageDialog(this, "Error al guardar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        ex.printStackTrace(); // Puedes ajustar el manejo de la excepción según tus necesidades
+	    }
+	}
+   
+   
     private void limpiarFormulario() {
-    	
         this.textoNombreUsuario.setText("");
         this.textoPassword.setText("");
         this.textoRol.setText("");
-        
     }
 }
