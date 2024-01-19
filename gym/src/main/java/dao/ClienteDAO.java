@@ -10,7 +10,6 @@ import java.util.List;
 
 import gym.modelo.Cliente;
 
-
 public class ClienteDAO {
 
 	final private Connection con;
