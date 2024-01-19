@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
@@ -89,14 +90,16 @@ public class AltaGastosFrame extends JFrame {
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
 
-        modelo = (DefaultTableModel) tabla.getModel();
+        //modelo = (DefaultTableModel) tabla.getModel();
+        modelo = new DefaultTableModel();
         modelo.addColumn("Id");
         modelo.addColumn("Perido Gasto");
         modelo.addColumn("Gasto");
         modelo.addColumn("Descripcion");
         modelo.addColumn("Costo");
 
-
+        tabla.setModel(modelo); // Asegúrate de establecer el modelo en la tabla
+        
         cargarTabla();
 
         tabla.setBounds(10, 286, 760, 143);
@@ -105,15 +108,19 @@ public class AltaGastosFrame extends JFrame {
         botonModificar = new JButton("Modificar");
         botonMenu = new JButton("Menú");
         
-        botonEliminar.setBounds(254, 458, 96, 20);
-        botonModificar.setBounds(364, 458, 94, 20);
-        botonMenu.setBounds(475, 458, 96, 20);
+        botonEliminar.setBounds(246, 495, 96, 20);
+        botonModificar.setBounds(356, 495, 94, 20);
+        botonMenu.setBounds(467, 495, 96, 20);
         
 
         container.add(tabla);
         container.add(botonEliminar);
         container.add(botonModificar);
         container.add(botonMenu);
+        
+        JScrollPane scrollPane = new JScrollPane(tabla); // Añadir la tabla a un JScrollPane
+        scrollPane.setBounds(10, 269, 760, 215);
+        container.add(scrollPane); // Agregar el JScrollPane al contenedor
 
         setSize(800, 600);
         setVisible(true);
@@ -149,8 +156,8 @@ public class AltaGastosFrame extends JFrame {
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(276, 262, 92, 20);
-        botonLimpiar.setBounds(378, 262, 92, 20);
+        botonGuardar.setBounds(277, 238, 92, 20);
+        botonLimpiar.setBounds(379, 238, 92, 20);
 
         container.add(labelNombreGasto);
         container.add(labelDescripcion);

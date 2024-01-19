@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -213,18 +214,25 @@ public class ReporteClientes extends JFrame {
             }
         };
 
-        modelo = (DefaultTableModel) tabla.getModel();
+       // modelo = (DefaultTableModel) tabla.getModel();
+        modelo = new DefaultTableModel();
         modelo.addColumn("Fecha Pago");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Monto");
         modelo.addColumn("Estado");
     
+        tabla.setModel(modelo);
+        
         cargarTabla();
 
         tabla.setBounds(10, 205, 760, 280);
 
         container.add(tabla);
+        
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        scrollPane.setBounds(10, 205, 760, 280);
+        container.add(scrollPane); 
 
         setSize(800, 600);
         setVisible(true);

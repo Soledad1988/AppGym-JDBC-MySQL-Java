@@ -34,6 +34,7 @@ import gym.modelo.Cliente;
 import gym.modelo.Rol;
 import gym.modelo.Usuario;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 
 
 public class AltaUsuario extends JFrame {
@@ -42,12 +43,13 @@ public class AltaUsuario extends JFrame {
 
     private JLabel labelNombre, labelApellido, labelRol;
     private JTextField textoNombreUsuario, textoRol;
-    private JButton botonGuardar, botonModificar, botonEliminar, botonMenu;
+    private JButton botonGuardar, botonModificar, botonEliminar, botonMenu, botonReporteUsuario;
     private DefaultTableModel modelo;
     private UsuarioController usuarioController;
     private JTable tabla;
     private JPasswordField textoPassword;
     private JComboBox listaRoles;
+    private ReporteUsuarioFrame inicioSesion;
     
     
     public static void main(String[] args) {
@@ -82,7 +84,7 @@ public class AltaUsuario extends JFrame {
         
         JLabel lblUsuariosGenerados = new JLabel("Usuarios Generados");
         lblUsuariosGenerados.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
-        lblUsuariosGenerados.setBounds(89, 212, 213, 30);
+        lblUsuariosGenerados.setBounds(89, 202, 213, 30);
         getContentPane().add(lblUsuariosGenerados);
         
         tabla = new JTable(modelo);
@@ -94,6 +96,10 @@ public class AltaUsuario extends JFrame {
         textoPassword = new JPasswordField();
         textoPassword.setBounds(183, 127, 130, 20);
         getContentPane().add(textoPassword);
+        
+        JButton botonReporteUsuario = new JButton("Reporte");
+        botonReporteUsuario.setBounds(211, 411, 93, 20);
+        getContentPane().add(botonReporteUsuario);
 
         configurarAccionesDelFormulario();
     }
@@ -101,24 +107,36 @@ public class AltaUsuario extends JFrame {
 
     private void configurarTablaDeContenido(Container container) {
     	
-    	modelo = new DefaultTableModel(new Object[][]{}, new String[] { 
-    			"IdUsuario", 
-    			"Nombre Usuario", 
-    			"Contraseña",
-    			"Rol Asigando" });
+    	tabla = new JTable();
+
+        modelo = new DefaultTableModel();
+        modelo.addColumn("IdUsuario");
+        modelo.addColumn("Nombre Usuario");
+        modelo.addColumn("Contraseña");
+        modelo.addColumn("Rol Asigando");
+
+        tabla.setModel(modelo); 
                
         cargarTabla();
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
         botonMenu = new JButton("Menú");
+        botonReporteUsuario = new JButton("Reporte");
         
         botonEliminar.setBounds(267, 381, 98, 20);
         botonModificar.setBounds(158, 381, 93, 20);
-        botonMenu.setBounds(158, 412, 93, 20);
+        botonMenu.setBounds(89, 412, 93, 20);
+        botonReporteUsuario.setBounds(211, 412, 93, 20);
         container.add(botonEliminar);
         container.add(botonModificar);
         container.add(botonMenu);
+        container.add(botonReporteUsuario);
+        
+        JScrollPane scrollPane = new JScrollPane(tabla); 
+        scrollPane.setBounds(10, 243, 390, 127);
+        container.add(scrollPane); 
+
 
         setSize(424, 499);
         setVisible(true);
@@ -196,6 +214,19 @@ public class AltaUsuario extends JFrame {
             
         });
         
+        botonReporteUsuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) { 
+					try {
+						reporteInicioSesion();
+					} catch (SQLException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				         	
+            }
+            
+        });
+        
         cargarRoles();
 
     }
@@ -207,6 +238,12 @@ public class AltaUsuario extends JFrame {
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);        
     }
+    
+    
+    private void reporteInicioSesion() throws SQLException {
+    	inicioSesion = new ReporteUsuarioFrame();
+    	inicioSesion.setVisible(true); 
+	    }
 
 
     private void limpiarTabla() {

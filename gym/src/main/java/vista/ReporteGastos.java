@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -173,19 +174,22 @@ public class ReporteGastos extends JFrame {
     }
     
     private void configurarTablaDeContenido(Container container) {
-        tabla = new JTable();
+    	
+    	tabla = new JTable();
 
-        modelo = (DefaultTableModel) tabla.getModel();
+        modelo = new DefaultTableModel();
         modelo.addColumn("Periodo Gasto");
         modelo.addColumn("Nombre Gasto");
         modelo.addColumn("Descripcion");
         modelo.addColumn("Costo");
-    
+
+        tabla.setModel(modelo); // Asegúrate de establecer el modelo en la tabla
+
         cargarTabla();
 
-        tabla.setBounds(10, 205, 760, 280);
-
-        container.add(tabla);
+        JScrollPane scrollPane = new JScrollPane(tabla); // Añadir la tabla a un JScrollPane
+        scrollPane.setBounds(10, 205, 760, 280);
+        container.add(scrollPane); // Agregar el JScrollPane al contenedor
 
         setSize(800, 600);
         setVisible(true);

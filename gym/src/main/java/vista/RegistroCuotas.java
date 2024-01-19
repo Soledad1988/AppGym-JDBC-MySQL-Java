@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -57,7 +58,6 @@ public class RegistroCuotas extends JFrame {
     public RegistroCuotas() throws SQLException {
         super("Cuotas");
         
-
         this.clienteController = new ClienteController();
         this.cuotaController = new CuotaController();
 
@@ -71,7 +71,7 @@ public class RegistroCuotas extends JFrame {
         
         JLabel labelFecha = new JLabel("Fecha Pago");
         labelFecha.setForeground(Color.BLACK);
-        labelFecha.setBounds(321, 323, 99, 15);
+        labelFecha.setBounds(239, 395, 99, 15);
         getContentPane().add(labelFecha);
         
         /*----------------------------------*/
@@ -83,7 +83,7 @@ public class RegistroCuotas extends JFrame {
         });
         textFechaPago.getCalendarButton().setBackground(SystemColor.textHighlight);
         textFechaPago.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
-        textFechaPago.setBounds(426, 323, 175, 23);
+        textFechaPago.setBounds(322, 392, 175, 20);
         textFechaPago.getCalendarButton().setBounds(268, 0, 21, 33);
         textFechaPago.setBackground(Color.WHITE);
         textFechaPago.setBorder(new LineBorder(SystemColor.window));
@@ -94,11 +94,11 @@ public class RegistroCuotas extends JFrame {
         
         JLabel lblMonto = new JLabel("Monto");
         lblMonto.setForeground(Color.BLACK);
-        lblMonto.setBounds(83, 326, 57, 15);
+        lblMonto.setBounds(26, 395, 57, 15);
         getContentPane().add(lblMonto);
         
         textMonto = new JTextField();
-        textMonto.setBounds(150, 323, 144, 20);
+        textMonto.setBounds(73, 392, 144, 20);
         getContentPane().add(textMonto);
         
         JLabel lblTitulo = new JLabel("Registro Cuotas");
@@ -113,24 +113,27 @@ public class RegistroCuotas extends JFrame {
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
 
-        modelo = (DefaultTableModel) tabla.getModel();
+       // modelo = (DefaultTableModel) tabla.getModel();
+        modelo = new DefaultTableModel();
         modelo.addColumn("Id");
-        modelo.addColumn("Fecha Alta");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
-        modelo.addColumn("Dirección");
+        
+        tabla.setModel(modelo); // Asegúrate de establecer el modelo en la tabla
 
-
-        //cargarTabla();
 
         tabla.setBounds(16, 112, 760, 172);
         botonMenu = new JButton("Menú");
-        botonMenu.setBounds(449, 366, 98, 20);
+        botonMenu.setBounds(338, 489, 135, 20);
         
 
         container.add(tabla);
         container.add(botonMenu);
 
+        JScrollPane scrollPane = new JScrollPane(tabla); // Añadir la tabla a un JScrollPane
+        scrollPane.setBounds(16, 112, 760, 262);
+        container.add(scrollPane); // Agregar el JScrollPane al contenedor
+        
         setSize(800, 600);
         setVisible(true);
         setLocationRelativeTo(null);
@@ -148,7 +151,7 @@ public class RegistroCuotas extends JFrame {
 
         botonAsignarCuota = new JButton("Asignar Cuota");
         botonBuscar = new JButton("Buscar");
-        botonAsignarCuota.setBounds(236, 366, 138, 20);
+        botonAsignarCuota.setBounds(587, 392, 138, 20);
         botonBuscar.setBounds(426, 62, 99, 20);
         
         container.add(labelApellido);
@@ -217,9 +220,7 @@ public class RegistroCuotas extends JFrame {
 	            modelo.addRow(new Object[] {
 	                cliente.getId(),
 	                cliente.getFechaAlta(), 
-	                cliente.getNombre(), 
-	                cliente.getApellido(), 
-	                cliente.getDireccion()
+	                cliente.getNombre()
 	            });
 	        }
 	    } catch (Exception e) {
@@ -268,7 +269,6 @@ public class RegistroCuotas extends JFrame {
 	            JOptionPane.showMessageDialog(this, "Seleccione una fila antes de guardar.");
 	        }
 	    } catch (SQLException | NumberFormatException e) {
-	        // Manejar excepciones adecuadamente, mostrar mensaje de error, etc.
 	        e.printStackTrace();
 	        JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
 	    }

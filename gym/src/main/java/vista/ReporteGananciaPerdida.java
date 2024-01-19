@@ -20,6 +20,7 @@ import controller.ReporteMensualController;
 import gym.modelo.Gastos;
 
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
@@ -192,22 +193,25 @@ public class ReporteGananciaPerdida extends JFrame {
         modeloIngresos.addColumn("Nombre");
         modeloIngresos.addColumn("Apellido");
         modeloIngresos.addColumn("Monto");
-        
+
         tablaIngresos = new JTable(modeloIngresos);
         tablaIngresos.setBounds(10, 129, 760, 164);
-        container.add(tablaIngresos);
-        
+        JScrollPane scrollPaneIngresos = new JScrollPane(tablaIngresos);
+        scrollPaneIngresos.setBounds(10, 129, 760, 164);
+        container.add(scrollPaneIngresos);
+
         // Configuración del modelo y la tabla de egresos
         modeloEgresos = new DefaultTableModel();
         modeloEgresos.addColumn("Periodo Gasto");
         modeloEgresos.addColumn("Nombre Gasto");
         modeloEgresos.addColumn("Descripcion");
         modeloEgresos.addColumn("Costo");
-        
+
         tablaEgresos = new JTable(modeloEgresos);
         tablaEgresos.setBounds(10, 322, 760, 164);
-        container.add(tablaEgresos);
-
+        JScrollPane scrollPaneEgresos = new JScrollPane(tablaEgresos);
+        scrollPaneEgresos.setBounds(10, 322, 760, 164);
+        container.add(scrollPaneEgresos);
 
         setSize(800, 600);
         setVisible(true);

@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -72,8 +73,7 @@ public class ListaClientesFrame extends JFrame {
         configurarCamposDelFormulario(container);
 
         configurarTablaDeContenido(container);
-        
-        
+                
         JLabel labelFecha = new JLabel("Fecha Ingreso");
         labelFecha.setForeground(Color.BLACK);
         labelFecha.setBounds(10, 33, 240, 15);
@@ -123,15 +123,16 @@ public class ListaClientesFrame extends JFrame {
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
 
-        modelo = (DefaultTableModel) tabla.getModel();
+        modelo = new DefaultTableModel();
         modelo.addColumn("Id");
         modelo.addColumn("Fecha Alta");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
-        modelo.addColumn("Pago");
+        modelo.addColumn("Telefono");
 
-
+        tabla.setModel(modelo);
+        
         cargarTabla();
 
         tabla.setBounds(10, 286, 760, 240);
@@ -140,15 +141,20 @@ public class ListaClientesFrame extends JFrame {
         botonModificar = new JButton("Modificar");
         botonMenu = new JButton("Menù");
         
-        botonEliminar.setBounds(15, 530, 80, 20);
-        botonModificar.setBounds(105, 530, 80, 20);
-        botonMenu.setBounds(195, 530, 80, 20);
+        botonEliminar.setBounds(15, 530, 93, 20);
+        botonModificar.setBounds(110, 530, 93, 20);
+        botonMenu.setBounds(213, 530, 80, 20);
         
 
         container.add(tabla);
         container.add(botonEliminar);
         container.add(botonModificar);
         container.add(botonMenu);
+        
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        scrollPane.setBounds(10, 293, 760, 233);
+        container.add(scrollPane);
+
 
         setSize(800, 600);
         setVisible(true);
@@ -181,8 +187,8 @@ public class ListaClientesFrame extends JFrame {
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(15, 265, 80, 20);
-        botonLimpiar.setBounds(105, 265, 80, 20);
+        botonGuardar.setBounds(15, 265, 93, 20);
+        botonLimpiar.setBounds(118, 265, 80, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);

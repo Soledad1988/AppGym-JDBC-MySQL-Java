@@ -1,3 +1,4 @@
+
 package vista;
 
 import java.awt.Color;
@@ -16,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
@@ -116,8 +118,8 @@ public class AltaClientesFrame extends JFrame {
 
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
-
-        modelo = (DefaultTableModel) tabla.getModel();
+        
+        modelo = new DefaultTableModel();
         modelo.addColumn("Id");
         modelo.addColumn("Fecha Alta");
         modelo.addColumn("Nombre");
@@ -125,14 +127,7 @@ public class AltaClientesFrame extends JFrame {
         modelo.addColumn("Dirección");
         modelo.addColumn("Telefono");
         
-        // Establecer los nombres de las columnas
-        String[] nombresColumnas = {"Id", "Fecha Alta", "Nombre", "Apellido", "Dirección", "Telefono"};
-        modelo.setColumnIdentifiers(nombresColumnas);
-        
-     // Configurar la tabla con el modelo
         tabla.setModel(modelo);
-        
-
         
         cargarTabla();
 
@@ -151,6 +146,10 @@ public class AltaClientesFrame extends JFrame {
         container.add(botonEliminar);
         container.add(botonModificar);
         container.add(botonMenu);
+        
+        JScrollPane scrollPane = new JScrollPane(tabla);
+        scrollPane.setBounds(10, 303, 760, 204);
+        container.add(scrollPane);
 
         setSize(800, 600);
         setVisible(true);
@@ -183,8 +182,8 @@ public class AltaClientesFrame extends JFrame {
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(20, 265, 99, 20);
-        botonLimpiar.setBounds(129, 265, 99, 20);
+        botonGuardar.setBounds(39, 265, 99, 20);
+        botonLimpiar.setBounds(148, 265, 99, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);
