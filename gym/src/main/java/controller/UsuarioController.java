@@ -6,6 +6,7 @@ import java.util.List;
 
 import conexion.Conexion;
 import dao.UsuarioDAO;
+import gym.modelo.RegistroLogin;
 import gym.modelo.Usuario;
 
 public class UsuarioController {
@@ -39,4 +40,14 @@ public class UsuarioController {
 	 	public List<Usuario> buscar(String usuario, String password) throws SQLException {
 	        return this.usuarioDAO.buscar(usuario, password);
 	    }
+	 	
+	 	//registro de sesisiones
+	 	public void registrarInicioSesion(int idUsuario) {
+	 		this.usuarioDAO.registrarInicioSesion(idUsuario);
+	 	}
+	 	
+	 	public List<RegistroLogin> obtenerRegistrosLogin() {
+	 		return this.usuarioDAO.obtenerRegistrosLogin();
+	 	}
+	 	
 }
