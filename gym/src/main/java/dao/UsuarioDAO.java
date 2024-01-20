@@ -1,5 +1,6 @@
 package dao;
 
+import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import gym.modelo.RegistroLogin;
 import gym.modelo.Rol;
 import gym.modelo.Usuario;
 
@@ -154,9 +156,57 @@ public class UsuarioDAO {
 		}				
 	}
 	
+    public List<Usuario> buscar(String usuario, String password) throws SQLException {
+        List<Usuario> usuarios = new ArrayList<>();
+
+        String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, r.nombreRol " +
+                     "FROM usuarios u " +
+                     "JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
+                     "JOIN roles r ON ur.idRol = r.idRol " +
+                     "WHERE u.nombreUsuario = ? AND u.contrasena = ?";
+
+        try (PreparedStatement stm = con.prepareStatement(sql)) {
+            stm.setString(1, usuario);
+            stm.setString(2, password);
+
+            try (ResultSet rst = stm.executeQuery()) {
+                Map<Integer, Usuario> usuariosMap = new HashMap<>();
+
+                while (rst.next()) {
+                    Integer idUsuario = rst.getInt("idUsuario");
+                    String nombreUsuario = rst.getString("nombreUsuario");
+                    String contrasena = rst.getString("contrasena");
+                    String nombreRol = rst.getString("nombreRol");
+
+                    Usuario usu = usuariosMap.computeIfAbsent(idUsuario,
+                            k -> new Usuario(idUsuario, nombreUsuario, contrasena));
+
+                    Set<Rol> roles = usu.getRoles();
+                    if (roles == null) {
+                        roles = new HashSet<>();
+                        usu.setRoles(roles);
+                    }
+
+                    roles.add(Rol.valueOf(nombreRol)); // Asumiendo que el nombreRol coincide con el nombre del Enum
+                }
+
+                usuarios.addAll(usuariosMap.values());
+
+                // Si se encontró al menos un usuario, registra el inicio de sesión
+                if (!usuarios.isEmpty()) {
+                    // Puedes tomar el ID del primer usuario en la lista
+                    registrarInicioSesion(usuarios.get(0).getIdUsuario());
+                }
+            }
+        }
+
+        return usuarios;
+    }
+    
+    
 	
 	//Inicio de sesión
-	public List<Usuario> buscar(String usuario, String password) throws SQLException {
+	public List<Usuario> buscar2(String usuario, String password) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
 
         String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, r.nombreRol " +
@@ -217,6 +267,44 @@ public class UsuarioDAO {
 	    }
 
 	    return roles;
+	}
+	
+	//Reporte de usuario
+	public void registrarInicioSesion(int idUsuario) {
+	    String sql = "INSERT INTO registros_login (idUsuario, fechaHora) VALUES (?, NOW())";
+	    // Quita la siguiente línea: ejecutarSQL(sql);
+	    try (PreparedStatement stm = con.prepareStatement(sql)) {
+	        stm.setInt(1, idUsuario);
+	        int rowsAffected = stm.executeUpdate();
+	        System.out.println(rowsAffected + " filas afectadas.");
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	}
+	
+	
+	public List<RegistroLogin> obtenerRegistrosLogin() {
+	    List<RegistroLogin> registros = new ArrayList<>();
+
+	    // Ajusta esta consulta para unir con la tabla de usuarios
+	    String sql = "SELECT rl.idUsuario, u.nombreUsuario, rl.fechaHora " +
+	                 "FROM registros_login rl " +
+	                 "JOIN usuarios u ON rl.idUsuario = u.idUsuario";
+
+	    try (PreparedStatement stm = con.prepareStatement(sql);
+	         ResultSet rs = stm.executeQuery()) {
+
+	        while (rs.next()) {
+	            int idUsuario = rs.getInt("idUsuario");
+	            String nombreUsuario = rs.getString("nombreUsuario");
+	            java.sql.Timestamp fechaHora = rs.getTimestamp("fechaHora");
+
+	            registros.add(new RegistroLogin(idUsuario, nombreUsuario, fechaHora));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return registros;
 	}
 
 }
