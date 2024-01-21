@@ -85,10 +85,10 @@ public class ReporteGastos extends JFrame {
     	lblNewLabel.setBounds(309, 21, 218, 36);
     	getContentPane().add(lblNewLabel);
     	
-    	JLabel lblPeriodo = new JLabel("Periodo");
-    	lblPeriodo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-    	lblPeriodo.setBounds(170, 108, 100, 22);
-    	getContentPane().add(lblPeriodo);
+    	JLabel lblMes = new JLabel("Mes");
+    	lblMes.setFont(new Font("Tahoma", Font.PLAIN, 15));
+    	lblMes.setBounds(170, 108, 100, 22);
+    	getContentPane().add(lblMes);
     	
     	JComboBox BoxPeriodo = new JComboBox();
     	BoxPeriodo.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
@@ -111,7 +111,7 @@ public class ReporteGastos extends JFrame {
     	
     	
     	// Nuevo botón para aplicar el filtro
-        JButton btnFiltrar = new JButton("Filtrar por Mes");
+        JButton btnFiltrar = new JButton("Filtrar");
         btnFiltrar.setBounds(600, 105, 150, 22);
         getContentPane().add(btnFiltrar);
 
@@ -130,6 +130,11 @@ public class ReporteGastos extends JFrame {
            JButton btnCalcularSuma = new JButton("Calcular Suma");
            btnCalcularSuma.setBounds(300, 497, 120, 25);
            getContentPane().add(btnCalcularSuma);
+           
+           JLabel lblAno = new JLabel("Año");
+           lblAno.setFont(new Font("Tahoma", Font.PLAIN, 15));
+           lblAno.setBounds(170, 141, 100, 22);
+           getContentPane().add(lblAno);
     	
         // Agregar un ActionListener al botón para manejar la acción
            btnCalcularSuma.addActionListener(new ActionListener() {
@@ -220,5 +225,4 @@ public class ReporteGastos extends JFrame {
                         gasto.getCosto()
                 }));
     }
-
 }

@@ -65,15 +65,29 @@ public class ReporteGananciaPerdida extends JFrame {
     	lblNewLabel.setBounds(300, 11, 218, 36);
     	getContentPane().add(lblNewLabel);
     	
-    	JLabel lblPeriodo = new JLabel("Periodo");
-    	lblPeriodo.setFont(new Font("Tahoma", Font.PLAIN, 15));
-    	lblPeriodo.setBounds(117, 61, 100, 22);
-    	getContentPane().add(lblPeriodo);
+    	JLabel lblMes = new JLabel("Mes");
+    	lblMes.setFont(new Font("Tahoma", Font.PLAIN, 15));
+    	lblMes.setBounds(238, 58, 100, 22);
+    	getContentPane().add(lblMes);
     	
     	JComboBox BoxPeriodo = new JComboBox();
     	BoxPeriodo.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
     	BoxPeriodo.setBounds(376, 58, 148, 22);
     	getContentPane().add(BoxPeriodo);
+    	
+    	JLabel lblAno = new JLabel("Año");
+    	lblAno.setFont(new Font("Tahoma", Font.PLAIN, 15));
+    	lblAno.setBounds(238, 87, 100, 22);
+    	getContentPane().add(lblAno);
+
+    	JComboBox<Integer> BoxAno = new JComboBox<>();
+    	// Ejemplo: Añadir los últimos 5 años
+    	int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+    	for (int i = currentYear; i > currentYear - 5; i--) {
+    	    BoxAno.addItem(i);
+    	}
+    	BoxAno.setBounds(376, 90, 148, 22);
+    	getContentPane().add(BoxAno);
     	
     	textTotal = new JTextField();
     	textTotal.setEditable(false);
@@ -83,26 +97,27 @@ public class ReporteGananciaPerdida extends JFrame {
     	
     	
     	// Nuevo botón para aplicar el filtro
-        JButton btnFiltrar = new JButton("Filtrar por Mes");
+        JButton btnFiltrar = new JButton("Filtrar");
         btnFiltrar.setBounds(547, 58, 150, 22);
         getContentPane().add(btnFiltrar);
 
         // Agregar un ActionListener al botón de filtro
         btnFiltrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Obtener el mes seleccionado en el JComboBox
+                // Obtener el mes y el año seleccionados
                 int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+                int anoSeleccionado = (int) BoxAno.getSelectedItem();
 
                 limpiarTabla();
-                cargarTablaGastosPorMes(numeroMes);
-                cargarTablaIngresoPorMes(numeroMes);
+                cargarTablaGastosPorMes(numeroMes, anoSeleccionado);
+                cargarTablaIngresoPorMes(numeroMes, anoSeleccionado);
             }
         });
         
         
         // Botón para calcular la suma por mes
            JButton btnCalcularGananciaPerdida = new JButton("Calcular Ganancia/Perdida");
-           btnCalcularGananciaPerdida.setBounds(252, 497, 168, 25);
+           btnCalcularGananciaPerdida.setBounds(202, 497, 218, 25);
            getContentPane().add(btnCalcularGananciaPerdida);
            
            JLabel lblTotalDeIngresos = new JLabel("Total de Ingresos");
@@ -121,15 +136,18 @@ public class ReporteGananciaPerdida extends JFrame {
            getContentPane().add(lblTotalDeEgresos);
     	
         // Agregar un ActionListener al botón para manejar la acción
-        btnCalcularGananciaPerdida.addActionListener(new ActionListener() {
-        	 public void actionPerformed(ActionEvent e) {
-        	        // Obtener el mes seleccionado del JComboBox
+           btnCalcularGananciaPerdida.addActionListener(new ActionListener() {
+        	    public void actionPerformed(ActionEvent e) {
+        	        // Obtener el mes seleccionado del JComboBox BoxPeriodo
         	        int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+        	        
+        	        // Obtener el año seleccionado del JComboBox BoxAño
+        	        int año = Integer.parseInt(BoxAno.getSelectedItem().toString());
 
         	        // Llamar a la función obtenerBalancePorMes y mostrar el resultado en textTotal
         	        double resultadoBalance = 0;
         	        try {
-        	            resultadoBalance = reporteMensual.obtenerBalancePorMes(numeroMes);
+        	            resultadoBalance = reporteMensual.obtenerBalancePorMes(numeroMes, año);
         	        } catch (SQLException e1) {
         	            e1.printStackTrace();
         	            // Opcionalmente, puedes manejar el error de manera más amigable para el usuario
@@ -146,11 +164,11 @@ public class ReporteGananciaPerdida extends JFrame {
     }
     
     
-    private void cargarTablaGastosPorMes(int numeroMes) {
+    private void cargarTablaGastosPorMes(int numeroMes, int año) {
         List<Gastos> gastos = new ArrayList<>();
 
         try {
-            gastos = this.reporteMensual.listarGastosPorMes(numeroMes);
+            gastos = this.reporteMensual.listarGastosPorMes(numeroMes, año);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -165,12 +183,12 @@ public class ReporteGananciaPerdida extends JFrame {
                 }));
     }
     
-    private void cargarTablaIngresoPorMes(int numeroMes) {
+    private void cargarTablaIngresoPorMes(int numeroMes, int año) {
 
         List<Map<String, String>> clientes = new ArrayList<>();
 
         try {
-            clientes = this.reporteMensual.reporteCuotasPagadasPorMes(numeroMes);
+            clientes = this.reporteMensual.reporteCuotasPagadasPorMes(numeroMes, año);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -202,7 +220,7 @@ public class ReporteGananciaPerdida extends JFrame {
 
         // Configuración del modelo y la tabla de egresos
         modeloEgresos = new DefaultTableModel();
-        modeloEgresos.addColumn("Periodo Gasto");
+        modeloEgresos.addColumn("Fecha Gasto");
         modeloEgresos.addColumn("Nombre Gasto");
         modeloEgresos.addColumn("Descripcion");
         modeloEgresos.addColumn("Costo");

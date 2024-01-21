@@ -48,7 +48,35 @@ public class ReporteMensualDAO {
         return resultado;
     }
     
+	public List<Gastos> listarGastosPorMes(int numeroDeMes, int año) throws SQLException {
+        String consulta = "SELECT * FROM gastos WHERE MONTH(fechaGasto) = ? AND YEAR(fechaGasto) = ?";
 
+        try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
+            preparedStatement.setInt(1, numeroDeMes);
+            preparedStatement.setInt(2, año);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                List<Gastos> gastos = new ArrayList<>();
+
+                while (resultSet.next()) {
+                    Gastos gasto = new Gastos(
+                            resultSet.getDate("fechaGasto"),
+                            resultSet.getString("nombreGasto"),
+                            resultSet.getString("descripcion"),
+                            resultSet.getDouble("costo")
+                    );
+                    gastos.add(gasto);
+                }
+
+                return gastos;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+	
+	/*
 	  public List<Gastos> listarGastosPorMes(int numeroDeMes) throws SQLException {
 	        Conexion factory = new Conexion();
 	             final Connection con = factory.recuperaConexion();
@@ -82,36 +110,36 @@ public class ReporteMensualDAO {
 	                return Collections.emptyList();
 	            }
 	        
-	    }
+	    }*/
     
     
-    public double obtenerSumaCostosPorMes(int numeroMes) throws SQLException {
+	public double obtenerSumaCostosPorMes(int numeroMes, int año) throws SQLException {
         Conexion factory = new Conexion();
              final Connection con = factory.recuperaConexion();
 
-            String nombreMes = obtenerNombreMes(numeroMes);
-            String consulta = "SELECT SUM(costo) AS resultado FROM gastos WHERE UPPER(fechaGasto) = UPPER(?)";
+             String consulta = "SELECT SUM(costo) AS resultado FROM gastos WHERE MONTH(fechaGasto) = ? AND YEAR(fechaGasto) = ?";
 
-            try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
-                preparedStatement.setString(1, nombreMes);
+             try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
+                 preparedStatement.setInt(1, numeroMes);
+                 preparedStatement.setInt(2, año);
 
-                try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    if (resultSet.next()) {
-                        // Obtener el resultado de la suma
-                        return resultSet.getDouble("resultado");
-                    }
-                }
-            } catch (SQLException e) {
-                // Manejo de excepciones
-                e.printStackTrace();
-            }
+                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                     if (resultSet.next()) {
+                         // Obtener el resultado de la suma
+                         return resultSet.getDouble("resultado");
+                     }
+                 }
+             } catch (SQLException e) {
+                 // Manejo de excepciones
+                 e.printStackTrace();
+             }
 
-            // En caso de error o si no hay resultados, retornar un valor indicativo
-            return 0;   
+             // En caso de error o si no hay resultados, retornar un valor indicativo
+             return 0;   
     }
     
   //Listado de cuotas pagadas por mes
-    public List<Map<String, String>> reporteCuotasPagadasPorMes(int numeroMes) throws SQLException {
+   /* public List<Map<String, String>> reporteCuotasPagadasPorMes(int numeroMes) throws SQLException {
         Conexion factory = new Conexion();
         final Connection con = factory.recuperaConexion();
 
@@ -123,6 +151,41 @@ public class ReporteMensualDAO {
         
         try (PreparedStatement statement = con.prepareStatement(consulta)) {
             statement.setInt(1, numeroMes);
+            statement.execute();
+
+            ResultSet resultSet = statement.getResultSet();
+
+            List<Map<String, String>> resultado = new ArrayList<>();
+
+            while (resultSet.next()) {
+                Map<String, String> fila = new HashMap<>();
+                Date fechaPago = resultSet.getDate("fechaPago");
+                fila.put("Fecha Pago", (fechaPago != null) ? fechaPago.toString() : "N/A");
+                fila.put("Nombre", resultSet.getString("nombre"));
+                fila.put("Apellido", resultSet.getString("apellido"));
+                fila.put("Monto", String.valueOf(resultSet.getDouble("monto")));
+                fila.put("Estado", "Pagado");
+
+                resultado.add(fila);
+            }
+
+            return resultado;
+        }
+    }*/
+    
+    public List<Map<String, String>> reporteCuotasPagadasPorMes(int numeroMes, int ano) throws SQLException {
+        Conexion factory = new Conexion();
+        final Connection con = factory.recuperaConexion();
+
+        final String consulta = "SELECT clientes.nombre, clientes.apellido, " +
+                "cuotas.monto, cuotas.fechaPago " +
+                "FROM clientes " +
+                "JOIN cuotas ON clientes.id = cuotas.clienteId " +
+                "WHERE MONTH(cuotas.fechaPago) = ? AND YEAR(cuotas.fechaPago) = ? AND cuotas.monto > 0";
+
+        try (PreparedStatement statement = con.prepareStatement(consulta)) {
+            statement.setInt(1, numeroMes);
+            statement.setInt(2, ano);
             statement.execute();
 
             ResultSet resultSet = statement.getResultSet();
@@ -156,15 +219,18 @@ public class ReporteMensualDAO {
         }
     }
     
-    public double obtenerTotalCuotasPagadasPorMes(int numeroMes) throws SQLException {
+    public double obtenerTotalCuotasPagadasPorMes(int numeroMes, int año) throws SQLException {
         double totalCuotas = 0;
 
         Conexion factory = new Conexion();
         final Connection con = factory.recuperaConexion();
         
-        String consulta = "SELECT SUM(monto) AS total FROM cuotas WHERE MONTH(fechaPago) = ? AND monto > 0";
+        // Actualizar la consulta para incluir el filtrado por año
+        String consulta = "SELECT SUM(monto) AS total FROM cuotas WHERE MONTH(fechaPago) = ? AND YEAR(fechaPago) = ? AND monto > 0";
         try (PreparedStatement statement = con.prepareStatement(consulta)) {
             statement.setInt(1, numeroMes);
+            statement.setInt(2, año); // Añadir el año como segundo parámetro
+
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     totalCuotas = resultSet.getDouble("total");
@@ -176,9 +242,10 @@ public class ReporteMensualDAO {
         return totalCuotas;
     }
     
-    public double obtenerBalancePorMes(int numeroMes) throws SQLException {
-        double totalGastos = obtenerSumaCostosPorMes(numeroMes);
-        double totalCuotasPagadas = obtenerTotalCuotasPagadasPorMes(numeroMes);
+    
+    public double obtenerBalancePorMes(int numeroMes, int año) throws SQLException {
+        double totalGastos = obtenerSumaCostosPorMes(numeroMes, año);
+        double totalCuotasPagadas = obtenerTotalCuotasPagadasPorMes(numeroMes, año);
 
         // Restar los gastos del total de cuotas pagadas
         return totalCuotasPagadas - totalGastos;

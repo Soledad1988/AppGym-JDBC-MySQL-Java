@@ -22,20 +22,20 @@ public class ReporteMensualController {
 	     return reporteMensual.reporteGastos();
 	}
 	
-	public List<Gastos> listarGastosPorMes(int numeroMes) throws SQLException {
-	     return reporteMensual.listarGastosPorMes(numeroMes);
+	public List<Gastos> listarGastosPorMes(int numeroMes, int año) throws SQLException {
+	     return reporteMensual.listarGastosPorMes(numeroMes, año);
 	}
 
-	public double obtenerSumaCostosPorMes(int numeroMes) throws SQLException {
-	     return reporteMensual.obtenerSumaCostosPorMes(numeroMes); 
+	public double obtenerSumaCostosPorMes(int numeroMes, int año) throws SQLException {
+	     return reporteMensual.obtenerSumaCostosPorMes(numeroMes, año); 
 	}
 	
-	public List<Map<String, String>> reporteCuotasPagadasPorMes(int numeroMes) throws SQLException{
-		return reporteMensual.reporteCuotasPagadasPorMes(numeroMes);
+	public List<Map<String, String>> reporteCuotasPagadasPorMes(int numeroMes, int año) throws SQLException{
+		return reporteMensual.reporteCuotasPagadasPorMes(numeroMes, año);
 	}
 	
-	public double obtenerBalancePorMes(int numeroMes) throws SQLException {
-		return reporteMensual.obtenerBalancePorMes(numeroMes);
+	public double obtenerBalancePorMes(int numeroMes, int año) throws SQLException {
+		return reporteMensual.obtenerBalancePorMes(numeroMes, año);
 	}
 
 }
