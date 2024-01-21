@@ -110,7 +110,7 @@ public class AltaUsuario extends JFrame {
     	tabla = new JTable();
 
         modelo = new DefaultTableModel();
-        modelo.addColumn("IdUsuario");
+        //modelo.addColumn("IdUsuario");
         modelo.addColumn("Nombre Usuario");
         modelo.addColumn("Contraseña");
         modelo.addColumn("Rol Asigando");
@@ -299,7 +299,7 @@ public class AltaUsuario extends JFrame {
 	    try {
 	        for (Usuario usuario : usuarios) {
 	            modelo.addRow(new Object[] { 
-	                usuario.getIdUsuario(), 
+	               // usuario.getIdUsuario(), 
 	                usuario.getNombreUsuario(), 
 	                usuario.getContrasena(),
 	                usuario.getRolesAsString() // Usar getRolesAsString()

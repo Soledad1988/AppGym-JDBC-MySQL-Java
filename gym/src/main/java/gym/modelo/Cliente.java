@@ -65,9 +65,6 @@ public class Cliente {
 		return fechaAlta;
 	}
 
-	public void setFechaAlta(Date fechaAlta) {
-		this.fechaAlta = fechaAlta;
-	}
 
 	public String getNombre() {
 		return nombre;

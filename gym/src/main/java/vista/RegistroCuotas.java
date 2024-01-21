@@ -115,11 +115,11 @@ public class RegistroCuotas extends JFrame {
 
        // modelo = (DefaultTableModel) tabla.getModel();
         modelo = new DefaultTableModel();
-        modelo.addColumn("Id");
+        //modelo.addColumn("Id");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         
-        tabla.setModel(modelo); // Asegúrate de establecer el modelo en la tabla
+        tabla.setModel(modelo);
 
 
         tabla.setBounds(16, 112, 760, 172);
@@ -218,9 +218,9 @@ public class RegistroCuotas extends JFrame {
 	    try {
 	        for (Cliente cliente : clientes) {
 	            modelo.addRow(new Object[] {
-	                cliente.getId(),
-	                cliente.getFechaAlta(), 
-	                cliente.getNombre()
+	               // cliente.getId(),
+	                cliente.getNombre(),
+	                cliente.getApellido()
 	            });
 	        }
 	    } catch (Exception e) {
@@ -240,7 +240,7 @@ public class RegistroCuotas extends JFrame {
 
            for (Cliente cliente : clientes) {
                Object[] fila = {
-            		   cliente.getId(), 
+            		   //cliente.getId(), 
             		   cliente.getNombre(), 
             		   cliente.getApellido(), 
             		   false};

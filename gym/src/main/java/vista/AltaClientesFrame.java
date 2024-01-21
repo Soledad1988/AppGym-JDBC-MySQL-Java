@@ -120,12 +120,12 @@ public class AltaClientesFrame extends JFrame {
         tabla = new JTable();
         
         modelo = new DefaultTableModel();
-        modelo.addColumn("Id");
+       // modelo.addColumn("Id");
         modelo.addColumn("Fecha Alta");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
-        modelo.addColumn("Telefono");
+        modelo.addColumn("Teléfono");
         
         tabla.setModel(modelo);
         
@@ -317,7 +317,7 @@ public class AltaClientesFrame extends JFrame {
 		try {
 			for (Cliente clientes : cliente) {
 				modelo.addRow(new Object[] { 
-						clientes.getId(), 
+						//clientes.getId(), 
 						clientes.getFechaAlta(), 
 						clientes.getNombre(), 
 						clientes.getApellido(), 

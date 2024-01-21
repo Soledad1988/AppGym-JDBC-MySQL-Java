@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import gym.modelo.Cliente;
@@ -117,6 +118,7 @@ public class ClienteDAO {
 
 	    return clientes;
 	}
+    
 
     
     private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) throws SQLException {
