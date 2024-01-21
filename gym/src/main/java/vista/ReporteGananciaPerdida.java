@@ -158,7 +158,7 @@ public class ReporteGananciaPerdida extends JFrame {
 
         gastos.forEach(gasto -> modeloEgresos.addRow(
                 new Object[] {
-                        gasto.getPeriodoGasto(),
+                        gasto.getFechaGasto(),
                         gasto.getNombreGasto(),
                         gasto.getDescripcion(),
                         gasto.getCosto()

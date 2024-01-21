@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -94,6 +95,14 @@ public class ReporteGastos extends JFrame {
     	BoxPeriodo.setBounds(429, 105, 148, 22);
     	getContentPane().add(BoxPeriodo);
     	
+    	// Ejemplo de cómo agregar un JComboBox para seleccionar el año
+    	JComboBox<Integer> boxAño = new JComboBox<>();
+    	for (int i = Calendar.getInstance().get(Calendar.YEAR); i >= 2000; i--) {
+    	    boxAño.addItem(i);
+    	}
+    	boxAño.setBounds(429, 140, 148, 22); // Ajusta las coordenadas según tu diseño
+    	getContentPane().add(boxAño);
+    	
     	textTotal = new JTextField();
     	textTotal.setEditable(false);
     	textTotal.setBounds(455, 497, 86, 20);
@@ -109,17 +118,13 @@ public class ReporteGastos extends JFrame {
         // Agregar un ActionListener al botón de filtro
         btnFiltrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Obtener el mes seleccionado en el JComboBox
                 int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+                int añoSeleccionado = (int) boxAño.getSelectedItem();
 
-                // Limpiar la tabla antes de cargar los nuevos datos
                 limpiarTabla();
-
-                // Recargar la tabla con los clientes del mes seleccionado
-                cargarTablaPorMes(numeroMes);
+                cargarTablaPorMes(numeroMes, añoSeleccionado);
             }
         });
-        
         
         // Botón para calcular la suma por mes
            JButton btnCalcularSuma = new JButton("Calcular Suma");
@@ -127,21 +132,20 @@ public class ReporteGastos extends JFrame {
            getContentPane().add(btnCalcularSuma);
     	
         // Agregar un ActionListener al botón para manejar la acción
-        btnCalcularSuma.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // Obtener el mes seleccionado del JComboBox
-                int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+           btnCalcularSuma.addActionListener(new ActionListener() {
+        	    public void actionPerformed(ActionEvent e) {
+        	        int numeroMes = BoxPeriodo.getSelectedIndex() + 1;
+        	        int añoSeleccionado = (int) boxAño.getSelectedItem();
 
-                // Llamar a la función realizarSumaPorMes y mostrar el resultado en textTotal
-                double resultadoSuma = 0;
-                try {
-                    resultadoSuma = reporteControler.obtenerSumaCostosPorMes(numeroMes);
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-                textTotal.setText(String.valueOf(resultadoSuma));
-            }
-        });
+        	        double resultadoSuma = 0;
+        	        try {
+        	            resultadoSuma = reporteControler.obtenerSumaCostosPorMes(numeroMes, añoSeleccionado);
+        	        } catch (SQLException e1) {
+        	            e1.printStackTrace();
+        	        }
+        	        textTotal.setText(String.valueOf(resultadoSuma));
+        	    }
+        	});
     }
     
  // Método para limpiar la tabla antes de cargar nuevos datos
@@ -151,14 +155,14 @@ public class ReporteGastos extends JFrame {
     }
     
  // Método para cargar la tabla con clientes del mes seleccionado
-    private void cargarTablaPorMes(int numeroMes) {
+    private void cargarTablaPorMes(int numeroMes, int año) {
         limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos
 
         List<Gastos> gastos = new ArrayList<>();
 
         try {
             // Utiliza el método listarGastosPorMes de tu ReporteController
-            gastos = this.reporteControler.listarGastosPorMes(numeroMes);
+            gastos = this.reporteControler.listarGastosPorMes(numeroMes, año);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -166,7 +170,7 @@ public class ReporteGastos extends JFrame {
 
         gastos.forEach(gasto -> modelo.addRow(
                 new Object[] {
-                        gasto.getPeriodoGasto(),
+                        gasto.getFechaGasto(),
                         gasto.getNombreGasto(),
                         gasto.getDescripcion(),
                         gasto.getCosto()
@@ -178,7 +182,7 @@ public class ReporteGastos extends JFrame {
     	tabla = new JTable();
 
         modelo = new DefaultTableModel();
-        modelo.addColumn("Periodo Gasto");
+        modelo.addColumn("Fecha Gasto");
         modelo.addColumn("Nombre Gasto");
         modelo.addColumn("Descripcion");
         modelo.addColumn("Costo");
@@ -210,7 +214,7 @@ public class ReporteGastos extends JFrame {
 
         gastos.forEach(gasto -> modelo.addRow(
                 new Object[] {
-                        gasto.getPeriodoGasto(),
+                        gasto.getFechaGasto(),
                         gasto.getNombreGasto(),
                         gasto.getDescripcion(),
                         gasto.getCosto()

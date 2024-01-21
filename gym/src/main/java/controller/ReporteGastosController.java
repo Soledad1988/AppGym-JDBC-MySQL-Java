@@ -21,12 +21,12 @@ public class ReporteGastosController {
 	     return reporteGastosDAO.reporteGastos();
 	}
 	
-	public List<Gastos> listarGastosPorMes(int numeroMes) throws SQLException {
-	     return reporteGastosDAO.listarGastosPorMes(numeroMes);
+	public List<Gastos> listarGastosPorMes(int numeroMes, int año) throws SQLException {
+	     return reporteGastosDAO.listarGastosPorMes(numeroMes, año);
 	}
 
-	public double obtenerSumaCostosPorMes(int numeroMes) throws SQLException {
-	     return reporteGastosDAO.obtenerSumaCostosPorMes(numeroMes);
+	public double obtenerSumaCostosPorMes(int numeroMes, int año) throws SQLException {
+	     return reporteGastosDAO.obtenerSumaCostosPorMes(numeroMes, año);
 	    
 	}
 	

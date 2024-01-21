@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -18,7 +19,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.toedter.calendar.JDateChooser;
 
 import controller.GastosController;
 
@@ -37,9 +41,9 @@ public class AltaGastosFrame extends JFrame {
     private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonMenu;
     private JTable tabla;
     private DefaultTableModel modelo;
-    private JComboBox<String> BoxPeriodo;
     private GastosController gastoController;
     private MenuFrame menuFrame;
+    public static JDateChooser textFechaGasto;
     
     public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -73,15 +77,28 @@ public class AltaGastosFrame extends JFrame {
         labelFechaGasto.setBounds(35, 52, 240, 15);
         getContentPane().add(labelFechaGasto);
         
+        /*----------------------------------*/
+        
+        textFechaGasto = new JDateChooser();
+        textFechaGasto.getCalendarButton().addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        	}
+        });
+        textFechaGasto.getCalendarButton().setBackground(SystemColor.textHighlight);
+        textFechaGasto.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
+        textFechaGasto.setBounds(345, 52, 265, 20);
+        textFechaGasto.getCalendarButton().setBounds(268, 0, 21, 33);
+        textFechaGasto.setBackground(Color.WHITE);
+        textFechaGasto.setBorder(new LineBorder(SystemColor.window));
+        textFechaGasto.setDateFormatString("yyyy-MM-dd");
+        textFechaGasto.setFont(new Font("Roboto", Font.PLAIN, 18));
+		//panel.add(textFechaIngreso);
+        getContentPane().add(textFechaGasto);
+        
         JLabel lblTitulo = new JLabel("Gastos");
         lblTitulo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
         lblTitulo.setBounds(325, 0, 213, 30);
         getContentPane().add(lblTitulo);
-
-        BoxPeriodo = new JComboBox<>();
-        BoxPeriodo.setModel(new DefaultComboBoxModel<>(new String[]{"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
-        BoxPeriodo.setBounds(345, 48, 265, 22);
-        getContentPane().add(BoxPeriodo);
 
         configurarAccionesDelFormulario();
     }
@@ -90,15 +107,14 @@ public class AltaGastosFrame extends JFrame {
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
 
-        //modelo = (DefaultTableModel) tabla.getModel();
         modelo = new DefaultTableModel();
-        modelo.addColumn("Id");
+       // modelo.addColumn("Id");
         modelo.addColumn("Perido Gasto");
         modelo.addColumn("Gasto");
-        modelo.addColumn("Descripcion");
+        modelo.addColumn("Descripción");
         modelo.addColumn("Costo");
 
-        tabla.setModel(modelo); // Asegúrate de establecer el modelo en la tabla
+        tabla.setModel(modelo); 
         
         cargarTabla();
 
@@ -299,8 +315,8 @@ public class AltaGastosFrame extends JFrame {
 		try {
 			for (Gastos gastos : gasto) {
 				modelo.addRow(new Object[] { 
-						gastos.getIdGasto(), 
-						gastos.getPeriodoGasto(), 
+						//gastos.getIdGasto(), 
+						gastos.getFechaGasto(), 
 						gastos.getNombreGasto(),
 						gastos.getDescripcion(),
 						gastos.getCosto()});
@@ -311,10 +327,16 @@ public class AltaGastosFrame extends JFrame {
 	}
   
    private void guardar() throws SQLException {
-	    String mesSeleccionado = (String) BoxPeriodo.getSelectedItem();
+	   // String mesSeleccionado = (String) BoxPeriodo.getSelectedItem();
+	    String fechaEgreso = ((JTextField)textFechaGasto.getDateEditor().getUiComponent()).getText();
 	    Double costo = Double.parseDouble(textoCosto.getText());
 
-	    Gastos gasto = new Gastos(mesSeleccionado, textoNombreGasto.getText(), textoDescripcion.getText(), costo);
+	    Gastos gasto = new Gastos(
+	    		java.sql.Date.valueOf(fechaEgreso), 
+	    		textoNombreGasto.getText(), 
+	    		textoDescripcion.getText(), 
+	    		costo);
+	    
 	    this.gastoController.guardar(gasto);
 
 	    JOptionPane.showMessageDialog(this, "Registrado con éxito!");
@@ -324,7 +346,7 @@ public class AltaGastosFrame extends JFrame {
     
    
     private void limpiarFormulario() {
-    	this.BoxPeriodo.setAction(null);
+    	this.textFechaGasto.setDate(null);
         this.textoNombreGasto.setText("");
         this.textoDescripcion.setText("");
         this.textoCosto.setText("");

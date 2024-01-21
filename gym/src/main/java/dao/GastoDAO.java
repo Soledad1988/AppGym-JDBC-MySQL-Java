@@ -22,9 +22,9 @@ public class GastoDAO {
 	
     public void guardar(Gastos gastos) {
 		try {
-			String sql = "INSERT INTO gastos (periodoGasto, nombreGasto, descripcion, costo) VALUES (?, ?, ?, ?)";
+			String sql = "INSERT INTO gastos (fechaGasto, nombreGasto, descripcion, costo) VALUES (?, ?, ?, ?)";
 			try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-				stm.setString(1, gastos.getPeriodoGasto());
+				stm.setDate(1, gastos.getFechaGasto());
 				stm.setString(2, gastos.getNombreGasto());
 				stm.setString(3, gastos.getDescripcion());
 				stm.setDouble(4, gastos.getCosto());
@@ -69,7 +69,7 @@ public class GastoDAO {
     public List<Gastos> listar() {
 		List<Gastos> gasto = new ArrayList<Gastos>();
 		try {
-			String sql = "SELECT idGasto, periodoGasto, nombreGasto, descripcion, costo FROM gastos";
+			String sql = "SELECT idGasto, fechaGasto, nombreGasto, descripcion, costo FROM gastos";
 
 			try (PreparedStatement stm = con.prepareStatement(sql)) {
 				stm.execute();
@@ -87,7 +87,7 @@ public class GastoDAO {
     private void transformarResultSetEnCliente(List<Gastos> gasto, PreparedStatement pstm) throws SQLException {
 		try (ResultSet rst = pstm.getResultSet()) {
 			while (rst.next()) {
-				Gastos gastos = new Gastos(rst.getInt(1), rst.getString(2), rst.getString(3), rst.getString(4),
+				Gastos gastos = new Gastos(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
 						rst.getDouble(5));
 				gasto.add(gastos);
 			}

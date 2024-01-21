@@ -27,7 +27,7 @@ public class ReporteMensualDAO {
         Conexion factory = new Conexion();
         final Connection con = factory.recuperaConexion();
 
-        final PreparedStatement statement = con.prepareStatement("SELECT periodoGasto, nombreGasto, descripcion, costo FROM gastos");
+        final PreparedStatement statement = con.prepareStatement("SELECT fechaGasto, nombreGasto, descripcion, costo FROM gastos");
 
         statement.execute();
 
@@ -38,7 +38,7 @@ public class ReporteMensualDAO {
         // Leemos el contenido para agregarlo a un listado de objetos Gastos
         while (resultSet.next()) {
             Gastos gasto = new Gastos();
-            gasto.setPeriodoGasto(resultSet.getString("periodoGasto"));
+            gasto.setFechaGasto(resultSet.getDate("fechaGasto"));
             gasto.setNombreGasto(resultSet.getString("nombreGasto"));
             gasto.setDescripcion(resultSet.getString("descripcion"));
 
@@ -53,7 +53,7 @@ public class ReporteMensualDAO {
 	        Conexion factory = new Conexion();
 	             final Connection con = factory.recuperaConexion();
 
-	            String consulta = "SELECT * FROM gastos WHERE UPPER(periodoGasto) = UPPER(?)";
+	            String consulta = "SELECT * FROM gastos WHERE UPPER(fechaGasto) = UPPER(?)";
 
 	            try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
 	                // Obtén el nombre del mes según el número proporcionado
@@ -66,7 +66,7 @@ public class ReporteMensualDAO {
 
 	                    while (resultSet.next()) {
 	                        Gastos gasto = new Gastos(
-	                                resultSet.getString("periodoGasto"),
+	                                resultSet.getDate("fechaGasto"),
 	                                resultSet.getString("nombreGasto"),
 	                                resultSet.getString("descripcion"),
 	                                resultSet.getDouble("costo")
@@ -90,7 +90,7 @@ public class ReporteMensualDAO {
              final Connection con = factory.recuperaConexion();
 
             String nombreMes = obtenerNombreMes(numeroMes);
-            String consulta = "SELECT SUM(costo) AS resultado FROM gastos WHERE UPPER(periodoGasto) = UPPER(?)";
+            String consulta = "SELECT SUM(costo) AS resultado FROM gastos WHERE UPPER(fechaGasto) = UPPER(?)";
 
             try (PreparedStatement preparedStatement = con.prepareStatement(consulta)) {
                 preparedStatement.setString(1, nombreMes);

@@ -1,10 +1,12 @@
 package gym.modelo;
 
+import java.sql.Date;
 
 public class Gastos {
 
 	private Integer idGasto;
-	private String periodoGasto;
+	private Date fechaGasto;
+	//private String periodoGasto;
 	private String nombreGasto;
 	private String descripcion;
 	private Double costo;
@@ -12,18 +14,18 @@ public class Gastos {
 	public Gastos() {
 		
 	}
-	
-	public Gastos(Integer idGasto, String periodoGasto, String nombreGasto, String descripcion, Double costo) {
+
+	public Gastos(Integer idGasto, Date fechaGasto, String nombreGasto, String descripcion, Double costo) {
 		super();
 		this.idGasto = idGasto;
-		this.periodoGasto = periodoGasto;
+		this.fechaGasto = fechaGasto;
 		this.nombreGasto = nombreGasto;
 		this.descripcion = descripcion;
 		this.costo = costo;
 	}
 
-	public Gastos(String periodoGasto, String nombreGasto, String descripcion, Double costo) {
-		this.periodoGasto = periodoGasto;
+	public Gastos(Date fechaGasto, String nombreGasto, String descripcion, Double costo) {
+		this.fechaGasto = fechaGasto;
 		this.nombreGasto = nombreGasto;
 		this.descripcion = descripcion;
 		this.costo = costo;
@@ -37,13 +39,12 @@ public class Gastos {
 		this.idGasto = idGasto;
 	}
 
-
-	public String getPeriodoGasto() {
-		return periodoGasto;
+	public Date getFechaGasto() {
+		return fechaGasto;
 	}
 
-	public void setPeriodoGasto(String periodoGasto) {
-		this.periodoGasto = periodoGasto;
+	public void setFechaGasto(Date fechaGasto) {
+		this.fechaGasto = fechaGasto;
 	}
 
 	public String getNombreGasto() {
@@ -69,5 +70,6 @@ public class Gastos {
 	public void setCosto(Double costo) {
 		this.costo = costo;
 	}
+	
 
 }
