@@ -27,10 +27,12 @@ public class UsuarioDAO {
 	 
 	public void guardar(Usuario usuario, String nombreRol) {
         try {
-            String sqlUsuario = "INSERT INTO usuarios (nombreUsuario, contrasena) VALUES (?, ?)";
+        	 String sqlUsuario = "INSERT INTO usuarios (nombreUsuario, contrasena, habilitado) VALUES (?, ?, ?)";
             try (PreparedStatement stmUsuario = con.prepareStatement(sqlUsuario, Statement.RETURN_GENERATED_KEYS)) {
                 stmUsuario.setString(1, usuario.getNombreUsuario());
                 stmUsuario.setString(2, usuario.getContrasena());
+                //los nuevos usuarios están habilitados por defecto
+                stmUsuario.setBoolean(3, true);
                 stmUsuario.executeUpdate();
 
                 try (ResultSet rstUsuario = stmUsuario.getGeneratedKeys()) {
@@ -117,7 +119,7 @@ public class UsuarioDAO {
         Map<Integer, Usuario> usuarioMap = new HashMap<>();
 
         try {
-            String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, r.nombreRol " +
+            String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, u.habilitado, r.nombreRol " +
                     "FROM usuarios u " +
                     "INNER JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
                     "INNER JOIN roles r ON ur.idRol = r.idRol";
@@ -129,11 +131,12 @@ public class UsuarioDAO {
                     int idUsuario = rst.getInt("idUsuario");
                     String nombreUsuario = rst.getString("nombreUsuario");
                     String password = rst.getString("contrasena");
+                    boolean habilitado = rst.getBoolean("habilitado");
                     String nombreRol = rst.getString("nombreRol");
 
                     Usuario usuario = usuarioMap.get(idUsuario);
                     if (usuario == null) {
-                        usuario = new Usuario(idUsuario, nombreUsuario, password);
+                        usuario = new Usuario(idUsuario, nombreUsuario, password, habilitado);
                         usuarioMap.put(idUsuario, usuario);
                     }
                     usuario.addRol(Rol.valueOf(nombreRol.toUpperCase().replace(" ", "_")));
@@ -148,22 +151,36 @@ public class UsuarioDAO {
     }
  
     private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) throws SQLException {
+        try (ResultSet rst = pstm.getResultSet()) {
+            while (rst.next()) {
+                int idUsuario = rst.getInt("idUsuario");
+                String nombreUsuario = rst.getString("nombreUsuario");
+                String contrasena = rst.getString("contrasena");
+                boolean habilitado = rst.getBoolean("habilitado");
+
+                Usuario usuario = new Usuario(idUsuario, nombreUsuario, contrasena, habilitado);
+                usuarios.add(usuario);
+            }
+        }				
+    }
+    /*
+    private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) throws SQLException {
 		try (ResultSet rst = pstm.getResultSet()) {
 			while (rst.next()) {
 				Usuario usuario = new Usuario(rst.getInt(1), rst.getString(2), rst.getString(3));
 				usuarios.add(usuario);
 			}
 		}				
-	}
+	}*/
 	
     public List<Usuario> buscar(String usuario, String password) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
 
-        String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, r.nombreRol " +
+        String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, u.habilitado, r.nombreRol " +
                      "FROM usuarios u " +
                      "JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
                      "JOIN roles r ON ur.idRol = r.idRol " +
-                     "WHERE u.nombreUsuario = ? AND u.contrasena = ?";
+                     "WHERE u.nombreUsuario = ? AND u.contrasena = ? AND u.habilitado = TRUE";
 
         try (PreparedStatement stm = con.prepareStatement(sql)) {
             stm.setString(1, usuario);
@@ -176,18 +193,21 @@ public class UsuarioDAO {
                     Integer idUsuario = rst.getInt("idUsuario");
                     String nombreUsuario = rst.getString("nombreUsuario");
                     String contrasena = rst.getString("contrasena");
+                    boolean habilitado = rst.getBoolean("habilitado");
                     String nombreRol = rst.getString("nombreRol");
 
-                    Usuario usu = usuariosMap.computeIfAbsent(idUsuario,
-                            k -> new Usuario(idUsuario, nombreUsuario, contrasena));
+                    if (habilitado) {
+                        Usuario usu = usuariosMap.computeIfAbsent(idUsuario,
+                                k -> new Usuario(idUsuario, nombreUsuario, contrasena, habilitado));
 
-                    Set<Rol> roles = usu.getRoles();
-                    if (roles == null) {
-                        roles = new HashSet<>();
-                        usu.setRoles(roles);
+                        Set<Rol> roles = usu.getRoles();
+                        if (roles == null) {
+                            roles = new HashSet<>();
+                            usu.setRoles(roles);
+                        }
+
+                        roles.add(Rol.valueOf(nombreRol)); // Asumiendo que el nombreRol coincide con el nombre del Enum
                     }
-
-                    roles.add(Rol.valueOf(nombreRol)); // Asumiendo que el nombreRol coincide con el nombre del Enum
                 }
 
                 usuarios.addAll(usuariosMap.values());
@@ -203,49 +223,8 @@ public class UsuarioDAO {
         return usuarios;
     }
     
-    
 	
-	//Inicio de sesión
-	public List<Usuario> buscar2(String usuario, String password) throws SQLException {
-        List<Usuario> usuarios = new ArrayList<>();
-
-        String sql = "SELECT u.idUsuario, u.nombreUsuario, u.contrasena, r.nombreRol " +
-                     "FROM usuarios u " +
-                     "JOIN usuarios_roles ur ON u.idUsuario = ur.idUsuario " +
-                     "JOIN roles r ON ur.idRol = r.idRol " +
-                     "WHERE u.nombreUsuario = ? AND u.contrasena = ?";
-
-        try (PreparedStatement stm = con.prepareStatement(sql)) {
-        	stm.setString(1, usuario);
-        	stm.setString(2, password);
-
-            try (ResultSet rst = stm.executeQuery()) {
-                Map<Integer, Usuario> usuariosMap = new HashMap<>();
-
-                while (rst.next()) {
-                    Integer idUsuario = rst.getInt("idUsuario");
-                    String nombreUsuario = rst.getString("nombreUsuario");
-                    String contrasena = rst.getString("contrasena");
-                    String nombreRol = rst.getString("nombreRol");
-
-                    Usuario usu = usuariosMap.computeIfAbsent(idUsuario,
-                            k -> new Usuario(idUsuario, nombreUsuario, contrasena));
-
-                    Set<Rol> roles = usu.getRoles();
-                    if (roles == null) {
-                        roles = new HashSet<>();
-                        usu.setRoles(roles);
-                    }
-
-                    roles.add(Rol.valueOf(nombreRol)); // Asumiendo que el nombreRol coincide con el nombre del Enum
-                }
-
-                usuarios.addAll(usuariosMap.values());
-            }
-        }
-
-        return usuarios;
-    }
+	
 	
 	public Set<Rol> obtenerRolesDesdeBaseDeDatos(Integer idUsuario) throws SQLException {
 	    Set<Rol> roles = new HashSet<>();
@@ -306,5 +285,29 @@ public class UsuarioDAO {
 	    }
 	    return registros;
 	}
+	
+	//Cambio de estado Habilitado / desabilitado
+	public void cambiarEstadoHabilitado(int idUsuario, boolean nuevoEstado) {
+	    String sql = "UPDATE usuarios SET habilitado = ? WHERE idUsuario = ?";
+	    
+	    try (PreparedStatement stm = con.prepareStatement(sql)) {
+	        // Configurar los parámetros del PreparedStatement
+	        stm.setBoolean(1, nuevoEstado);
+	        stm.setInt(2, idUsuario);
+
+	        // Ejecutar la actualización
+	        int filasAfectadas = stm.executeUpdate();
+	        if (filasAfectadas > 0) {
+	            System.out.println("El estado del usuario ha sido actualizado.");
+	        } else {
+	            System.out.println("No se encontró un usuario con el ID especificado.");
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	        // Manejar cualquier error de SQL aquí
+	    } 
+	}
+	
+	
 
 }

@@ -34,6 +34,10 @@ public class UsuarioController {
 		public void actualizar(String nombreUsuario, String password, Integer idUsuario) {
 			this.usuarioDAO.actualizar(nombreUsuario, password, idUsuario);
 		}
+		
+		public void cambiarEstadoHabilitado(int idUsuario, boolean nuevoEstado) {
+		    usuarioDAO.cambiarEstadoHabilitado(idUsuario, nuevoEstado);
+		}
 	 
 	 
 		//Inicio sesion
