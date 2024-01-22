@@ -43,7 +43,7 @@ public class AltaUsuario extends JFrame {
 
     private JLabel labelNombre, labelApellido, labelRol;
     private JTextField textoNombreUsuario, textoRol;
-    private JButton botonGuardar, botonModificar, botonEliminar, botonMenu, botonReporteUsuario;
+    private JButton botonGuardar, botonModificar, botonHabilitarDesabilitar, botonMenu, botonReporteUsuario;
     private DefaultTableModel modelo;
     private UsuarioController usuarioController;
     private JTable tabla;
@@ -87,12 +87,6 @@ public class AltaUsuario extends JFrame {
         lblUsuariosGenerados.setBounds(89, 202, 213, 30);
         getContentPane().add(lblUsuariosGenerados);
         
-        tabla = new JTable(modelo);
-        
-       // tabla = new JTable();
-        tabla.setBounds(10, 253, 390, 117);
-        getContentPane().add(tabla);
-        
         textoPassword = new JPasswordField();
         textoPassword.setBounds(183, 127, 130, 20);
         getContentPane().add(textoPassword);
@@ -110,25 +104,29 @@ public class AltaUsuario extends JFrame {
     	tabla = new JTable();
 
         modelo = new DefaultTableModel();
-        //modelo.addColumn("IdUsuario");
+        modelo.addColumn("IdUsuario");
         modelo.addColumn("Nombre Usuario");
         modelo.addColumn("Contraseña");
         modelo.addColumn("Rol Asigando");
+        modelo.addColumn("Habilitado");
 
         tabla.setModel(modelo); 
                
         cargarTabla();
+        
+        // Ocultar la columna de ID
+        tabla.removeColumn(tabla.getColumnModel().getColumn(0));
 
-        botonEliminar = new JButton("Eliminar");
+        botonHabilitarDesabilitar = new JButton("Habilitar / Desabilitar");
         botonModificar = new JButton("Modificar");
         botonMenu = new JButton("Menú");
         botonReporteUsuario = new JButton("Reporte");
         
-        botonEliminar.setBounds(267, 381, 98, 20);
+        botonHabilitarDesabilitar.setBounds(267, 381, 133, 20);
         botonModificar.setBounds(158, 381, 93, 20);
         botonMenu.setBounds(89, 412, 93, 20);
         botonReporteUsuario.setBounds(211, 412, 93, 20);
-        container.add(botonEliminar);
+        container.add(botonHabilitarDesabilitar);
         container.add(botonModificar);
         container.add(botonMenu);
         container.add(botonReporteUsuario);
@@ -192,11 +190,9 @@ public class AltaUsuario extends JFrame {
             }
         });
 
-        botonEliminar.addActionListener(new ActionListener() {
+        botonHabilitarDesabilitar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                eliminar();
-                limpiarTabla();
-                cargarTabla();
+            	cambiarEstadoHabilitado();
             }
         });
 
@@ -239,12 +235,26 @@ public class AltaUsuario extends JFrame {
         menuFrame.setVisible(true);        
     }
     
+    private void cambiarEstadoHabilitado() {
+        int filaSeleccionada = tabla.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un usuario");
+            return;
+        }
+
+        Integer idUsuario = Integer.valueOf(modelo.getValueAt(filaSeleccionada, 0).toString());
+        boolean estadoActual = modelo.getValueAt(filaSeleccionada, 4).equals("Sí");
+        usuarioController.cambiarEstadoHabilitado(idUsuario, !estadoActual);
+
+        // Actualizar la tabla
+        modelo.setValueAt(!estadoActual ? "Sí" : "No", filaSeleccionada, 4);
+    }
+    
     
     private void reporteInicioSesion() throws SQLException {
     	inicioSesion = new ReporteUsuarioFrame();
     	inicioSesion.setVisible(true); 
 	    }
-
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -271,12 +281,30 @@ public class AltaUsuario extends JFrame {
         JOptionPane.showMessageDialog(this, "Registro modificado con éxito");
     }
  
+    private int obtenerIdFilaSeleccionada() {
+        int filaSeleccionada = tabla.getSelectedRow();
+        if (filaSeleccionada >= 0) {
+            // Se ajusta el índice del ID ya que la columna del ID está oculta
+            return (Integer) modelo.getValueAt(filaSeleccionada, 0);
+        } else {
+            // Manejar el caso en que no hay fila seleccionada
+            return -1; // O cualquier valor que indique un estado no válido
+        }
+    }
+    
     
     private void eliminar() {
-        if (tieneFilaElegida()) {
+    	
+    	int idCliente = obtenerIdFilaSeleccionada();
+        if (idCliente == -1) {
             JOptionPane.showMessageDialog(this, "Por favor, elije un item");
             return;
         }
+        /*
+        if (tieneFilaElegida()) {
+            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
+            return;
+        }*/
 
         Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
                 .ifPresentOrElse(fila -> {
@@ -299,10 +327,11 @@ public class AltaUsuario extends JFrame {
 	    try {
 	        for (Usuario usuario : usuarios) {
 	            modelo.addRow(new Object[] { 
-	               // usuario.getIdUsuario(), 
+	                usuario.getIdUsuario(), 
 	                usuario.getNombreUsuario(), 
 	                usuario.getContrasena(),
-	                usuario.getRolesAsString() // Usar getRolesAsString()
+	                usuario.getRolesAsString(), // Usar getRolesAsString()
+	                usuario.isHabilitado() ? "Sí" : "No" // Asum
 	            });
 	        }
 	    } catch (Exception e) {
@@ -345,10 +374,43 @@ public class AltaUsuario extends JFrame {
 	            return; // No continuar si el rol no es válido
 	        }
 
-	        Usuario usuario = new Usuario(nombreUsuario, password);
+	        // Inicializar el usuario con el estado habilitado como verdadero
+	        Usuario usuario = new Usuario(nombreUsuario, password, true);
 	        usuario.addRol(rol);
 
 	        this.usuarioController.guardar(usuario, rolSeleccionado);
+	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+	        limpiarFormulario();
+	    } catch (RuntimeException ex) {
+	        JOptionPane.showMessageDialog(this, "Error al guardar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        ex.printStackTrace(); // Puedes ajustar el manejo de la excepción según tus necesidades
+	    }
+	}
+   
+   private void guardar2() {
+	    try {
+	        String nombreUsuario = textoNombreUsuario.getText();
+	        String password = textoPassword.getText();
+	        String rolSeleccionado = (String) listaRoles.getSelectedItem(); // Obtener el rol seleccionado
+
+	        if (nombreUsuario.isEmpty() || password.isEmpty() || rolSeleccionado == null) {
+	            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
+	            return;
+	        }
+
+	        // Asegúrate de que el valor del rol coincida con los valores del enum Rol
+	        Rol rol;
+	        try {
+	            rol = Rol.valueOf(rolSeleccionado.replace(" ", "_").toUpperCase());
+	        } catch (IllegalArgumentException e) {
+	            JOptionPane.showMessageDialog(this, "Rol seleccionado no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+	            return; // No continuar si el rol no es válido
+	        }
+
+	       // Usuario usuario = new Usuario(nombreUsuario, password);
+	        //usuario.addRol(rol);
+
+	        //this.usuarioController.guardar(usuario, rolSeleccionado);
 	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
 	        limpiarFormulario();
 	    } catch (RuntimeException ex) {

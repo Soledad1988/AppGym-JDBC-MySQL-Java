@@ -120,7 +120,7 @@ public class AltaClientesFrame extends JFrame {
         tabla = new JTable();
         
         modelo = new DefaultTableModel();
-       // modelo.addColumn("Id");
+        modelo.addColumn("Id");
         modelo.addColumn("Fecha Alta");
         modelo.addColumn("Nombre");
         modelo.addColumn("Apellido");
@@ -130,6 +130,9 @@ public class AltaClientesFrame extends JFrame {
         tabla.setModel(modelo);
         
         cargarTabla();
+        
+     // Ocultar la columna de ID
+        tabla.removeColumn(tabla.getColumnModel().getColumn(0));
 
         tabla.setBounds(10, 307, 760, 219);
 
@@ -249,8 +252,19 @@ public class AltaClientesFrame extends JFrame {
         dispose();
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
-        
     }
+    
+    /*
+    private int obtenerIdFilaSeleccionada() {
+        int filaSeleccionada = tabla.getSelectedRow();
+        if (filaSeleccionada >= 0) {
+            // Se ajusta el índice del ID ya que la columna del ID está oculta
+            return (Integer) modelo.getValueAt(filaSeleccionada, 0);
+        } else {
+            // Manejar el caso en que no hay fila seleccionada
+            return -1; // O cualquier valor que indique un estado no válido
+        }
+    }*/
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -317,7 +331,7 @@ public class AltaClientesFrame extends JFrame {
 		try {
 			for (Cliente clientes : cliente) {
 				modelo.addRow(new Object[] { 
-						//clientes.getId(), 
+						clientes.getId(), 
 						clientes.getFechaAlta(), 
 						clientes.getNombre(), 
 						clientes.getApellido(), 

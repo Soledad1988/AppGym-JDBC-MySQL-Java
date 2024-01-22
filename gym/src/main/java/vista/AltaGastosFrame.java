@@ -108,7 +108,7 @@ public class AltaGastosFrame extends JFrame {
         tabla = new JTable();
 
         modelo = new DefaultTableModel();
-       // modelo.addColumn("Id");
+        modelo.addColumn("Id");
         modelo.addColumn("Perido Gasto");
         modelo.addColumn("Gasto");
         modelo.addColumn("Descripción");
@@ -117,6 +117,9 @@ public class AltaGastosFrame extends JFrame {
         tabla.setModel(modelo); 
         
         cargarTabla();
+        
+        // Ocultar la columna de ID
+        tabla.removeColumn(tabla.getColumnModel().getColumn(0));
 
         tabla.setBounds(10, 286, 760, 143);
 
@@ -315,7 +318,7 @@ public class AltaGastosFrame extends JFrame {
 		try {
 			for (Gastos gastos : gasto) {
 				modelo.addRow(new Object[] { 
-						//gastos.getIdGasto(), 
+						gastos.getIdGasto(), 
 						gastos.getFechaGasto(), 
 						gastos.getNombreGasto(),
 						gastos.getDescripcion(),
