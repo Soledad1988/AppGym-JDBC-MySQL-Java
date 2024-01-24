@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import conexion.Conexion;
+import dao.CuotasDAO;
 import dao.ReporteMensualDAO;
 import gym.modelo.Gastos;
 
@@ -13,10 +14,13 @@ public class ReporteMensualController {
 	
 	private ReporteMensualDAO reporteMensual;
 	
-	public ReporteMensualController() throws SQLException {
+	/*public ReporteMensualController() throws SQLException {
 		 Connection connection = new Conexion().recuperaConexion();
 		 this.reporteMensual = new ReporteMensualDAO(connection);
-	}
+	}*/
+	 public ReporteMensualController() throws SQLException {
+	        this.reporteMensual = new ReporteMensualDAO(Conexion.getInstance().getConnection());
+	    }
 	
 	public List<Gastos> reporteGastos() throws SQLException {
 	     return reporteMensual.reporteGastos();

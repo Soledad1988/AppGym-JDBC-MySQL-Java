@@ -1,6 +1,5 @@
 package controller;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,12 +10,11 @@ import gym.modelo.Cliente;
 
 public class ClienteController {
 
-	private ClienteDAO clienteDAO;
+	    private ClienteDAO clienteDAO;
 	 
-	 public ClienteController() throws SQLException {
-		 Connection connection = new Conexion().recuperaConexion();
-		 this.clienteDAO = new ClienteDAO(connection);
-		}
+	    public ClienteController() throws SQLException {
+	        this.clienteDAO = new ClienteDAO(Conexion.getInstance().getConnection());
+	    }
 	 
 		public void guardar(Cliente cliente) {
 			this.clienteDAO.guardar(cliente);
@@ -34,7 +32,7 @@ public class ClienteController {
 			this.clienteDAO.actualizar(nombre, apellido, direccion, id);
 		}
 		 
-		 public List<Cliente> buscarPorApellido(String apellido) throws SQLException {
+		public List<Cliente> buscarPorApellido(String apellido){
 		        return this.clienteDAO.buscarPorApellido(apellido);
 		}
 
