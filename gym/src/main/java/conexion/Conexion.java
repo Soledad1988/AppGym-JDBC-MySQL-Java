@@ -15,7 +15,7 @@ public class Conexion {
 	            this.connection = DriverManager.getConnection(
 	                "jdbc:mysql://localhost/baseClientes?useTimeZone=true&serverTimeZone=UTC",
 	                "root",
-	                "root");
+	                "****");
 	            System.out.println("Conexión a la base de datos establecida.");
 	        } catch (SQLException e) {
 	            System.err.println("Error al conectar con la base de datos: " + e.getMessage());
