@@ -21,14 +21,17 @@ public class ReporteIngresosDAO {
 
 	//listar reporte
 	public List<Map<String,String>> reporteClientes() throws SQLException {
-		Conexion factory = new Conexion();
-		final Connection con = factory.recuperaConexion();
+		//Conexion factory = new Conexion();
+		//final Connection con = factory.recuperaConexion();
+		// Conexion factory = Conexion.getInstance();
 				  
-		final PreparedStatement statement = con.prepareStatement("SELECT fechaAlta, nombre, apellido, telefono FROM clientes");
+		final String sql = "SELECT fechaAlta, nombre, apellido, telefono FROM clientes";
 			        
-		statement.execute();
+		try (PreparedStatement stm = con.prepareStatement(sql)) {
+			
+		stm.execute();
 
-		ResultSet resultSet = statement.getResultSet();
+		ResultSet resultSet = stm.getResultSet();
 
 		List<Map<String, String>> resultado = new ArrayList<>();
 
@@ -44,38 +47,34 @@ public class ReporteIngresosDAO {
 		  }
 					
 		return resultado;
-			
+		}
 	}
 			
-		    
-	public static double realizarSumaPorMes(int numeroMes) throws SQLException {
-		    Conexion factory = new Conexion();
-		    final Connection con = factory.recuperaConexion();
-		    ResultSet resultSet = null;
+	
+    public static double realizarSumaPorMes(int numeroMes, int año) throws SQLException {
+    	//Conexion factory = new Conexion();
+		//final Connection con = factory.recuperaConexion();
+    	  Conexion factory = Conexion.getInstance();
 
-		    try {
-		        String consulta = "SELECT SUM(monto) AS resultado FROM cuotas WHERE MONTH(fechaPago) = ?";
-		        PreparedStatement statement = con.prepareStatement(consulta);
-		            
-		        statement.setInt(1, numeroMes);
+             String sql = "SELECT SUM(monto) AS resultado FROM cuotas WHERE MONTH(fechaPago) = ? AND YEAR(fechaPago) = ?";
 
-		        // Ejecutar la consulta
-		        resultSet = statement.executeQuery();
+             try (Connection con = factory.getConnection();
+            		 PreparedStatement stm = con.prepareStatement(sql)) {
+                 stm.setInt(1, numeroMes);
+                 stm.setInt(2, año);
 
-		        // Procesar el resultado
-		        if (resultSet.next()) {
-		                return resultSet.getDouble("resultado");
-		            }
-		        } catch (SQLException e) {
-		            e.printStackTrace();
-		        } finally {
-		          
-		            if (resultSet != null) {
-		                resultSet.close();
-		            }
-		        }
+                 try (ResultSet resultSet = stm.executeQuery()) {
+                     if (resultSet.next()) {
+                         // Obtener el resultado de la suma
+                         return resultSet.getDouble("resultado");
+                     }
+                 }
+             } catch (SQLException e) {
+                 // Manejo de excepciones
+                 e.printStackTrace();
+             }
 
-		        // En caso de error, retornar un valor indicativo
-		        return -1;
-		    }
+             // En caso de error o si no hay resultados, retornar un valor indicativo
+             return 0;   
+    }
 }

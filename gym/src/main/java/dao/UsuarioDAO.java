@@ -163,15 +163,6 @@ public class UsuarioDAO {
             }
         }				
     }
-    /*
-    private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) throws SQLException {
-		try (ResultSet rst = pstm.getResultSet()) {
-			while (rst.next()) {
-				Usuario usuario = new Usuario(rst.getInt(1), rst.getString(2), rst.getString(3));
-				usuarios.add(usuario);
-			}
-		}				
-	}*/
 	
     public List<Usuario> buscar(String usuario, String password) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
@@ -240,7 +231,7 @@ public class UsuarioDAO {
 	        try (ResultSet rst = stm.executeQuery()) {
 	            while (rst.next()) {
 	                String nombreRol = rst.getString("nombreRol");
-	                roles.add(Rol.valueOf(nombreRol)); // Asumiendo que el nombreRol coincide con el nombre del Enum
+	                roles.add(Rol.valueOf(nombreRol));
 	            }
 	        }
 	    }
@@ -251,7 +242,7 @@ public class UsuarioDAO {
 	//Reporte de usuario
 	public void registrarInicioSesion(int idUsuario) {
 	    String sql = "INSERT INTO registros_login (idUsuario, fechaHora) VALUES (?, NOW())";
-	    // Quita la siguiente línea: ejecutarSQL(sql);
+	    
 	    try (PreparedStatement stm = con.prepareStatement(sql)) {
 	        stm.setInt(1, idUsuario);
 	        int rowsAffected = stm.executeUpdate();
@@ -265,7 +256,6 @@ public class UsuarioDAO {
 	public List<RegistroLogin> obtenerRegistrosLogin() {
 	    List<RegistroLogin> registros = new ArrayList<>();
 
-	    // Ajusta esta consulta para unir con la tabla de usuarios
 	    String sql = "SELECT rl.idUsuario, u.nombreUsuario, rl.fechaHora " +
 	                 "FROM registros_login rl " +
 	                 "JOIN usuarios u ON rl.idUsuario = u.idUsuario";
@@ -291,11 +281,10 @@ public class UsuarioDAO {
 	    String sql = "UPDATE usuarios SET habilitado = ? WHERE idUsuario = ?";
 	    
 	    try (PreparedStatement stm = con.prepareStatement(sql)) {
-	        // Configurar los parámetros del PreparedStatement
+	  
 	        stm.setBoolean(1, nuevoEstado);
 	        stm.setInt(2, idUsuario);
 
-	        // Ejecutar la actualización
 	        int filasAfectadas = stm.executeUpdate();
 	        if (filasAfectadas > 0) {
 	            System.out.println("El estado del usuario ha sido actualizado.");
@@ -304,7 +293,6 @@ public class UsuarioDAO {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-	        // Manejar cualquier error de SQL aquí
 	    } 
 	}
 	

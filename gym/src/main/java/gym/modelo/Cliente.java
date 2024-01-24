@@ -16,7 +16,6 @@ public class Cliente {
 		
 	}
 	
-
 	public Cliente(Integer id, Date fechaAlta, String nombre, String apellido, String direccion, String telefono,
 			Boolean pago) {
 		super();
@@ -28,7 +27,6 @@ public class Cliente {
 		this.telefono = telefono;
 		this.pago = pago;
 	}
-
 
 	public Cliente(Date fechaAlta, String nombre, String apellido, String direccion, String telefono) {
 		this.fechaAlta = fechaAlta;
@@ -52,7 +50,6 @@ public class Cliente {
 		this.telefono = telefono;
 	}
 
-
 	public Integer getId() {
 		return id;
 	}
@@ -64,7 +61,6 @@ public class Cliente {
 	public Date getFechaAlta() {
 		return fechaAlta;
 	}
-
 
 	public String getNombre() {
 		return nombre;
@@ -90,26 +86,21 @@ public class Cliente {
 		this.direccion = direccion;
 	}
 
-
 	public String getTelefono() {
 		return telefono;
 	}
-
 
 	public void setTelefono(String telefono) {
 		this.telefono = telefono;
 	}
 
-
 	public Boolean getPago() {
 		return pago;
 	}
-
 
 	public void setPago(Boolean pago) {
 		this.pago = pago;
 	}
 	
-	
-	
+		
 }

@@ -20,7 +20,7 @@ public class ReporteUsuarioFrame extends JFrame{
 	        this.dao = new UsuarioController();
 	        setTitle("Informe de Inicios de Sesión");
 	        setSize(400, 300);
-	        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 	        initUI();
 	        setLocationRelativeTo(null); // Para centrar la ventana
 	    }

@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import gym.modelo.Cliente;
@@ -88,46 +87,53 @@ public class ClienteDAO {
 			return cliente;
 		} catch (SQLException e) {
 			 e.printStackTrace(); 
+			 
 			throw new RuntimeException(e);
 		}
 	}
     
-    
-    public List<Cliente> buscarPorApellido(String apellido) throws SQLException {
+    public List<Cliente> buscarPorApellido(String apellido) {
 	    List<Cliente> clientes = new ArrayList<>();
 
+	    try {
 	    String sql = "SELECT * FROM clientes WHERE apellido LIKE ?";
 	    try (PreparedStatement stm = con.prepareStatement(sql)) {
 	    	stm.setString(1, "%" + apellido + "%");
 
-	        try (ResultSet resultSet = stm.executeQuery()) {
-	            while (resultSet.next()) {
-	                Integer id = resultSet.getInt("id");
-	                String nombre = resultSet.getString("nombre");
-	                String apellidoCliente = resultSet.getString("apellido");
-
-	                Cliente cliente = new Cliente();
-	                cliente.setId(id);
-	                cliente.setNombre(nombre);
-	                cliente.setApellido(apellidoCliente);
-
-	                clientes.add(cliente);
-	            }
-	        }
-	    }
+		        try (ResultSet resultSet = stm.executeQuery()) {
+		            while (resultSet.next()) {
+		                Integer id = resultSet.getInt("id");
+		                String nombre = resultSet.getString("nombre");
+		                String apellidoCliente = resultSet.getString("apellido");
+	
+		                Cliente cliente = new Cliente();
+		                cliente.setId(id);
+		                cliente.setNombre(nombre);
+		                cliente.setApellido(apellidoCliente);
+	
+		                clientes.add(cliente);
+		            }
+		        }
+	       }
+	    }catch (SQLException e) {
+	        System.err.println("Error al realizar la consulta: " + e.getMessage());
+	    } 
 
 	    return clientes;
 	}
     
+    private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) {
+        ResultSet rst = null;
+        try {
+            rst = pstm.getResultSet();
+            while (rst.next()) {
+                Cliente cliente = new Cliente(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
+                        rst.getString(5), rst.getString(6), null);
+                clientes.add(cliente);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error al transformar ResultSet en Cliente: " + e.getMessage());
+        } 
+    }
 
-    
-    private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) throws SQLException {
-		try (ResultSet rst = pstm.getResultSet()) {
-			while (rst.next()) {
-				Cliente cliente = new Cliente(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
-						rst.getString(5), rst.getString(6), null);
-				clientes.add(cliente);
-			}
-		}				
-	}
 }

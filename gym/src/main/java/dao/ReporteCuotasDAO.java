@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 import conexion.Conexion;
-import gym.modelo.Cliente;
 
 public class ReporteCuotasDAO {
 	
@@ -21,44 +20,46 @@ public class ReporteCuotasDAO {
 		this.con = con;
 	}
 
-	//Listado de cuotas asignadas por mes 
-    public List<Map<String, String>> reporteCuotasPorMes(int numeroMes) throws SQLException {
-        Conexion factory = new Conexion();
-        final Connection con = factory.recuperaConexion();
+	//Listado de cuotas asignadas por mes y año
+	public List<Map<String, String>> reporteCuotasPorMesYAnio(int numeroMes, int anio) throws SQLException {
+	    //Conexion factory = new Conexion();
+	    //final Connection con = factory.recuperaConexion();
+		 Conexion factory = Conexion.getInstance();
 
-        final String consulta = "SELECT clientes.nombre, clientes.apellido, " +
-                                "IFNULL(cuotas.monto, 0) AS monto, cuotas.fechaPago " +
-                                "FROM clientes " +
-                                "LEFT JOIN cuotas ON clientes.id = cuotas.clienteId AND MONTH(cuotas.fechaPago) = ?";
+	    final String sql = "SELECT clientes.nombre, clientes.apellido, " +
+	                            "IFNULL(cuotas.monto, 0) AS monto, cuotas.fechaPago " +
+	                            "FROM clientes " +
+	                            "LEFT JOIN cuotas ON clientes.id = cuotas.clienteId AND MONTH(cuotas.fechaPago) = ? AND YEAR(cuotas.fechaPago) = ?";
 
-        try (PreparedStatement statement = con.prepareStatement(consulta)) {
-            statement.setInt(1, numeroMes);
-            statement.execute();
+	    try (PreparedStatement stm = con.prepareStatement(sql)) {
+	        stm.setInt(1, numeroMes);
+	        stm.setInt(2, anio);
+	        stm.execute();
 
-            ResultSet resultSet = statement.getResultSet();
+	        ResultSet resultSet = stm.getResultSet();
 
-            List<Map<String, String>> resultado = new ArrayList<>();
+	        List<Map<String, String>> resultado = new ArrayList<>();
 
-            while (resultSet.next()) {
-                Map<String, String> fila = new HashMap<>();
-                Date fechaPago = resultSet.getDate("fechaPago");
-                fila.put("Fecha Pago", (fechaPago != null) ? fechaPago.toString() : "N/A");
-                fila.put("Nombre", resultSet.getString("nombre"));
-                fila.put("Apellido", resultSet.getString("apellido"));
-                fila.put("Monto", String.valueOf(resultSet.getDouble("monto")));
+	        while (resultSet.next()) {
+	            Map<String, String> fila = new HashMap<>();
+	            Date fechaPago = resultSet.getDate("fechaPago");
+	            fila.put("Fecha Pago", (fechaPago != null) ? fechaPago.toString() : "N/A");
+	            fila.put("Nombre", resultSet.getString("nombre"));
+	            fila.put("Apellido", resultSet.getString("apellido"));
+	            fila.put("Monto", String.valueOf(resultSet.getDouble("monto")));
 
-                // Lógica para determinar si el cliente ha pagado o debe
-                if (resultSet.getDouble("monto") > 0) {
-                    fila.put("Estado", "Pagado");
-                } else {
-					fila.put("Estado", "Debe");
-                }
+	            // Lógica para determinar si el cliente ha pagado o debe
+	            if (resultSet.getDouble("monto") > 0) {
+	                fila.put("Estado", "Pagado");
+	            } else {
+	                fila.put("Estado", "Debe");
+	            }
 
-                resultado.add(fila);
-            }
+	            resultado.add(fila);
+	        }
 
-            return resultado;
-        }
-    }
+	        return resultado;
+	    }
+	}
     
 }

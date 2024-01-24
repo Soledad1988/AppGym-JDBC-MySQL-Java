@@ -1,38 +1,23 @@
 package vista;
 
-import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
-
-import com.toedter.calendar.JDateChooser;
-
-import controller.ClienteController;
 import controller.ReporteGastosController;
-import gym.modelo.Cliente;
 import gym.modelo.Gastos;
-
-import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
@@ -40,20 +25,8 @@ import javax.swing.DefaultComboBoxModel;
 public class ReporteGastos extends JFrame {
 
     private static final long serialVersionUID = 1L;
-
-    private JTable tablaReporte;
     private JTable tabla;
     private DefaultTableModel modelo;
-    
-    //********************************
-    private JPanel contentPane;
-    private JLabel labelPeriodo;
-	
-
-	private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonReporte;
-	
-
-    //private ClienteController clienteController;
     private ReporteGastosController reporteControler;
     private JTextField textTotal;
     
@@ -100,7 +73,7 @@ public class ReporteGastos extends JFrame {
     	for (int i = Calendar.getInstance().get(Calendar.YEAR); i >= 2000; i--) {
     	    boxAño.addItem(i);
     	}
-    	boxAño.setBounds(429, 140, 148, 22); // Ajusta las coordenadas según tu diseño
+    	boxAño.setBounds(429, 140, 148, 22);
     	getContentPane().add(boxAño);
     	
     	textTotal = new JTextField();
@@ -126,7 +99,7 @@ public class ReporteGastos extends JFrame {
             }
         });
         
-        // Botón para calcular la suma por mes
+        // Botón para calcular la suma
            JButton btnCalcularSuma = new JButton("Calcular Suma");
            btnCalcularSuma.setBounds(300, 497, 120, 25);
            getContentPane().add(btnCalcularSuma);
@@ -159,14 +132,14 @@ public class ReporteGastos extends JFrame {
         model.setRowCount(0);
     }
     
- // Método para cargar la tabla con clientes del mes seleccionado
+ // Método para cargar la tabla con clientes del mes y año seleccionado
     private void cargarTablaPorMes(int numeroMes, int año) {
         limpiarTabla(); // Limpiar la tabla antes de cargar nuevos datos
 
         List<Gastos> gastos = new ArrayList<>();
 
         try {
-            // Utiliza el método listarGastosPorMes de tu ReporteController
+            // Utiliza el método listarGastosPorMes del ReporteController
             gastos = this.reporteControler.listarGastosPorMes(numeroMes, año);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -192,13 +165,13 @@ public class ReporteGastos extends JFrame {
         modelo.addColumn("Descripcion");
         modelo.addColumn("Costo");
 
-        tabla.setModel(modelo); // Asegúrate de establecer el modelo en la tabla
+        tabla.setModel(modelo);
 
         cargarTabla();
 
-        JScrollPane scrollPane = new JScrollPane(tabla); // Añadir la tabla a un JScrollPane
+        JScrollPane scrollPane = new JScrollPane(tabla);
         scrollPane.setBounds(10, 205, 760, 280);
-        container.add(scrollPane); // Agregar el JScrollPane al contenedor
+        container.add(scrollPane);
 
         setSize(800, 600);
         setVisible(true);

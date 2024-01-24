@@ -133,9 +133,9 @@ public class RegistroCuotas extends JFrame {
         container.add(tabla);
         container.add(botonMenu);
 
-        JScrollPane scrollPane = new JScrollPane(tabla); // Añadir la tabla a un JScrollPane
+        JScrollPane scrollPane = new JScrollPane(tabla);
         scrollPane.setBounds(16, 112, 760, 262);
-        container.add(scrollPane); // Agregar el JScrollPane al contenedor
+        container.add(scrollPane);
         
         setSize(800, 600);
         setVisible(true);
@@ -233,26 +233,33 @@ public class RegistroCuotas extends JFrame {
 	
    
    private void buscarClientesPorApellido() {
-       String apellido = textoApellido.getText().trim();
+	   String apellido = textoApellido.getText().trim();
 
-       try {
-           List<Cliente> clientes = clienteController.buscarPorApellido(apellido);
+	    try {
+	        List<Cliente> clientes = clienteController.buscarPorApellido(apellido);
 
-           DefaultTableModel modeloTabla = (DefaultTableModel) tabla.getModel();
-           modeloTabla.setRowCount(0);
+	        DefaultTableModel modeloTabla = (DefaultTableModel) tabla.getModel();
+	        modeloTabla.setRowCount(0);
 
-           for (Cliente cliente : clientes) {
-               Object[] fila = {
-            		   cliente.getId(), 
-            		   cliente.getNombre(), 
-            		   cliente.getApellido(), 
-            		   false};
-               modeloTabla.addRow(fila);
-           }
-       } catch (SQLException ex) {
-           ex.printStackTrace();
-           JOptionPane.showMessageDialog(this, "Error al buscar clientes.");
-       }
+	        if (clientes.isEmpty()) {
+	            // Mostrar mensaje si no se encuentran clientes
+	            JOptionPane.showMessageDialog(this, "No se encontró clientes con el apellido: " + apellido);
+	        } else {
+	            // Agregar clientes encontrados a la tabla
+	            for (Cliente cliente : clientes) {
+	                Object[] fila = {
+	                    cliente.getId(), 
+	                    cliente.getNombre(), 
+	                    cliente.getApellido(), 
+	                    false
+	                };
+	                modeloTabla.addRow(fila);
+	            }
+	        }
+	    } catch (RuntimeException ex) {
+	        ex.printStackTrace();
+	        JOptionPane.showMessageDialog(this, "Error al buscar clientes.");
+	    }
    }
    
    private void guardar() {
@@ -271,7 +278,7 @@ public class RegistroCuotas extends JFrame {
 	        } else {
 	            JOptionPane.showMessageDialog(this, "Seleccione una fila antes de guardar.");
 	        }
-	    } catch (SQLException | NumberFormatException e) {
+	    } catch (NumberFormatException e) {
 	        e.printStackTrace();
 	        JOptionPane.showMessageDialog(this, "Error al guardar: " + e.getMessage());
 	    }

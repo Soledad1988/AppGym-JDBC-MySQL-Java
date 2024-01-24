@@ -18,14 +18,12 @@ public class CuotasDAO {
 		this.con = con;
 	}
 	
-	public void asignarCuota(Integer idCliente, Double monto, Date fechaPago) throws SQLException {
+	public void asignarCuota(Integer idCliente, Double monto, Date fechaPago){
 	    // Primero, insertar la cuota.
 	    String sqlCuota = "INSERT INTO cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
-	    System.out.println("Consulta SQL para Cuota: " + sqlCuota);
 
 	    // Segundo, actualizar el estado de pago del cliente.
 	    String sqlCliente = "UPDATE clientes SET pago = true WHERE id = ?";
-	    System.out.println("Consulta SQL para Cliente: " + sqlCliente);
 
 	    try (PreparedStatement stmCuota = con.prepareStatement(sqlCuota, Statement.RETURN_GENERATED_KEYS);
 	         PreparedStatement stmCliente = con.prepareStatement(sqlCliente)) {
@@ -41,18 +39,21 @@ public class CuotasDAO {
 	        stmCliente.executeUpdate();
 
 	    } catch (SQLException e) {
-	        e.printStackTrace();
-	        throw e;
+	    	System.err.println("Error al asignar cuota: " + e.getMessage());
 	    }
 	}
 	
-	 private void transformarResultSetEnCuota(List<Cuota> cuotas, PreparedStatement pstm) throws SQLException {
-			try (ResultSet rst = pstm.getResultSet()) {
-				while (rst.next()) {
+	 private void transformarResultSetEnCuota(List<Cuota> cuotas, PreparedStatement pstm){
+		 ResultSet rst = null;	
+		 try {
+			rst = pstm.getResultSet(); 
+			while (rst.next()) {
 					Cuota cuota = new Cuota(rst.getInt(1), rst.getInt(2), rst.getDouble(3), rst.getDate(4));
 					cuotas.add(cuota);
 				}
-			}				
+			} catch (SQLException e) {
+	            System.err.println("Error al transformar ResultSet en Cuota: " + e.getMessage());
+	        } 				
 		}
     
 }

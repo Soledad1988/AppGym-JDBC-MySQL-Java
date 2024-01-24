@@ -56,12 +56,13 @@ public class UsuarioFrame extends JFrame {
 	public UsuarioFrame() {
 		super("Gym-Fitness");
 		
-		 try {
-	            Connection connection = new Conexion().recuperaConexion();
+		// try {
+	           // Connection connection = new Conexion().recuperaConexion();
+			 Connection connection = Conexion.getInstance().getConnection();
 	            this.usuarioDAO = new UsuarioDAO(connection);
-	        } catch (SQLException e) {
-	            e.printStackTrace();  // Manejo adecuado de la excepción según tus necesidades
-	        }
+	   //  ()   } catch (SQLException e) {
+	    //        e.printStackTrace();  // Manejo adecuado de la excepción según tus necesidades
+	     //   }
 		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
