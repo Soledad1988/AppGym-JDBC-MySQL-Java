@@ -37,7 +37,6 @@ public class ReporteGananciaPerdida extends JFrame {
     private JTextField textTotal;
    
     
-    
     public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -70,8 +69,8 @@ public class ReporteGananciaPerdida extends JFrame {
     	lblMes.setBounds(238, 58, 100, 22);
     	getContentPane().add(lblMes);
     	
-    	JComboBox BoxPeriodo = new JComboBox();
-    	BoxPeriodo.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
+    	JComboBox<String> BoxPeriodo = new JComboBox<>();
+    	BoxPeriodo.setModel(new DefaultComboBoxModel<>(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
     	BoxPeriodo.setBounds(376, 58, 148, 22);
     	getContentPane().add(BoxPeriodo);
     	

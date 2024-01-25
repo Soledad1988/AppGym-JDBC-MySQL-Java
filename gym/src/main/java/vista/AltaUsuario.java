@@ -4,18 +4,12 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -23,14 +17,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
 import javax.swing.table.DefaultTableModel;
-
-import com.toedter.calendar.JDateChooser;
-
-import controller.ClienteController;
 import controller.UsuarioController;
-import gym.modelo.Cliente;
 import gym.modelo.Rol;
 import gym.modelo.Usuario;
 import javax.swing.JPasswordField;
@@ -48,7 +36,8 @@ public class AltaUsuario extends JFrame {
     private UsuarioController usuarioController;
     private JTable tabla;
     private JPasswordField textoPassword;
-    private JComboBox listaRoles;
+    @SuppressWarnings("rawtypes")
+	private JComboBox listaRoles;
     private ReporteUsuarioFrame inicioSesion;
     
     
@@ -259,10 +248,6 @@ public class AltaUsuario extends JFrame {
     private void limpiarTabla() {
         modelo.getDataVector().clear();
     }
-
-    private boolean tieneFilaElegida() {
-        return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
-    }
     
     private void actualizar() {
         int filaSeleccionada = tabla.getSelectedRow();
@@ -274,50 +259,13 @@ public class AltaUsuario extends JFrame {
 
         Integer idUsuario = Integer.valueOf(modelo.getValueAt(filaSeleccionada, 0).toString());
         String nombreUsuario = (String) modelo.getValueAt(filaSeleccionada, 1);
-        String password = (String) modelo.getValueAt(filaSeleccionada, 2); // Ahora obteniendo la contraseña de la tabla
+        String password = (String) modelo.getValueAt(filaSeleccionada, 2); //obteniendo la contraseña de la tabla
 
         this.usuarioController.actualizar(nombreUsuario, password, idUsuario);
 
         JOptionPane.showMessageDialog(this, "Registro modificado con éxito");
     }
- 
-    private int obtenerIdFilaSeleccionada() {
-        int filaSeleccionada = tabla.getSelectedRow();
-        if (filaSeleccionada >= 0) {
-            // Se ajusta el índice del ID ya que la columna del ID está oculta
-            return (Integer) modelo.getValueAt(filaSeleccionada, 0);
-        } else {
-            // Manejar el caso en que no hay fila seleccionada
-            return -1; // O cualquier valor que indique un estado no válido
-        }
-    }
-    
-    
-    private void eliminar() {
-    	
-    	int idCliente = obtenerIdFilaSeleccionada();
-        if (idCliente == -1) {
-            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
-            return;
-        }
-        /*
-        if (tieneFilaElegida()) {
-            JOptionPane.showMessageDialog(this, "Por favor, elije un item");
-            return;
-        }*/
-
-        Optional.ofNullable(modelo.getValueAt(tabla.getSelectedRow(), tabla.getSelectedColumn()))
-                .ifPresentOrElse(fila -> {
-                    Integer idUsuario = Integer.valueOf(modelo.getValueAt(tabla.getSelectedRow(), 0).toString());
-                    this.usuarioController.eliminar(idUsuario);	
-            
-                    modelo.removeRow(tabla.getSelectedRow());
-
-                    JOptionPane.showMessageDialog(this, " Item eliminado con éxito!");
-                }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un item"));
-    }
-    
-     
+   
    private List<Usuario> ListarUsuarios() {
 		return this.usuarioController.listar();
    }
@@ -339,7 +287,8 @@ public class AltaUsuario extends JFrame {
 	    }
 	}
      
-   private void cargarRoles() {
+   @SuppressWarnings("unchecked")
+private void cargarRoles() {
 	    // Obtener los valores del enum Rol
 	    Rol[] roles = Rol.values();
 
@@ -354,7 +303,8 @@ public class AltaUsuario extends JFrame {
 	    listaRoles.setModel(comboBoxModel);
 	}
    
-   private void guardar() {
+   @SuppressWarnings("deprecation")
+private void guardar() {
 	    try {
 	        String nombreUsuario = textoNombreUsuario.getText();
 	        String password = textoPassword.getText();
@@ -379,38 +329,6 @@ public class AltaUsuario extends JFrame {
 	        usuario.addRol(rol);
 
 	        this.usuarioController.guardar(usuario, rolSeleccionado);
-	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
-	        limpiarFormulario();
-	    } catch (RuntimeException ex) {
-	        JOptionPane.showMessageDialog(this, "Error al guardar el usuario: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-	        ex.printStackTrace(); // Puedes ajustar el manejo de la excepción según tus necesidades
-	    }
-	}
-   
-   private void guardar2() {
-	    try {
-	        String nombreUsuario = textoNombreUsuario.getText();
-	        String password = textoPassword.getText();
-	        String rolSeleccionado = (String) listaRoles.getSelectedItem(); // Obtener el rol seleccionado
-
-	        if (nombreUsuario.isEmpty() || password.isEmpty() || rolSeleccionado == null) {
-	            JOptionPane.showMessageDialog(this, "Por favor, complete todos los campos.");
-	            return;
-	        }
-
-	        // Asegúrate de que el valor del rol coincida con los valores del enum Rol
-	        Rol rol;
-	        try {
-	            rol = Rol.valueOf(rolSeleccionado.replace(" ", "_").toUpperCase());
-	        } catch (IllegalArgumentException e) {
-	            JOptionPane.showMessageDialog(this, "Rol seleccionado no válido.", "Error", JOptionPane.ERROR_MESSAGE);
-	            return; // No continuar si el rol no es válido
-	        }
-
-	       // Usuario usuario = new Usuario(nombreUsuario, password);
-	        //usuario.addRol(rol);
-
-	        //this.usuarioController.guardar(usuario, rolSeleccionado);
 	        JOptionPane.showMessageDialog(this, "Registrado con éxito!");
 	        limpiarFormulario();
 	    } catch (RuntimeException ex) {

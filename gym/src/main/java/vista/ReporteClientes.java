@@ -5,39 +5,24 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.EventQueue;
 import java.awt.Font;
-import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
-import com.toedter.calendar.JDateChooser;
-
-import controller.ClienteController;
 import controller.ReporteCuotasController;
 import controller.ReporteIngresosController;
-import dao.ReporteIngresosDAO;
-import gym.modelo.Cliente;
-import gym.modelo.Cuota;
-
-import javax.swing.JList;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 
@@ -45,20 +30,8 @@ import javax.swing.DefaultComboBoxModel;
 public class ReporteClientes extends JFrame {
 
     private static final long serialVersionUID = 1L;
-
-    private JTable tablaReporte;
     private JTable tabla;
     private DefaultTableModel modelo;
-    
-    //********************************
-    private JPanel contentPane;
-    private JLabel labelPeriodo;
-	
-
-	private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonReporte;
-	
-
-    //private ClienteController clienteController;
     private ReporteIngresosController reporteControler;
     private ReporteCuotasController reporteCuotas;
     private JTextField textTotal;
@@ -97,15 +70,17 @@ public class ReporteClientes extends JFrame {
     	lblPeriodo.setBounds(170, 108, 100, 22);
     	getContentPane().add(lblPeriodo);
     	
-    	JComboBox BoxPeriodo = new JComboBox();
-    	BoxPeriodo.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
+    	JComboBox<String> BoxPeriodo = new JComboBox<>();
+    	BoxPeriodo.setModel(new DefaultComboBoxModel<>(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
     	BoxPeriodo.setBounds(429, 105, 148, 22);
     	getContentPane().add(BoxPeriodo);
     	
     	// Ejemplo de cómo agregar un JComboBox para seleccionar el año
+    	// Ejemplo: Añadir los últimos 5 años
     	JComboBox<Integer> boxAño = new JComboBox<>();
-    	for (int i = Calendar.getInstance().get(Calendar.YEAR); i >= 2000; i--) {
-    	    boxAño.addItem(i);
+    	int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+    	for (int i = currentYear; i > currentYear - 5; i--) {
+    		boxAño.addItem(i);
     	}
     	boxAño.setBounds(429, 140, 148, 22); // Ajusta las coordenadas según tu diseño
     	getContentPane().add(boxAño);
@@ -199,7 +174,8 @@ public class ReporteClientes extends JFrame {
     }
     
     
-    private void configurarTablaDeContenido(Container container) {
+    @SuppressWarnings("serial")
+	private void configurarTablaDeContenido(Container container) {
         tabla = new JTable(){
         	//agregamos color a los estados
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
@@ -228,7 +204,6 @@ public class ReporteClientes extends JFrame {
             }
         };
 
-       // modelo = (DefaultTableModel) tabla.getModel();
         modelo = new DefaultTableModel();
         modelo.addColumn("Fecha Pago");
         modelo.addColumn("Nombre");

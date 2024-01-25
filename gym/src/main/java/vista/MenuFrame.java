@@ -5,7 +5,6 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
 import gym.modelo.Rol;
-import gym.modelo.Usuario;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -16,45 +15,32 @@ import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
-import java.awt.Button;
-import java.awt.EventQueue;
 
+@SuppressWarnings("serial")
 public class MenuFrame extends JFrame {
 
 	 private JPanel contentPane;
-	 private AltaClientesFrame listaClientesFrame;
+	 @SuppressWarnings("unused")
+	private AltaClientesFrame listaClientesFrame;
+	 @SuppressWarnings("unused")
 	 private AltaGastosFrame altaGastosFrame;
-	 private ReporteClientes reporteClientes;
-	 private ReporteGastos reporteGastos;
+	 @SuppressWarnings("unused")
+	private ReporteClientes reporteClientes;
+	 @SuppressWarnings("unused")
+	private ReporteGastos reporteGastos;
 	 private RegistroCuotas registroIngresos;
-	 private AltaUsuario altaUsuario;
-	 private UsuarioFrame usuario;
+	 @SuppressWarnings("unused")
+	private AltaUsuario altaUsuario;
+	 @SuppressWarnings("unused")
 	 private ReporteGananciaPerdida reporteGananciaPerdida;
 	 
 	 private JButton btnNuevoUsuario;
 	 private JButton listaClientes;
 	 private JButton btnGananciaPerdida;
 
-	
-	
-	 /*public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					MenuFrame menuFrame = new MenuFrame();
-					menuFrame.setVisible(true);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}*/
 	 
 	 public MenuFrame() {
 		 super("Gym-Fitness");
-	       // initComponents();
-	       //setLocationRelativeTo(null);
 		}
 
 	
@@ -95,7 +81,6 @@ public class MenuFrame extends JFrame {
 		
 		listaClientes = new JButton("Lista Clientes");
 		listaClientes.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		//JButton listaClientes = new JButton("Lista Clientes");
 		listaClientes.setBounds(31, 195, 168, 23);
 		contentPane.add(listaClientes);
 		
@@ -191,7 +176,6 @@ public class MenuFrame extends JFrame {
 		contentPane.add(btnCerrarSesesio);
 		
 		btnGananciaPerdida = new JButton("Reporte Ganancia/Perdida");
-		//JButton reporteGananciaPerdida = new JButton("Reporte Ganancia/Perdida");
 		btnGananciaPerdida.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		btnGananciaPerdida.setBounds(31, 229, 168, 23);
 		contentPane.add(btnGananciaPerdida);
@@ -289,6 +273,5 @@ public class MenuFrame extends JFrame {
 		        System.out.println("btnNuevoUsuario es null"); // Mensaje de depuración
 		    }
 
-		    // ...
 		}
 }

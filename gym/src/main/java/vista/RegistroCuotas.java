@@ -74,8 +74,6 @@ public class RegistroCuotas extends JFrame {
         labelFecha.setBounds(239, 395, 99, 15);
         getContentPane().add(labelFecha);
         
-        /*----------------------------------*/
-        
         textFechaPago = new JDateChooser();
         textFechaPago.getCalendarButton().addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -113,7 +111,6 @@ public class RegistroCuotas extends JFrame {
     private void configurarTablaDeContenido(Container container) {
         tabla = new JTable();
 
-       // modelo = (DefaultTableModel) tabla.getModel();
         modelo = new DefaultTableModel();
         modelo.addColumn("Id");
         modelo.addColumn("Nombre");
@@ -200,22 +197,14 @@ public class RegistroCuotas extends JFrame {
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
     }
-
-
-    private void limpiarTabla() {
-        modelo.getDataVector().clear();
-    }
-
-    private boolean tieneFilaElegida() {
-        return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
-    }
      
      
    private List<Cliente> ListarClientes() {
 		return this.clienteController.listar();
    }
      
-   private void cargarTabla() {               
+   @SuppressWarnings("unused")
+private void cargarTabla() {               
 	    // Llenar Tabla
 	    List<Cliente> clientes = ListarClientes();
 	    try {
@@ -284,7 +273,8 @@ public class RegistroCuotas extends JFrame {
 	    }
 	}
 
-    private void limpiarCampos() {
+    @SuppressWarnings("static-access")
+	private void limpiarCampos() {
     	this.textFechaPago.setDate(null);
         this.textoApellido.setText("");
         this.textMonto.setText("");

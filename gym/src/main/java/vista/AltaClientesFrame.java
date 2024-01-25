@@ -69,15 +69,13 @@ public class AltaClientesFrame extends JFrame {
 
         configurarTablaDeContenido(container);
         
-        
         JLabel labelFecha = new JLabel("Fecha Ingreso");
         labelFecha.setForeground(Color.BLACK);
         labelFecha.setBounds(10, 33, 240, 15);
         getContentPane().add(labelFecha);
         
-        /*----------------------------------*/
-        
         textFechaIngreso = new JDateChooser();
+        textFechaIngreso.setDateFormatString("dd-MM-yyyy");
         textFechaIngreso.getCalendarButton().addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
         	}
@@ -253,18 +251,6 @@ public class AltaClientesFrame extends JFrame {
         MenuFrame menuFrame = new MenuFrame();
         menuFrame.setVisible(true);
     }
-    
-    /*
-    private int obtenerIdFilaSeleccionada() {
-        int filaSeleccionada = tabla.getSelectedRow();
-        if (filaSeleccionada >= 0) {
-            // Se ajusta el índice del ID ya que la columna del ID está oculta
-            return (Integer) modelo.getValueAt(filaSeleccionada, 0);
-        } else {
-            // Manejar el caso en que no hay fila seleccionada
-            return -1; // O cualquier valor que indique un estado no válido
-        }
-    }*/
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();
@@ -362,8 +348,8 @@ public class AltaClientesFrame extends JFrame {
     							
     }
     
-   
-    private void limpiarFormulario() {
+	@SuppressWarnings("static-access")
+	private void limpiarFormulario() {
     	this.textFechaIngreso.setDate(null);
         this.textoNombre.setText("");
         this.textoApellido.setText("");

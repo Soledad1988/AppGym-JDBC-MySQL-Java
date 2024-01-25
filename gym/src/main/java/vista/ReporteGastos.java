@@ -63,8 +63,8 @@ public class ReporteGastos extends JFrame {
     	lblMes.setBounds(170, 108, 100, 22);
     	getContentPane().add(lblMes);
     	
-    	JComboBox BoxPeriodo = new JComboBox();
-    	BoxPeriodo.setModel(new DefaultComboBoxModel(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
+    	JComboBox<String> BoxPeriodo = new JComboBox<>();
+    	BoxPeriodo.setModel(new DefaultComboBoxModel<>(new String[] {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"}));
     	BoxPeriodo.setBounds(429, 105, 148, 22);
     	getContentPane().add(BoxPeriodo);
     	

@@ -28,6 +28,7 @@ import java.awt.EventQueue;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 
+@SuppressWarnings("serial")
 public class UsuarioFrame extends JFrame {
 
 	private JPanel contentPane;
@@ -36,7 +37,8 @@ public class UsuarioFrame extends JFrame {
 	 private JLabel lblMensaje;
 	 private JPasswordField textPassword;
 	 private UsuarioDAO usuarioDAO;
-	 private Set<Rol> rolesUsuario;
+	 @SuppressWarnings("unused")
+	private Set<Rol> rolesUsuario;
 	 private Usuario usuarioLogueado;
 	
 	public static void main(String[] args) {
@@ -55,15 +57,9 @@ public class UsuarioFrame extends JFrame {
 	
 	public UsuarioFrame() {
 		super("Gym-Fitness");
-		
-		// try {
-	           // Connection connection = new Conexion().recuperaConexion();
+	
 			 Connection connection = Conexion.getInstance().getConnection();
 	            this.usuarioDAO = new UsuarioDAO(connection);
-	   //  ()   } catch (SQLException e) {
-	    //        e.printStackTrace();  // Manejo adecuado de la excepción según tus necesidades
-	     //   }
-		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 647, 375);
@@ -137,37 +133,9 @@ public class UsuarioFrame extends JFrame {
 	}
 	
 	   
-	   private void abrirIniciarSesion2() throws SQLException {
-		    String usuario = textUsuario.getText();
-		    String password = textPassword.getText();
-
-		    List<Usuario> usuarios = new UsuarioController().buscar(usuario, password);
-
-		    if (usuarios.isEmpty()) {
-		        lblMensaje.setText("Usuario o contraseña incorrectos");
-		    } else {
-		        // Autenticación exitosa, puedes abrir la siguiente ventana aquí
-		        //menu = new MenuFrame();
-		        menu.mostrarVentana();  // Asegúrate de tener un método similar en tu MenuFrame
-		        setVisible(false);  // Oculta la ventana actual
-		    }
-		}
-	   
 	   public void mostrarVentana() {
 	        setVisible(true);
 	    }
-	   
-	  /* private void abrirMenuFrame(Set<Rol> roles) {
-		    MenuFrame menuFrame = new MenuFrame(roles);
-		    menuFrame.setVisible(true);
-		    // Resto del código para cerrar la ventana actual, etc.
-		}
-	   
-	   private void abrirMenuFrame2() {
-		    MenuFrame menuFrame = new MenuFrame();
-		    menuFrame.setVisible(true);
-		    // Resto del código para cerrar la ventana actual, etc.
-		}*/
 	   
 	   private void abrirMenuFrame() {
 		    if (usuarioLogueado != null) {
@@ -187,7 +155,8 @@ public class UsuarioFrame extends JFrame {
 	   
 	   private void abrirIniciarSesion() throws SQLException {
 		    String usuario = textUsuario.getText();
-		    String password = textPassword.getText();
+		    @SuppressWarnings("deprecation")
+			String password = textPassword.getText();
 
 		    List<Usuario> usuarios = new UsuarioController().buscar(usuario, password);
 
@@ -221,7 +190,7 @@ public class UsuarioFrame extends JFrame {
 
 		    // Lógica común para roles de usuario regular
 		    // btnVerPerfil.setEnabled(true);
-		    // ...
+	
 		}
 		   
 		   private Set<Rol> obtenerRolesDesdeBaseDeDatos(Integer idUsuario) {

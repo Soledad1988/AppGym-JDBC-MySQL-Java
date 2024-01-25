@@ -10,8 +10,6 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,9 +26,6 @@ import controller.GastosController;
 
 import gym.modelo.Gastos;
 
-import javax.swing.JComboBox;
-
-
 
 public class AltaGastosFrame extends JFrame {
 
@@ -42,7 +37,6 @@ public class AltaGastosFrame extends JFrame {
     private JTable tabla;
     private DefaultTableModel modelo;
     private GastosController gastoController;
-    private MenuFrame menuFrame;
     public static JDateChooser textFechaGasto;
     
     public static void main(String[] args) {
@@ -330,7 +324,6 @@ public class AltaGastosFrame extends JFrame {
 	}
   
    private void guardar() throws SQLException {
-	   // String mesSeleccionado = (String) BoxPeriodo.getSelectedItem();
 	    String fechaEgreso = ((JTextField)textFechaGasto.getDateEditor().getUiComponent()).getText();
 	    Double costo = Double.parseDouble(textoCosto.getText());
 
@@ -348,7 +341,8 @@ public class AltaGastosFrame extends JFrame {
 	}
     
    
-    private void limpiarFormulario() {
+    @SuppressWarnings("static-access")
+	private void limpiarFormulario() {
     	this.textFechaGasto.setDate(null);
         this.textoNombreGasto.setText("");
         this.textoDescripcion.setText("");

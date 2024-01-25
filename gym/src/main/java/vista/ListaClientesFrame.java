@@ -8,9 +8,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.swing.ImageIcon;
@@ -27,10 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import com.toedter.calendar.JDateChooser;
 
 import controller.ClienteController;
-import controller.ClienteController;
 import gym.modelo.Cliente;
-
-import java.sql.Date;
 
 
 
@@ -44,7 +39,8 @@ public class ListaClientesFrame extends JFrame {
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
-    private MenuFrame menuFrame;
+    @SuppressWarnings("unused")
+	private MenuFrame menuFrame;
     
     public static JDateChooser textFechaIngreso;
     private JTextField textTelefono;
@@ -328,7 +324,6 @@ public class ListaClientesFrame extends JFrame {
     private void guardar() throws SQLException {
              
     	String fechaIngreso = ((JTextField)textFechaIngreso.getDateEditor().getUiComponent()).getText();
-    	Double precio = Double.parseDouble(textTelefono.getText());
 		
 		 Cliente cliente = new Cliente(java.sql.Date.valueOf(fechaIngreso),
           		textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(),textTelefono.getText());	
@@ -342,7 +337,8 @@ public class ListaClientesFrame extends JFrame {
     }
     
    
-    private void limpiarFormulario() {
+    @SuppressWarnings("static-access")
+	private void limpiarFormulario() {
     	this.textFechaIngreso.setDate(null);
         this.textoNombre.setText("");
         this.textoApellido.setText("");

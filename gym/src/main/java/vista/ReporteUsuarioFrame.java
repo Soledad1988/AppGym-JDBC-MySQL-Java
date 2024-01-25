@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.List;
 import gym.modelo.RegistroLogin;
 
+@SuppressWarnings("serial")
 public class ReporteUsuarioFrame extends JFrame{
 
 	 	private JTable table;
