@@ -10,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import conexion.Conexion;
-
 public class ReporteCuotasDAO {
 	
 	final private Connection con;
@@ -22,14 +20,11 @@ public class ReporteCuotasDAO {
 
 	//Listado de cuotas asignadas por mes y año
 	public List<Map<String, String>> reporteCuotasPorMesYAnio(int numeroMes, int anio) throws SQLException {
-	    //Conexion factory = new Conexion();
-	    //final Connection con = factory.recuperaConexion();
-		 Conexion factory = Conexion.getInstance();
 
 	    final String sql = "SELECT clientes.nombre, clientes.apellido, " +
-	                            "IFNULL(cuotas.monto, 0) AS monto, cuotas.fechaPago " +
-	                            "FROM clientes " +
-	                            "LEFT JOIN cuotas ON clientes.id = cuotas.clienteId AND MONTH(cuotas.fechaPago) = ? AND YEAR(cuotas.fechaPago) = ?";
+	                       "IFNULL(cuotas.monto, 0) AS monto, cuotas.fechaPago " +
+	                       "FROM clientes " +
+	                       "LEFT JOIN cuotas ON clientes.id = cuotas.clienteId AND MONTH(cuotas.fechaPago) = ? AND YEAR(cuotas.fechaPago) = ?";
 
 	    try (PreparedStatement stm = con.prepareStatement(sql)) {
 	        stm.setInt(1, numeroMes);

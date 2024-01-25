@@ -6,7 +6,6 @@ public class Gastos {
 
 	private Integer idGasto;
 	private Date fechaGasto;
-	//private String periodoGasto;
 	private String nombreGasto;
 	private String descripcion;
 	private Double costo;

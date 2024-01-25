@@ -84,13 +84,19 @@ public class GastoDAO {
     
   		
     
-    private void transformarResultSetEnCliente(List<Gastos> gasto, PreparedStatement pstm) throws SQLException {
+    private void transformarResultSetEnCliente(List<Gastos> gasto, PreparedStatement pstm) {
 		try (ResultSet rst = pstm.getResultSet()) {
 			while (rst.next()) {
-				Gastos gastos = new Gastos(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
+				Gastos gastos = new Gastos(
+						rst.getInt(1), 
+						rst.getDate(2), 
+						rst.getString(3), 
+						rst.getString(4),
 						rst.getDouble(5));
 				gasto.add(gastos);
 			}
-		}				
+		}catch (SQLException e) {
+            System.err.println("Error al transformar ResultSet en Gastos: " + e.getMessage());
+        } 			
 	}
 }

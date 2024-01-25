@@ -1,12 +1,10 @@
 package controller;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 import conexion.Conexion;
-import dao.CuotasDAO;
 import dao.ReporteMensualDAO;
 import gym.modelo.Gastos;
 

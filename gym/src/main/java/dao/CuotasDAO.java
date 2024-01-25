@@ -3,12 +3,8 @@ package dao;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
-
-import gym.modelo.Cuota;
 
 public class CuotasDAO {
 
@@ -43,17 +39,5 @@ public class CuotasDAO {
 	    }
 	}
 	
-	 private void transformarResultSetEnCuota(List<Cuota> cuotas, PreparedStatement pstm){
-		 ResultSet rst = null;	
-		 try {
-			rst = pstm.getResultSet(); 
-			while (rst.next()) {
-					Cuota cuota = new Cuota(rst.getInt(1), rst.getInt(2), rst.getDouble(3), rst.getDate(4));
-					cuotas.add(cuota);
-				}
-			} catch (SQLException e) {
-	            System.err.println("Error al transformar ResultSet en Cuota: " + e.getMessage());
-	        } 				
-		}
     
 }

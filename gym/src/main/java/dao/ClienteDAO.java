@@ -127,8 +127,14 @@ public class ClienteDAO {
         try {
             rst = pstm.getResultSet();
             while (rst.next()) {
-                Cliente cliente = new Cliente(rst.getInt(1), rst.getDate(2), rst.getString(3), rst.getString(4),
-                        rst.getString(5), rst.getString(6), null);
+                Cliente cliente = new Cliente(
+                		rst.getInt(1), 
+                		rst.getDate(2), 
+                		rst.getString(3), 
+                		rst.getString(4),
+                        rst.getString(5), 
+                        rst.getString(6), 
+                        null);
                 clientes.add(cliente);
             }
         } catch (SQLException e) {

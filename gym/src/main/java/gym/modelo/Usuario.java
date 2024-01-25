@@ -83,7 +83,7 @@ public class Usuario {
 		this.roles = roles;
 	}
 	
-	 //Convertir los roles a string antes, asi cargar la tabla en la vista
+	 //Convertir los roles a string antes, asi carga la tabla en la vista
     public String getRolesAsString() {
  	    return roles.stream()
  	                .map(Rol::toString)

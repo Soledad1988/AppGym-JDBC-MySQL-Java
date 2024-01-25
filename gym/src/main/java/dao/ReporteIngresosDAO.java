@@ -21,9 +21,6 @@ public class ReporteIngresosDAO {
 
 	//listar reporte
 	public List<Map<String,String>> reporteClientes() throws SQLException {
-		//Conexion factory = new Conexion();
-		//final Connection con = factory.recuperaConexion();
-		// Conexion factory = Conexion.getInstance();
 				  
 		final String sql = "SELECT fechaAlta, nombre, apellido, telefono FROM clientes";
 			        
@@ -51,9 +48,7 @@ public class ReporteIngresosDAO {
 	}
 			
 	
-    public static double realizarSumaPorMes(int numeroMes, int año) throws SQLException {
-    	//Conexion factory = new Conexion();
-		//final Connection con = factory.recuperaConexion();
+    public static double realizarSumaPorMes(int numeroMes, int año) {
     	  Conexion factory = Conexion.getInstance();
 
              String sql = "SELECT SUM(monto) AS resultado FROM cuotas WHERE MONTH(fechaPago) = ? AND YEAR(fechaPago) = ?";
@@ -70,8 +65,7 @@ public class ReporteIngresosDAO {
                      }
                  }
              } catch (SQLException e) {
-                 // Manejo de excepciones
-                 e.printStackTrace();
+            	 System.err.println("Error al realizar la operación: " + e.getMessage());
              }
 
              // En caso de error o si no hay resultados, retornar un valor indicativo

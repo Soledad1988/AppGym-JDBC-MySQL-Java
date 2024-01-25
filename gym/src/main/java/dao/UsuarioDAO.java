@@ -1,6 +1,5 @@
 package dao;
 
-import java.security.Timestamp;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import gym.modelo.RegistroLogin;
 import gym.modelo.Rol;
 import gym.modelo.Usuario;
@@ -150,19 +148,6 @@ public class UsuarioDAO {
         }
     }
  
-    private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) throws SQLException {
-        try (ResultSet rst = pstm.getResultSet()) {
-            while (rst.next()) {
-                int idUsuario = rst.getInt("idUsuario");
-                String nombreUsuario = rst.getString("nombreUsuario");
-                String contrasena = rst.getString("contrasena");
-                boolean habilitado = rst.getBoolean("habilitado");
-
-                Usuario usuario = new Usuario(idUsuario, nombreUsuario, contrasena, habilitado);
-                usuarios.add(usuario);
-            }
-        }				
-    }
 	
     public List<Usuario> buscar(String usuario, String password) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
@@ -295,6 +280,23 @@ public class UsuarioDAO {
 	        e.printStackTrace();
 	    } 
 	}
+	
+	/* private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) {
+	        ResultSet rst = null;
+	        try {
+	            rst = pstm.getResultSet();
+	            while (rst.next()) {
+	                Usuario usuario = new Usuario(
+	                		rst.getInt(1), 
+	                		rst.getString(2), 
+	                		rst.getString(3), 
+	                		rst.getBoolean(4));
+	                usuarios.add(usuario);
+	            }
+	        } catch (SQLException e) {
+	            System.err.println("Error al transformar ResultSet en Usuario: " + e.getMessage());
+	        } 
+	    }*/
 	
 	
 

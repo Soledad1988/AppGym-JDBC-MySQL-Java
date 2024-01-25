@@ -7,8 +7,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import conexion.Conexion;
 import gym.modelo.Gastos;
 
 public class ReporteGastosDAO {
@@ -21,15 +19,11 @@ public class ReporteGastosDAO {
 
 	// Listar reporte de gastos
 	public List<Gastos> reporteGastos() {
-		
-	    //Conexion factory = new Conexion();
-	   // Connection con = null;
-	    
+
 	    List<Gastos> resultado = new ArrayList<>();
 
 	    try {
-	    	// Conexion factory = Conexion.getInstance();
-	       // con = factory.recuperaConexion();
+	    
 	        final String sql = "SELECT fechaGasto, nombreGasto, descripcion, costo FROM gastos";
 
 	        try (PreparedStatement stm = con.prepareStatement(sql)) {
@@ -54,12 +48,8 @@ public class ReporteGastosDAO {
 	    return resultado;
 	}
     
-    
-    public double obtenerSumaCostosPorMes(int numeroMes, int año) throws SQLException {
-        	// Conexion factory = new Conexion();
-             //final Connection con = factory.recuperaConexion();
-    	 Conexion factory = Conexion.getInstance();
-
+    public double obtenerSumaCostosPorMes(int numeroMes, int año) {
+    	try {
              String sql = "SELECT SUM(costo) AS resultado FROM gastos WHERE MONTH(fechaGasto) = ? AND YEAR(fechaGasto) = ?";
 
              try (PreparedStatement stm = con.prepareStatement(sql)) {
@@ -71,16 +61,19 @@ public class ReporteGastosDAO {
                          // Obtener el resultado de la suma
                          return resultSet.getDouble("resultado");
                      }
-                 }
-             } catch (SQLException e) {
-                 e.printStackTrace();
-             }
-
+                  }
+               } 
+             }catch (SQLException e) {
+     	        System.err.println("Error al realizar la consulta: " + e.getMessage());
+     	    } 
              // En caso de error o si no hay resultados, retornar un valor indicativo
              return 0;   
     }
     
-    public List<Gastos> listarGastosPorMes(int numeroDeMes, int año) throws SQLException {
+    public List<Gastos> listarGastosPorMes(int numeroDeMes, int año) {
+    	
+    	try {
+    		
         String sql = "SELECT * FROM gastos WHERE MONTH(fechaGasto) = ? AND YEAR(fechaGasto) = ?";
 
         try (PreparedStatement stm = con.prepareStatement(sql)) {
@@ -99,24 +92,14 @@ public class ReporteGastosDAO {
                     );
                     gastos.add(gasto);
                 }
-
                 return gastos;
             }
-        } catch (SQLException e) {
+          }
+    	} catch (SQLException e) {
             e.printStackTrace();
             return Collections.emptyList();
-        }
+    	}
     }
-    
-    
- // Método auxiliar para obtener el nombre del mes según su número
-    /*private String obtenerNombreMes(int numeroDeMes) {
-        String[] nombresMeses = {"ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"};
-        if (numeroDeMes >= 1 && numeroDeMes <= nombresMeses.length) {
-            return nombresMeses[numeroDeMes - 1];
-        } else {
-            throw new IllegalArgumentException("Número de mes no válido: " + numeroDeMes);
-        }
-    }*/
+    	 
     
 }
