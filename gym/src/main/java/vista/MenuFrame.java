@@ -37,17 +37,11 @@ public class MenuFrame extends JFrame {
 	 private JButton btnNuevoUsuario;
 	 private JButton listaClientes;
 	 private JButton btnGananciaPerdida;
-
 	 
-	 public MenuFrame() {
-		 super("Gym-Fitness");
-		}
-
-	
+	 
 	public MenuFrame(Set<Rol> roles) {
 		super("Gym-Fitness");
 
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 647, 375);
 		contentPane = new JPanel();
@@ -63,7 +57,7 @@ public class MenuFrame extends JFrame {
 		
 		JButton botonNuevoClientes = new JButton("Nuevo Cliente");
 		botonNuevoClientes.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		botonNuevoClientes.setBounds(31, 59, 168, 23);
+		botonNuevoClientes.setBounds(31, 59, 195, 23);
 		contentPane.add(botonNuevoClientes);
 		
 		botonNuevoClientes.addActionListener(new ActionListener() {
@@ -81,7 +75,7 @@ public class MenuFrame extends JFrame {
 		
 		listaClientes = new JButton("Lista Clientes");
 		listaClientes.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		listaClientes.setBounds(31, 195, 168, 23);
+		listaClientes.setBounds(31, 195, 195, 23);
 		contentPane.add(listaClientes);
 		
 		listaClientes.addActionListener(new ActionListener() {
@@ -99,7 +93,7 @@ public class MenuFrame extends JFrame {
 		
 		JButton reporteGastos = new JButton("Reporte Gastos");
 		reporteGastos.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		reporteGastos.setBounds(31, 161, 168, 23);
+		reporteGastos.setBounds(31, 161, 195, 23);
 		contentPane.add(reporteGastos);
 		
 		reporteGastos.addActionListener(new ActionListener() {
@@ -122,7 +116,7 @@ public class MenuFrame extends JFrame {
 		
 		JButton btnAltaGastos = new JButton("Registrar Gastos");
 		btnAltaGastos.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnAltaGastos.setBounds(31, 127, 168, 23);
+		btnAltaGastos.setBounds(31, 127, 195, 23);
 		contentPane.add(btnAltaGastos);
 		
 		btnAltaGastos.addActionListener(new ActionListener() {
@@ -140,13 +134,13 @@ public class MenuFrame extends JFrame {
 	
 		JButton botonRegistroCuotas = new JButton("Registro Cuotas");
 		botonRegistroCuotas.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		botonRegistroCuotas.setBounds(31, 93, 168, 23);
+		botonRegistroCuotas.setBounds(31, 93, 195, 23);
 		contentPane.add(botonRegistroCuotas);
 		
 		btnNuevoUsuario = new JButton("Nuevo Usuario");
 		btnNuevoUsuario.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		//JButton btnNuevoUsuario = new JButton("Nuevo Usuario");
-		btnNuevoUsuario.setBounds(32, 272, 168, 23);
+		btnNuevoUsuario.setBounds(32, 272, 194, 23);
 		contentPane.add(btnNuevoUsuario);
 		
 		btnNuevoUsuario.addActionListener(new ActionListener() {
@@ -177,7 +171,7 @@ public class MenuFrame extends JFrame {
 		
 		btnGananciaPerdida = new JButton("Reporte Ganancia/Perdida");
 		btnGananciaPerdida.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		btnGananciaPerdida.setBounds(31, 229, 168, 23);
+		btnGananciaPerdida.setBounds(31, 229, 195, 23);
 		contentPane.add(btnGananciaPerdida);
 		
 		btnGananciaPerdida.addActionListener(new ActionListener() {

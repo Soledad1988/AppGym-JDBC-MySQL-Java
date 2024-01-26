@@ -35,7 +35,7 @@ public class ListaClientesFrame extends JFrame {
 
     private JLabel labelNombre, labelApellido, labelDireccion;
     private JTextField textoNombre, textoApellido, textoDireccion;
-    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonMenu;
+    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar;
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
@@ -138,17 +138,14 @@ public class ListaClientesFrame extends JFrame {
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
-        botonMenu = new JButton("Menù");
         
         botonEliminar.setBounds(15, 530, 93, 20);
         botonModificar.setBounds(110, 530, 93, 20);
-        botonMenu.setBounds(213, 530, 80, 20);
         
 
         container.add(tabla);
         container.add(botonEliminar);
         container.add(botonModificar);
-        container.add(botonMenu);
         
         JScrollPane scrollPane = new JScrollPane(tabla);
         scrollPane.setBounds(10, 293, 760, 233);
@@ -235,20 +232,9 @@ public class ListaClientesFrame extends JFrame {
             
         });
         
-        botonMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) { 
-            	volverMenu();          	
-            }
-            
-        });
 
     }
-
     
-    private void volverMenu(){
-        menuFrame = new MenuFrame();
-    }
-
     private void limpiarTabla() {
         modelo.getDataVector().clear();
     }

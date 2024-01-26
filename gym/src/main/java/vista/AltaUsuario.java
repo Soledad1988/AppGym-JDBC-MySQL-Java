@@ -31,7 +31,7 @@ public class AltaUsuario extends JFrame {
 
     private JLabel labelNombre, labelApellido, labelRol;
     private JTextField textoNombreUsuario, textoRol;
-    private JButton botonGuardar, botonModificar, botonHabilitarDesabilitar, botonMenu, botonReporteUsuario;
+    private JButton botonGuardar, botonModificar, botonHabilitarDeshabilitar, botonReporteUsuario;
     private DefaultTableModel modelo;
     private UsuarioController usuarioController;
     private JTable tabla;
@@ -79,10 +79,6 @@ public class AltaUsuario extends JFrame {
         textoPassword = new JPasswordField();
         textoPassword.setBounds(183, 127, 130, 20);
         getContentPane().add(textoPassword);
-        
-        JButton botonReporteUsuario = new JButton("Reporte");
-        botonReporteUsuario.setBounds(211, 411, 93, 20);
-        getContentPane().add(botonReporteUsuario);
 
         configurarAccionesDelFormulario();
     }
@@ -106,18 +102,15 @@ public class AltaUsuario extends JFrame {
         // Ocultar la columna de ID
         tabla.removeColumn(tabla.getColumnModel().getColumn(0));
 
-        botonHabilitarDesabilitar = new JButton("Habilitar / Desabilitar");
+        botonHabilitarDeshabilitar = new JButton("Habilitar / Deshabilitar");
         botonModificar = new JButton("Modificar");
-        botonMenu = new JButton("Menú");
         botonReporteUsuario = new JButton("Reporte");
         
-        botonHabilitarDesabilitar.setBounds(267, 381, 133, 20);
-        botonModificar.setBounds(158, 381, 93, 20);
-        botonMenu.setBounds(89, 412, 93, 20);
-        botonReporteUsuario.setBounds(211, 412, 93, 20);
-        container.add(botonHabilitarDesabilitar);
+        botonHabilitarDeshabilitar.setBounds(221, 412, 145, 20);
+        botonModificar.setBounds(220, 381, 145, 20);
+        botonReporteUsuario.setBounds(52, 412, 146, 20);
+        container.add(botonHabilitarDeshabilitar);
         container.add(botonModificar);
-        container.add(botonMenu);
         container.add(botonReporteUsuario);
         
         JScrollPane scrollPane = new JScrollPane(tabla); 
@@ -158,7 +151,7 @@ public class AltaUsuario extends JFrame {
         container.add(listaRoles);
 
         botonGuardar = new JButton("Guardar");
-        botonGuardar.setBounds(32, 381, 99, 20);
+        botonGuardar.setBounds(52, 381, 146, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);
@@ -179,9 +172,20 @@ public class AltaUsuario extends JFrame {
             }
         });
 
-        botonHabilitarDesabilitar.addActionListener(new ActionListener() {
+        botonHabilitarDeshabilitar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
             	cambiarEstadoHabilitado();
+            }
+        });
+        
+        botonReporteUsuario.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            	try {
+					reporteInicioSesion();
+				} catch (SQLException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             }
         });
 
@@ -192,38 +196,11 @@ public class AltaUsuario extends JFrame {
             
         });
         
-        botonMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) { 
-            	volverMenu();          	
-            }
-            
-        });
-        
-        botonReporteUsuario.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) { 
-					try {
-						reporteInicioSesion();
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				         	
-            }
-            
-        });
-        
         cargarRoles();
 
     }
 
-    
-    private void volverMenu() {
-        dispose();
-
-        MenuFrame menuFrame = new MenuFrame();
-        menuFrame.setVisible(true);        
-    }
-    
+   
     private void cambiarEstadoHabilitado() {
         int filaSeleccionada = tabla.getSelectedRow();
         if (filaSeleccionada == -1) {

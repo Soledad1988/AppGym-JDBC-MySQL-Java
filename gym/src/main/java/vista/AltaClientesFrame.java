@@ -35,7 +35,7 @@ public class AltaClientesFrame extends JFrame {
 
     private JLabel labelNombre, labelApellido, labelDireccion;
     private JTextField textoNombre, textoApellido, textoDireccion;
-    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonMenu;
+    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar;
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
@@ -136,17 +136,14 @@ public class AltaClientesFrame extends JFrame {
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
-        botonMenu = new JButton("Menú");
         
-        botonEliminar.setBounds(238, 532, 98, 20);
-        botonModificar.setBounds(346, 532, 93, 20);
-        botonMenu.setBounds(449, 532, 98, 20);
+        botonEliminar.setBounds(297, 518, 98, 20);
+        botonModificar.setBounds(405, 518, 93, 20);
         
 
         container.add(tabla);
         container.add(botonEliminar);
         container.add(botonModificar);
-        container.add(botonMenu);
         
         JScrollPane scrollPane = new JScrollPane(tabla);
         scrollPane.setBounds(10, 303, 760, 204);
@@ -234,23 +231,10 @@ public class AltaClientesFrame extends JFrame {
             }
             
         });
-        
-        botonMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) { 
-            	volverMenu();          	
-            }
-            
-        });
+
 
     }
 
-    
-    private void volverMenu() {
-        // Cerrar la ventana actual
-        dispose();
-        MenuFrame menuFrame = new MenuFrame();
-        menuFrame.setVisible(true);
-    }
 
     private void limpiarTabla() {
         modelo.getDataVector().clear();

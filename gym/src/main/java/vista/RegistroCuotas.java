@@ -33,7 +33,7 @@ public class RegistroCuotas extends JFrame {
 
     private JLabel labelApellido;
     private JTextField textoApellido;
-    private JButton botonAsignarCuota, botonBuscar, botonMenu;
+    private JButton botonAsignarCuota, botonBuscar;
     private JTable tabla;
     private DefaultTableModel modelo;
     private ClienteController clienteController;
@@ -71,7 +71,7 @@ public class RegistroCuotas extends JFrame {
         
         JLabel labelFecha = new JLabel("Fecha Pago");
         labelFecha.setForeground(Color.BLACK);
-        labelFecha.setBounds(239, 395, 99, 15);
+        labelFecha.setBounds(240, 448, 99, 15);
         getContentPane().add(labelFecha);
         
         textFechaPago = new JDateChooser();
@@ -81,7 +81,7 @@ public class RegistroCuotas extends JFrame {
         });
         textFechaPago.getCalendarButton().setBackground(SystemColor.textHighlight);
         textFechaPago.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
-        textFechaPago.setBounds(322, 392, 175, 20);
+        textFechaPago.setBounds(323, 445, 175, 20);
         textFechaPago.getCalendarButton().setBounds(268, 0, 21, 33);
         textFechaPago.setBackground(Color.WHITE);
         textFechaPago.setBorder(new LineBorder(SystemColor.window));
@@ -92,11 +92,11 @@ public class RegistroCuotas extends JFrame {
         
         JLabel lblMonto = new JLabel("Monto");
         lblMonto.setForeground(Color.BLACK);
-        lblMonto.setBounds(26, 395, 57, 15);
+        lblMonto.setBounds(27, 448, 57, 15);
         getContentPane().add(lblMonto);
         
         textMonto = new JTextField();
-        textMonto.setBounds(73, 392, 144, 20);
+        textMonto.setBounds(74, 445, 144, 20);
         getContentPane().add(textMonto);
         
         JLabel lblTitulo = new JLabel("Registro Cuotas");
@@ -123,12 +123,9 @@ public class RegistroCuotas extends JFrame {
 
 
         tabla.setBounds(16, 112, 760, 172);
-        botonMenu = new JButton("Menú");
-        botonMenu.setBounds(338, 489, 135, 20);
         
 
         container.add(tabla);
-        container.add(botonMenu);
 
         JScrollPane scrollPane = new JScrollPane(tabla);
         scrollPane.setBounds(16, 112, 760, 262);
@@ -151,7 +148,7 @@ public class RegistroCuotas extends JFrame {
 
         botonAsignarCuota = new JButton("Asignar Cuota");
         botonBuscar = new JButton("Buscar");
-        botonAsignarCuota.setBounds(587, 392, 138, 20);
+        botonAsignarCuota.setBounds(588, 445, 138, 20);
         botonBuscar.setBounds(426, 62, 99, 20);
         
         container.add(labelApellido);
@@ -181,23 +178,9 @@ public class RegistroCuotas extends JFrame {
             }
         });
         
-        botonMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) { 
-            	volverMenu();          	
-            }
-            
-        });
 
     }
-
-    
-    private void volverMenu() {
-        dispose();
-
-        MenuFrame menuFrame = new MenuFrame();
-        menuFrame.setVisible(true);
-    }
-     
+ 
      
    private List<Cliente> ListarClientes() {
 		return this.clienteController.listar();

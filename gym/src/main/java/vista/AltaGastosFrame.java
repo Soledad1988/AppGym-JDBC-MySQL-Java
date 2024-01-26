@@ -33,7 +33,7 @@ public class AltaGastosFrame extends JFrame {
 
     private JLabel labelNombreGasto, labelDescripcion, labelCosto;
     private JTextField textoNombreGasto, textoDescripcion, textoCosto;
-    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonMenu;
+    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar;
     private JTable tabla;
     private DefaultTableModel modelo;
     private GastosController gastoController;
@@ -119,17 +119,14 @@ public class AltaGastosFrame extends JFrame {
 
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
-        botonMenu = new JButton("Menú");
         
-        botonEliminar.setBounds(246, 495, 96, 20);
-        botonModificar.setBounds(356, 495, 94, 20);
-        botonMenu.setBounds(467, 495, 96, 20);
+        botonEliminar.setBounds(267, 491, 96, 20);
+        botonModificar.setBounds(377, 491, 94, 20);
         
 
         container.add(tabla);
         container.add(botonEliminar);
         container.add(botonModificar);
-        container.add(botonMenu);
         
         JScrollPane scrollPane = new JScrollPane(tabla); // Añadir la tabla a un JScrollPane
         scrollPane.setBounds(10, 269, 760, 215);
@@ -217,23 +214,7 @@ public class AltaGastosFrame extends JFrame {
             }
             
         });
-        
-        botonMenu.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) { 
-            	volverMenu();          	
-            }
-            
-        });
 
-    }
-
-    
-    private void volverMenu() {
-        // Cerrar la ventana actual
-        dispose();
-        
-        MenuFrame menuFrame = new MenuFrame();
-        menuFrame.setVisible(true);
     }
 
     private void limpiarTabla() {
