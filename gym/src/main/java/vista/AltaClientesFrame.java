@@ -12,8 +12,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -35,13 +37,14 @@ public class AltaClientesFrame extends JFrame {
 
     private JLabel labelNombre, labelApellido, labelDireccion;
     private JTextField textoNombre, textoApellido, textoDireccion;
-    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar;
+    private JButton botonGuardar, botonModificar, botonLimpiar, botonEliminar, botonVerTurnos;
     private JTable tabla;
     private DefaultTableModel modelo;
+    private JComboBox<String> boxHorario;
     private ClienteController clienteController;
     
     public static JDateChooser textFechaIngreso;
-    private JTextField textTelefono;
+    private JTextField textoTelefono;
     
     
     public static void main(String[] args) {
@@ -96,9 +99,9 @@ public class AltaClientesFrame extends JFrame {
         lblTelefono.setBounds(10, 220, 240, 15);
         getContentPane().add(lblTelefono);
         
-        textTelefono = new JTextField();
-        textTelefono.setBounds(10, 234, 265, 20);
-        getContentPane().add(textTelefono);
+        textoTelefono = new JTextField();
+        textoTelefono.setBounds(10, 234, 265, 20);
+        getContentPane().add(textoTelefono);
         
         JLabel Logo = new JLabel("");
         Logo.setIcon(new ImageIcon("C:\\Users\\brent\\eclipse-workspace\\gym.png"));
@@ -109,6 +112,11 @@ public class AltaClientesFrame extends JFrame {
         lblTitulo.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
         lblTitulo.setBounds(275, 0, 213, 30);
         getContentPane().add(lblTitulo);
+        
+        JLabel lblHorario = new JLabel("Horario");
+        lblHorario.setForeground(Color.BLACK);
+        lblHorario.setBounds(10, 260, 240, 15);
+        getContentPane().add(lblHorario);
 
         configurarAccionesDelFormulario();
     }
@@ -124,6 +132,7 @@ public class AltaClientesFrame extends JFrame {
         modelo.addColumn("Apellido");
         modelo.addColumn("Dirección");
         modelo.addColumn("Teléfono");
+        modelo.addColumn("Horario");
         
         tabla.setModel(modelo);
         
@@ -137,8 +146,8 @@ public class AltaClientesFrame extends JFrame {
         botonEliminar = new JButton("Eliminar");
         botonModificar = new JButton("Modificar");
         
-        botonEliminar.setBounds(297, 518, 98, 20);
-        botonModificar.setBounds(405, 518, 93, 20);
+        botonEliminar.setBounds(296, 532, 98, 20);
+        botonModificar.setBounds(404, 532, 93, 20);
         
 
         container.add(tabla);
@@ -146,7 +155,7 @@ public class AltaClientesFrame extends JFrame {
         container.add(botonModificar);
         
         JScrollPane scrollPane = new JScrollPane(tabla);
-        scrollPane.setBounds(10, 303, 760, 204);
+        scrollPane.setBounds(10, 339, 760, 182);
         container.add(scrollPane);
 
         setSize(800, 600);
@@ -173,15 +182,31 @@ public class AltaClientesFrame extends JFrame {
         textoDireccion = new JTextField();
 
         // TODO
+        //JComboBox<String> boxHorario = new JComboBox<>();
+        boxHorario = new JComboBox<>();
+        boxHorario.setModel(new DefaultComboBoxModel<>(new String[] {
+            "08:00 a 09:00", "09:00 a 10:00", 
+            "10:00 a 11:00", "11:00 a 12:00", "12:00 a 13:00", 
+            "13:00 a 14:00", "14:00 a 15:00", "15:00 a 16:00", 
+            "16:00 a 17:00", "17:00 a 18:00", "18:00 a 19:00", 
+            "19:00 a 20:00", "20:00 a 21:00", "21:00 a 22:00"
+        }));
+
+        boxHorario.setBounds(10, 275, 265, 22);
+        getContentPane().add(boxHorario);
         
         textoNombre.setBounds(10, 97, 265, 20);
         textoApellido.setBounds(10, 143, 265, 20);
         textoDireccion.setBounds(10, 189, 265, 20);
+        
+        botonVerTurnos = new JButton("Ver Turnos");
+        botonVerTurnos.setBounds(260, 308, 120, 20);
+        container.add(botonVerTurnos);
 
         botonGuardar = new JButton("Guardar");
         botonLimpiar = new JButton("Limpiar");
-        botonGuardar.setBounds(39, 265, 99, 20);
-        botonLimpiar.setBounds(148, 265, 99, 20);
+        botonGuardar.setBounds(42, 308, 99, 20);
+        botonLimpiar.setBounds(151, 308, 99, 20);
 
         container.add(labelNombre);
         container.add(labelApellido);
@@ -191,6 +216,7 @@ public class AltaClientesFrame extends JFrame {
         container.add(textoDireccion);
         container.add(botonGuardar);
         container.add(botonLimpiar);
+        container.add(botonVerTurnos);
        
         
     }
@@ -232,6 +258,11 @@ public class AltaClientesFrame extends JFrame {
             
         });
 
+        botonVerTurnos.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                abrirReporteTurnos();
+            }
+        });
 
     }
 
@@ -242,6 +273,15 @@ public class AltaClientesFrame extends JFrame {
 
     private boolean tieneFilaElegida() {
         return tabla.getSelectedRowCount() == 0 || tabla.getSelectedColumnCount() == 0;
+    }
+    
+    private void abrirReporteTurnos() {
+        try {
+        	TurnosFrame reporteFrame = new TurnosFrame();
+            reporteFrame.setVisible(true);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     
     private void actualizar() {
@@ -258,6 +298,9 @@ public class AltaClientesFrame extends JFrame {
                     textoNombre.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 2));
                     textoApellido.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 3));
                     textoDireccion.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 4));
+                    textoTelefono.setText((String) modelo.getValueAt(tabla.getSelectedRow(), 5));
+                    
+                    String horarioSeleccionado = (String) boxHorario.getSelectedItem();
 
                     // Luego, puedes imprimir los valores para verificar
                     System.out.println("ID to update: " + id);
@@ -266,7 +309,8 @@ public class AltaClientesFrame extends JFrame {
                     System.out.println("Texto Direccion: " + textoDireccion.getText());
 
                     // Finalmente, llamar al método actualizar del controlador
-                    this.clienteController.actualizar(textoNombre.getText(), textoApellido.getText(), textoDireccion.getText(), id);
+                    this.clienteController.actualizar(textoNombre.getText(), textoApellido.getText(), 
+                    		textoDireccion.getText(), textoTelefono.getText(), horarioSeleccionado , id);
 
                     JOptionPane.showMessageDialog(this, String.format("Registro modificado con éxito"));
                 }, () -> JOptionPane.showMessageDialog(this, "Por favor, elije un registro"));
@@ -306,31 +350,32 @@ public class AltaClientesFrame extends JFrame {
 						clientes.getNombre(), 
 						clientes.getApellido(), 
 						clientes.getDireccion(),
-						clientes.getTelefono() });
+						clientes.getTelefono(),
+						clientes.getHorario()});
 			}
 		} catch (Exception e) {
 			throw e;
 		}
 	}
     
-    private void guardar() throws SQLException {
-             
-    	String fechaIngreso = ((JTextField)textFechaIngreso.getDateEditor().getUiComponent()).getText();
-		
-		Cliente cliente = new Cliente(
-				java.sql.Date.valueOf(fechaIngreso),
-          		textoNombre.getText(), 
-          		textoApellido.getText(), 
-          		textoDireccion.getText(),
-          		textTelefono.getText());	
-		 	
-		this.clienteController.guardar(cliente);	
- 			
- 		JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+   private void guardar() throws SQLException {
+	    String fechaIngreso = ((JTextField) textFechaIngreso.getDateEditor().getUiComponent()).getText();
+	    String horarioSeleccionado = (String) boxHorario.getSelectedItem();
 
- 	    this.limpiarFormulario();
-    							
-    }
+	    Cliente cliente = new Cliente(
+	            java.sql.Date.valueOf(fechaIngreso),
+	            textoNombre.getText(),
+	            textoApellido.getText(),
+	            textoDireccion.getText(),
+	            textoTelefono.getText());
+	    cliente.setHorario(horarioSeleccionado);
+
+	    this.clienteController.guardar(cliente);
+
+	    JOptionPane.showMessageDialog(this, "Registrado con éxito!");
+
+	    this.limpiarFormulario();
+	}
     
 	@SuppressWarnings("static-access")
 	private void limpiarFormulario() {
@@ -338,7 +383,6 @@ public class AltaClientesFrame extends JFrame {
         this.textoNombre.setText("");
         this.textoApellido.setText("");
         this.textoDireccion.setText("");
-        this.textTelefono.setText("");
+        this.textoTelefono.setText("");
     }
-
 }
