@@ -20,14 +20,15 @@ public class ClienteDAO {
     
     public void guardar(Cliente cliente) {
 		try {
-			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, telefono, pago) VALUES (?, ?, ?, ?, ?,?)";
+			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, telefono, horario, pago) VALUES (?, ?, ?, ?, ?, ?, ?)";
 			try (PreparedStatement stm = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 				stm.setDate(1, cliente.getFechaAlta());
 				stm.setString(2, cliente.getNombre());
 				stm.setString(3, cliente.getApellido());
 				stm.setString(4, cliente.getDireccion());
 				stm.setString(5, cliente.getTelefono());
-				stm.setBoolean(6, false);
+				stm.setString(6, cliente.getHorario());
+				stm.setBoolean(7, false);
 				stm.execute();
 				try (ResultSet rst = stm.getGeneratedKeys()) {
 					while (rst.next()) {
@@ -50,9 +51,11 @@ public class ClienteDAO {
 		}
 	}
     
-    public void actualizar(String nombre, String apellido, String direccion, Integer id) {
+    public void actualizar(String nombre, String apellido, String direccion,
+    		String telefono, String horario, Integer id) {
     	
-    	String sql = "UPDATE clientes SET nombre = ?, apellido = ?, direccion = ? WHERE id = ?";
+    	String sql = "UPDATE clientes SET nombre = ?, apellido = ?, "
+    			+ "direccion = ?, telefono = ?, horario = ? WHERE id = ?";
     	System.out.println("Consulta SQL: " + sql);
         
         System.out.println("ID: " + id);
@@ -64,7 +67,9 @@ public class ClienteDAO {
             stm.setString(1, nombre);
             stm.setString(2, apellido);
             stm.setString(3, direccion);
-            stm.setInt(4, id);
+            stm.setString(4, telefono);
+            stm.setString(5, horario);
+            stm.setInt(6, id);
 
             int rowsUpdated = stm.executeUpdate();
             System.out.println(rowsUpdated + " fila(s) modificadas.");
@@ -77,7 +82,7 @@ public class ClienteDAO {
     public List<Cliente> listar() {
 		List<Cliente> cliente = new ArrayList<Cliente>();
 		try {
-			String sql = "SELECT id, fechaAlta, nombre, apellido, direccion, telefono FROM clientes";
+			String sql = "SELECT id, fechaAlta, nombre, apellido, direccion, telefono, horario FROM clientes";
 
 			try (PreparedStatement stm = con.prepareStatement(sql)) {
 				stm.execute();
@@ -122,6 +127,14 @@ public class ClienteDAO {
 	    return clientes;
 	}
     
+    //Reporte turnos
+    public int contarPersonasPorHorario(String horario) {
+        return this.listar().stream()
+        		.filter(cliente -> horario != null && horario.equals(cliente.getHorario()))
+                .mapToInt(cliente -> 1)
+                .sum();
+    }
+    
     private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) {
         ResultSet rst = null;
         try {
@@ -133,7 +146,8 @@ public class ClienteDAO {
                 		rst.getString(3), 
                 		rst.getString(4),
                         rst.getString(5), 
-                        rst.getString(6), 
+                        rst.getString(6),
+                        rst.getString(7),
                         null);
                 clientes.add(cliente);
             }

@@ -28,8 +28,12 @@ public class ClienteController {
 			this.clienteDAO.eliminar(id);
 		}
 
-		public void actualizar(String nombre, String apellido, String direccion, Integer id) {
-			this.clienteDAO.actualizar(nombre, apellido, direccion, id);
+		public void actualizar(String nombre, String apellido, String direccion, String telefono, String horario, Integer id) {
+			this.clienteDAO.actualizar(nombre, apellido, direccion, telefono, horario, id);
+		}
+		
+		public int contarPersonasPorHorario(String horario) {
+			return this.clienteDAO.contarPersonasPorHorario(horario);
 		}
 		 
 		public List<Cliente> buscarPorApellido(String apellido){
