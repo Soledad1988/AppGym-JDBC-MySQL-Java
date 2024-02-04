@@ -2,6 +2,15 @@ package gym.modelo;
 
 import java.sql.Timestamp;
 
+/**
+ * Representa un registro de inicio de sesión en el sistema.
+ * 
+ * <p>La clase encapsula la información relacionada con un registro de inicio de sesión,
+ * incluyendo su identificador, nombre de usuario y la fecha y hora del inicio de sesión.</p>
+ * 
+ * <p>La clase proporciona constructores para crear instancias con diferentes conjuntos
+ * de atributos. Los métodos de acceso y modificación permiten interactuar con los datos del registro.</p>
+ */
 public class RegistroLogin {
 
 	private int idUsuario;

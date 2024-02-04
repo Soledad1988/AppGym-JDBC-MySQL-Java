@@ -4,6 +4,15 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Representa un usuario en el sistema.
+ * 
+ * <p>La clase encapsula la información relacionada con un usuario, incluyendo su identificador,
+ * nombre de usuario, contraseña, si esta habilitado, y el rol asignado.</p>
+ * 
+ * <p>La clase proporciona constructores para la creación de instancias con diferentes conjuntos
+ * de atributos. Los métodos de acceso y modificación permiten interactuar con los datos del cliente.</p>
+ */
 public class Usuario {
 	
 	private Integer idUsuario; 
@@ -83,7 +92,14 @@ public class Usuario {
 		this.roles = roles;
 	}
 	
-	 //Convertir los roles a string antes, asi carga la tabla en la vista
+	/**
+	 * Obtiene una representación en cadena de los roles del usuario.
+	 *
+	 * <p>Este método convierte los roles del usuario a cadenas de texto y las une en una sola cadena,
+	 * separadas por comas.</p>
+	 *
+	 * @return Una cadena que representa los roles del usuario.
+	 */
     public String getRolesAsString() {
  	    return roles.stream()
  	                .map(Rol::toString)

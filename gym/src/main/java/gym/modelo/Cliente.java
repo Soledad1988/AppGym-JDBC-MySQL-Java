@@ -2,6 +2,15 @@ package gym.modelo;
 
 import java.sql.Date;
 
+/**
+ * Representa un cliente en el sistema.
+ * 
+ * <p>La clase encapsula la información relacionada con un cliente, incluyendo su identificador,
+ * fecha de alta, nombre, apellido, dirección, teléfono, horario preferido y estado de pago.</p>
+ * 
+ * <p>La clase proporciona constructores para la creación de instancias con diferentes conjuntos
+ * de atributos. Los métodos de acceso y modificación permiten interactuar con los datos del cliente.</p>
+ */
 public class Cliente {
 
 	private Integer id;

@@ -1,5 +1,11 @@
 package gym.modelo;
 
+/**
+ * Enumeración que representa roles en el sistema.
+ * 
+ * <p>Los roles definen diferentes niveles de acceso y permisos en la aplicación.
+ * En este enum, se definen dos roles: ADMINISTRADOR y USUARIO_REGULAR.</p>
+ */
 public enum Rol {
 	
 	ADMINISTRADOR("ADMINISTRADOR"),

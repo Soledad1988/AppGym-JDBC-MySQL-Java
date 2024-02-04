@@ -2,6 +2,15 @@ package gym.modelo;
 
 import java.sql.Date;
 
+/**
+ * Representa un gasto en el sistema.
+ * 
+ * <p>La clase encapsula la información relacionada con un gasto, incluyendo su identificador,
+ * fecha del gasto, nombre del gasto, descripción, dirección, y costo.</p>
+ * 
+ * <p>La clase proporciona constructores para la creación de instancias con diferentes conjuntos
+ * de atributos. Los métodos de acceso y modificación permiten interactuar con los datos del gasto.</p>
+ */
 public class Gastos {
 
 	private Integer idGasto;

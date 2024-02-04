@@ -2,6 +2,15 @@ package gym.modelo;
 
 import java.sql.Date;
 
+/**
+ * Representa una cuota en el sistema.
+ * 
+ * <p>La clase encapsula la información relacionada con una cuota, incluyendo su identificador,
+ * el identificador del cliente al que pertenece, el monto abonado y la fecha de pago.</p>
+ * 
+ * <p>La clase proporciona constructores para la creación de instancias con diferentes conjuntos
+ * de atributos. Los métodos de acceso y modificación permiten interactuar con los datos de la cuota.</p>
+ */
 public class Cuota {
 
 	private Integer idCuota;
