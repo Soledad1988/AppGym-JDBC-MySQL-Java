@@ -7,17 +7,34 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
 import gym.modelo.Cliente;
 
+/**
+ * Esta clase proporciona métodos para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
+ * en la tabla de clientes de la base de datos.
+ */
 public class ClienteDAO {
 
+	/**
+     * La conexión a la base de datos utilizada por este DAO.
+     */
 	final private Connection con;
 
+	/**
+     * Constructor que inicializa un nuevo ClienteDAO con la conexión especificada.
+     *
+     * @param con La conexión a la base de datos que se utilizará para las operaciones del DAO.
+     */
 	public ClienteDAO(Connection con) {
 		this.con = con;
 	}
     
+	/**
+	 * Realiza el registro de un nuevo cliente en el sistema.
+	 * @param cliente es el objeto Cliente que representa la información del nuevo cliente. 
+	 * 
+	 * @throws RuntimeException Si ocurre un error durante la ejecución del registro.
+	 */
     public void guardar(Cliente cliente) {
 		try {
 			String sql = "INSERT INTO clientes (fechaAlta, nombre, apellido, direccion, telefono, horario, pago) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -41,6 +58,10 @@ public class ClienteDAO {
 		}
 	}
     
+    /**
+     * Elimina el registro de un cliente en el sistema
+     * @param id Identificador único del cliente que se desea eliminar.
+     */
     public void eliminar(Integer id) {
     	String sql = "DELETE FROM clientes WHERE id = ?";
 		try (PreparedStatement stm = con.prepareStatement(sql)) {
@@ -51,6 +72,18 @@ public class ClienteDAO {
 		}
 	}
     
+    /**
+     * Actualiza el registro de un cliente en el sistema.
+     * @param nombre: Nombre actualizado del cliente.
+     * @param apellido: Apellido actualizado del cliente.
+     * @param direccion: Dirección actualizado del cliente.
+     * @param telefono: Número de teléfono actualizado del cliente.
+     * @param horario: Horario preferido actualizado del cliente.
+     * @param id: Identificador único del cliente que se desea actualizar.
+     * 
+     * @throws RuntimeException Si ocurre un error durante la ejecución de la operación de actualización
+     *  o si no se encuentra un cliente con el identificador proporcionado.
+     */
     public void actualizar(String nombre, String apellido, String direccion,
     		String telefono, String horario, Integer id) {
     	
@@ -79,6 +112,11 @@ public class ClienteDAO {
         }
     }
  
+    /**
+     * Recupera una lista de todos los clientes registrados en el sistema.
+     * @return retorna una lista que contiene registros de clientes en el sistema.
+     * La lista puede estar vacía si no hay clientes registrados.
+     */
     public List<Cliente> listar() {
 		List<Cliente> cliente = new ArrayList<Cliente>();
 		try {
@@ -97,6 +135,17 @@ public class ClienteDAO {
 		}
 	}
     
+    
+    /**
+     * Busca en el sistema los clientes registrados cuyo apellido coincide parcial o totalmente
+     * con el apellido proporcionado.
+     * @param apellido a buscar.
+     * @return retorna lista que contiene registros que coinciden con el apellido proporcionado.
+     *         La lista puede estar vacía si no se encuentran coincidencias.
+     *
+     * @throws RuntimeException Si ocurre un error durante la ejecución de la consulta.
+    */
+  
     public List<Cliente> buscarPorApellido(String apellido) {
 	    List<Cliente> clientes = new ArrayList<>();
 
@@ -127,7 +176,12 @@ public class ClienteDAO {
 	    return clientes;
 	}
     
-    //Reporte turnos
+ 
+    /**
+     * Cuenta el número de personas registradas en el sistema que tienen el horario especificado.
+     * @param horario Horario a filtrar.
+     * @return El número de personas cuyo horario coincide con el horario proporcionado.
+     */
     public int contarPersonasPorHorario(String horario) {
         return this.listar().stream()
         		.filter(cliente -> horario != null && horario.equals(cliente.getHorario()))
@@ -135,6 +189,11 @@ public class ClienteDAO {
                 .sum();
     }
     
+    /**
+     * Transforma los resultados de un ResultSet en objetos de la clase Cliente y los agrega a una lista.
+     * @param clientes La lista en la que se agregarán los objetos de la clase Cliente.
+     * @param pstm PreparedStatement con el ResultSet obtenido de la consulta.
+     */
     private void transformarResultSetEnCliente(List<Cliente> clientes, PreparedStatement pstm) {
         ResultSet rst = null;
         try {

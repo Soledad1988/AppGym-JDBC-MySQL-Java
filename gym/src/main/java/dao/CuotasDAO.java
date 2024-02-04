@@ -6,14 +6,31 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Esta clase proporciona métodos para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
+ * en la tabla de clientes de la base de datos.
+ */
 public class CuotasDAO {
 
+	/**
+     * La conexión a la base de datos utilizada por este DAO.
+     */
 	final private Connection con;
 
+	/**
+	 * Constructor que inicializa una nueva CuotasDAO con la conexión especificada.
+	 * @param con La conexión a la base de datos que se utilizará para las operaciones del DAO.
+	 */
 	public CuotasDAO(Connection con) {
 		this.con = con;
 	}
 	
+	/**
+	 * Asignación de cuotas a clientes previamente registrados y actualiza su estado de pago.
+	 * @param idCliente Identificador del cliente que abonó la cuota
+	 * @param monto Monto abonado
+	 * @param fechaPago Fecha de pago.
+	 */
 	public void asignarCuota(Integer idCliente, Double monto, Date fechaPago){
 	    // Primero, insertar la cuota.
 	    String sqlCuota = "INSERT INTO cuotas (clienteId, monto, fechaPago) VALUES (?, ?, ?)";
