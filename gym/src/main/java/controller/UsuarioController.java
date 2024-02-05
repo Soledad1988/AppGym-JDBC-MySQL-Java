@@ -24,10 +24,10 @@ public class UsuarioController {
 	 	public List<Usuario> listar() {
 	 	    return this.usuarioDAO.listar();
 	 	}
-		
+		/*
 		public void eliminar(Integer idUsuario) {
 			this.usuarioDAO.eliminar(idUsuario);
-		}
+		}*/
 
 		public void actualizar(String nombreUsuario, String password, Integer idUsuario) {
 			this.usuarioDAO.actualizar(nombreUsuario, password, idUsuario);

@@ -10,15 +10,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Esta clase proporciona un método para realizar leectura
+ * en la tabla de cuotas de la base de datos.
+ */
 public class ReporteCuotasDAO {
 	
+	/**
+     * La conexión a la base de datos utilizada por este DAO.
+     */
 	final private Connection con;
 
+	/**
+     * Constructor que inicializa un nuevo ReporteCuotasDAO con la conexión especificada.
+     *
+     * @param con La conexión a la base de datos que se utilizará para las operaciones del DAO.
+     */
 	public ReporteCuotasDAO(Connection con) {
 		this.con = con;
 	}
 
-	//Listado de cuotas asignadas por mes y año
+	/**
+	 * Genera una lista de cuotas asignadas, filtrado por mes y año.
+	 * @param numeroMes Hace referencia al mes.
+	 * @param anio hace referencia al año.
+	 * @return retorna una lista segun el mes y año seleccionado.
+	 * @throws SQLException
+	 */
 	public List<Map<String, String>> reporteCuotasPorMesYAnio(int numeroMes, int anio) throws SQLException {
 
 	    final String sql = "SELECT clientes.nombre, clientes.apellido, " +

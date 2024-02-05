@@ -14,15 +14,31 @@ import java.util.Map;
 import conexion.Conexion;
 import gym.modelo.Gastos;
 
+/**
+ * Esta clase proporciona un método para realizar leectura
+ * en la tabla de gastos, clientes y cuotas de la base de datos.
+ */
 public class ReporteMensualDAO {
 	
-
+	/**
+     * La conexión a la base de datos utilizada por este DAO.
+     */
 	final private Connection con;
 
+	/**
+     * Constructor que inicializa un nuevo ReporteMensualDAO con la conexión especificada.
+     *
+     * @param con La conexión a la base de datos que se utilizará para las operaciones del DAO.
+     */
 	public ReporteMensualDAO(Connection con) {
 		this.con = con;
 	}
 	
+	/**
+	 * 
+	 * @return
+	 * @throws SQLException
+	 */
 	public List<Gastos> reporteGastos() throws SQLException {
 		Conexion factory = Conexion.getInstance();
 
@@ -52,6 +68,12 @@ public class ReporteMensualDAO {
         }
     }
     
+	/**
+	 * 
+	 * @param numeroDeMes
+	 * @param año
+	 * @return
+	 */
 	public List<Gastos> listarGastosPorMes(int numeroDeMes, int año) {
         String sql = "SELECT * FROM gastos WHERE MONTH(fechaGasto) = ? AND YEAR(fechaGasto) = ?";
 
@@ -80,7 +102,12 @@ public class ReporteMensualDAO {
         }
     }
 	
-    
+    /**
+     * 
+     * @param numeroMes
+     * @param año
+     * @return
+     */
 	public double obtenerSumaCostosPorMes(int numeroMes, int año){
 
              String consulta = "SELECT SUM(costo) AS resultado FROM gastos WHERE MONTH(fechaGasto) = ? AND YEAR(fechaGasto) = ?";
@@ -104,7 +131,13 @@ public class ReporteMensualDAO {
     }
     
  
-    
+	 /**
+	  *    
+	  * @param numeroMes
+	  * @param ano
+	  * @return
+	  * @throws SQLException
+	  */
     public List<Map<String, String>> reporteCuotasPagadasPorMes(int numeroMes, int ano) throws SQLException {
 
         final String consulta = "SELECT clientes.nombre, clientes.apellido, " +
@@ -139,7 +172,12 @@ public class ReporteMensualDAO {
     }
     
  
-    
+    /**
+     * 
+     * @param numeroMes
+     * @param año
+     * @return
+     */
     public double obtenerTotalCuotasPagadasPorMes(int numeroMes, int año){
         double totalCuotas = 0;
         
@@ -160,7 +198,13 @@ public class ReporteMensualDAO {
         return totalCuotas;
     }
     
-    
+    /**
+     * 
+     * @param numeroMes
+     * @param año
+     * @return
+     * @throws SQLException
+     */
     public double obtenerBalancePorMes(int numeroMes, int año) throws SQLException {
         double totalGastos = obtenerSumaCostosPorMes(numeroMes, año);
         double totalCuotasPagadas = obtenerTotalCuotasPagadasPorMes(numeroMes, año);

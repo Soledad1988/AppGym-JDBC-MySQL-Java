@@ -11,15 +11,31 @@ import java.util.Map;
 
 import conexion.Conexion;
 
+/**
+ * Esta clase proporciona un método para realizar leectura
+ * en la tabla de clientes y cuotas de la base de datos.
+ */
 public class ReporteIngresosDAO {
 	
+	/**
+     * La conexión a la base de datos utilizada por este DAO.
+     */
 	final private Connection con;
 
+	/**
+     * Constructor que inicializa un nuevo ReporteIngresosDAO con la conexión especificada.
+     *
+     * @param con La conexión a la base de datos que se utilizará para las operaciones del DAO.
+     */
 	public ReporteIngresosDAO(Connection con) {
 		this.con = con;
 	}
 
-	//listar reporte
+	/**
+	 * Recupera una lista con la fecha de alta, nombre, apellido y telefono de los clientes registrados en el sistema.
+     * @return retorna una lista que contiene registros de clientes en el sistema.
+	 * @throws SQLException
+	 */
 	public List<Map<String,String>> reporteClientes() throws SQLException {
 				  
 		final String sql = "SELECT fechaAlta, nombre, apellido, telefono FROM clientes";
@@ -48,6 +64,12 @@ public class ReporteIngresosDAO {
 	}
 			
 	
+	/**
+	 * Obtiene la suma de las cuotas generadas segùn el año y mes seleccionado.
+	 * @param numeroMes hace refencia al mes.
+	 * @param año hace referencia al año.
+	 * @return retorna un importe segùn las cuotas generadas en base a el año y mes seleccionado.
+	 */
     public static double realizarSumaPorMes(int numeroMes, int año) {
     	  Conexion factory = Conexion.getInstance();
 

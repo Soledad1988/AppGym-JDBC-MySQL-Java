@@ -9,15 +9,31 @@ import java.util.Collections;
 import java.util.List;
 import gym.modelo.Gastos;
 
+/**
+ * Esta clase proporciona un método para realizar leectura
+ * en la tabla de gastos de la base de datos.
+ */
 public class ReporteGastosDAO {
 	
+	/**
+     * La conexión a la base de datos utilizada por este DAO.
+     */
 	final private Connection con;
 
+	/**
+     * Constructor que inicializa un nuevo ReporteGastosDAO con la conexión especificada.
+     *
+     * @param con La conexión a la base de datos que se utilizará para las operaciones del DAO.
+     */
 	public ReporteGastosDAO(Connection con) {
 		this.con = con;
 	}
 
 	// Listar reporte de gastos
+	/**
+	 * Recupera una lista de todos los gastos registrados en el sistema.
+     * @return retorna una lista que contiene registros de gastos en el sistema.
+	 */
 	public List<Gastos> reporteGastos() {
 
 	    List<Gastos> resultado = new ArrayList<>();
@@ -48,6 +64,12 @@ public class ReporteGastosDAO {
 	    return resultado;
 	}
     
+	/**
+	 * Obtiene la suma de los costos generados segùn el año y mes seleccionado.
+	 * @param numeroMes hace refencia al mes.
+	 * @param año hace referencia al año.
+	 * @return retorna un importe segùn los costos generados en base a el año y mes seleccionado.
+	 */
     public double obtenerSumaCostosPorMes(int numeroMes, int año) {
     	try {
              String sql = "SELECT SUM(costo) AS resultado FROM gastos WHERE MONTH(fechaGasto) = ? AND YEAR(fechaGasto) = ?";
@@ -70,6 +92,12 @@ public class ReporteGastosDAO {
              return 0;   
     }
     
+    /**
+     * Lista de gastos segun un mes seleccionado.
+     * @param numeroDeMes Hace referencia la mes.
+     * @param año Hace referencia al año.
+     * @return retorna una lista de gastos segun el mes seleccionado.
+     */
     public List<Gastos> listarGastosPorMes(int numeroDeMes, int año) {
     	
     	try {

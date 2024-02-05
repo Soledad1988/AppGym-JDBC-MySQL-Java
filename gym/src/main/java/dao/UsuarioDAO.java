@@ -15,14 +15,31 @@ import gym.modelo.RegistroLogin;
 import gym.modelo.Rol;
 import gym.modelo.Usuario;
 
+/**
+ * Esta clase proporciona métodos para realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar)
+ * en la tabla de Usuarios de la base de datos.
+ */
 public class UsuarioDAO {
 
+	/**
+     * La conexión a la base de datos utilizada por este DAO.
+     */
 	final private Connection con;
 
+	/**
+     * Constructor que inicializa un nuevo UsuarioDAO con la conexión especificada.
+     *
+     * @param con La conexión a la base de datos que se utilizará para las operaciones del DAO.
+     */
 	public UsuarioDAO(Connection con) {
 		this.con = con;
 	}
 	 
+	/**
+	 * Realiza el registro de un nuevo usaurio en el sistema.
+	 * @param usuario es el objeto Usuario que representa la información del nuevo usuario. 
+	 * @param nombreRol es el rol asignado.
+	 */
 	public void guardar(Usuario usuario, String nombreRol) {
         try {
         	 String sqlUsuario = "INSERT INTO usuarios (nombreUsuario, contrasena, habilitado) VALUES (?, ?, ?)";
@@ -53,6 +70,12 @@ public class UsuarioDAO {
         }
     }
 
+	/**
+	 * Obtiene el Identificador del rol segun el nombre.
+	 * @param nombreRol nombre del rol.
+	 * @return retorna el Identificador del rol.
+	 * @throws SQLException
+	 */
     private int obtenerIdRol(String nombreRol) throws SQLException {
     	nombreRol = nombreRol.toUpperCase().replace(" ", "_");
         String sql = "SELECT idRol FROM roles WHERE nombreRol = ?";
@@ -70,7 +93,7 @@ public class UsuarioDAO {
     }
 	
 	
-    
+    /*
     public void eliminar(Integer idUsuario) {
         // Primero, eliminar registros relacionados de usuarios_roles
         String sqlRoles = "DELETE FROM usuarios_roles WHERE idUsuario = ?";
@@ -89,8 +112,14 @@ public class UsuarioDAO {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
     
+    /**
+     * Actualiza el registro de un usaurio en el sistema.
+     * @param nombreUsuario  Nombre de Usuario actualizado del usuario.
+     * @param password  Contraseña actualizada del usuario.
+     * @param idUsuario Identificador ùnico del usuario.
+     */
     public void actualizar(String nombreUsuario, String password, Integer idUsuario) {
     	
     	String sql = "UPDATE usuarios SET nombreUsuario = ?, contrasena = ? WHERE idUsuario = ?";
@@ -113,6 +142,10 @@ public class UsuarioDAO {
         }
     }
     
+    /**
+     * Recupera una lista de todos los usuarios registrados en el sistema.
+     * @return Lista de usuarios registrados.
+     */
     public List<Usuario> listar() {
         Map<Integer, Usuario> usuarioMap = new HashMap<>();
 
@@ -148,7 +181,13 @@ public class UsuarioDAO {
         }
     }
  
-	
+	/**
+	 * Busca el usuario en la base de datos
+	 * @param usuario nombre de usuario.
+	 * @param password contraseña.
+	 * @return lista de usuarios que coinciden con los parámetros proporcionados.
+	 * @throws SQLException
+	 */
     public List<Usuario> buscar(String usuario, String password) throws SQLException {
         List<Usuario> usuarios = new ArrayList<>();
 
@@ -199,9 +238,12 @@ public class UsuarioDAO {
         return usuarios;
     }
     
-	
-	
-	
+	/**
+	 * Obtiene roles de la base de datos para un usuario determinado.
+	 * @param idUsuario El ID del usuario.
+	 * @return Un conjunto de roles asociados con el usuario.
+	 * @throws SQLException
+	 */
 	public Set<Rol> obtenerRolesDesdeBaseDeDatos(Integer idUsuario) throws SQLException {
 	    Set<Rol> roles = new HashSet<>();
 
@@ -224,7 +266,10 @@ public class UsuarioDAO {
 	    return roles;
 	}
 	
-	//Reporte de usuario
+	/**
+	 * Registra en el sistema el usuario que ha inicado sesiòn
+	 * @param idUsuario Id del usuario.
+	 */
 	public void registrarInicioSesion(int idUsuario) {
 	    String sql = "INSERT INTO registros_login (idUsuario, fechaHora) VALUES (?, NOW())";
 	    
@@ -237,7 +282,10 @@ public class UsuarioDAO {
 	    }
 	}
 	
-	
+	/**
+	 * Obtiene una lista de los usuarios que han iniciado sesiòn.
+	 * @return retorna una lista de los usuarios que han iniciado sesiòn.
+	 */
 	public List<RegistroLogin> obtenerRegistrosLogin() {
 	    List<RegistroLogin> registros = new ArrayList<>();
 
@@ -261,7 +309,11 @@ public class UsuarioDAO {
 	    return registros;
 	}
 	
-	//Cambio de estado Habilitado / desabilitado
+	/**
+	 * Cambia el estado del usuario en habiltado o deshabilitado.
+	 * @param idUsuario Id del usuario.
+	 * @param nuevoEstado Estado actualizado.
+	 */
 	public void cambiarEstadoHabilitado(int idUsuario, boolean nuevoEstado) {
 	    String sql = "UPDATE usuarios SET habilitado = ? WHERE idUsuario = ?";
 	    
@@ -280,24 +332,6 @@ public class UsuarioDAO {
 	        e.printStackTrace();
 	    } 
 	}
-	
-	/* private void transformarResultSetEnUsuario(List<Usuario> usuarios, PreparedStatement pstm) {
-	        ResultSet rst = null;
-	        try {
-	            rst = pstm.getResultSet();
-	            while (rst.next()) {
-	                Usuario usuario = new Usuario(
-	                		rst.getInt(1), 
-	                		rst.getString(2), 
-	                		rst.getString(3), 
-	                		rst.getBoolean(4));
-	                usuarios.add(usuario);
-	            }
-	        } catch (SQLException e) {
-	            System.err.println("Error al transformar ResultSet en Usuario: " + e.getMessage());
-	        } 
-	    }*/
-	
 	
 
 }
