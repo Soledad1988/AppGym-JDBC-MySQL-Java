@@ -4,12 +4,12 @@
 
 ## :bulb: 1º Parte: Altas, Bajas y Actualizacion de registros de Clientes.
 - El sistema permite ingresar nuevos registros, borrarlos y actualizar. :heavy_check_mark:
-- Buscar clientes y asignar cuota del mes. :construction:
+- Buscar clientes y asignar cuota del mes. :heavy_check_mark:
 
 ## :bulb: 2º Parte: Reporte de Clientes
 - Generar el listado de clientes y filtrar por periodo. :heavy_check_mark: 
 - Realizar una sumatoria de los ingresos obtenidos en el periodo. :heavy_check_mark:
-- Obtener los ingresos generados en el periodo solo de los clientes que abonaron la cuota. :construction:
+- Obtener los ingresos generados en el periodo solo de los clientes que abonaron la cuota. :heavy_check_mark:
 
 ## :bulb: 3º Parte: Altas, Bajas y Actualizacion de registros de Gastos del período.
 - El sistema permite ingresar nuevos gastos, borrarlos y actualizar. :heavy_check_mark: 
@@ -19,7 +19,7 @@
 - Realizar una sumatoria de los gastos incurridos en el periodo. :heavy_check_mark: 
 
 ## :bulb: 5º Parte: Reporte de Ganancia / Perdida mensual
-- Poder obtener un reporte básico de ganacias o perdidas de un periodo/mes consultado. :construction:
+- Poder obtener un reporte básico de ganacias o perdidas de un periodo/mes consultado. :heavy_check_mark:
   
 <h4>
 :clapper: Vista previa :clapper:</h4>
